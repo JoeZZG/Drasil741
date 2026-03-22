@@ -64,6 +64,7 @@ packages:
 - drasil-example/ssp
 - drasil-example/swhs
 - drasil-example/template
+- drasil-example/trajecto
 
 # Dependency packages to be pulled from upstream that are not in the resolver
 # (e.g., acme-missiles-0.3)

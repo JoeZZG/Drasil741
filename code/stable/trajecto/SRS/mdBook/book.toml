@@ -1,0 +1,7 @@
+[book]
+language = "en"
+src = "src"
+title = "Software Requirements Specification for Charged Particle Trajectory Simulator"
+[output.html]
+smart-punctuation = true
+mathjax-support = true

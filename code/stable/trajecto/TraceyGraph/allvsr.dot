@@ -1,0 +1,75 @@
+digraph allvsr {
+
+
+	instance:piecewiseUniform	[shape=box, color=black, style=filled, fillcolor=mistyrose, label="A:piecewiseUniform"];
+	instance:singleParticle	[shape=box, color=black, style=filled, fillcolor=mistyrose, label="A:singleParticle"];
+	instance:noInteractions	[shape=box, color=black, style=filled, fillcolor=mistyrose, label="A:noInteractions"];
+	instance:prescribedFields	[shape=box, color=black, style=filled, fillcolor=mistyrose, label="A:prescribedFields"];
+	instance:twoDMotion	[shape=box, color=black, style=filled, fillcolor=mistyrose, label="A:twoDMotion"];
+	instance:bPerpPlane	[shape=box, color=black, style=filled, fillcolor=mistyrose, label="A:bPerpPlane"];
+	instance:eAxisAligned	[shape=box, color=black, style=filled, fillcolor=mistyrose, label="A:eAxisAligned"];
+	instance:rectRegions	[shape=box, color=black, style=filled, fillcolor=mistyrose, label="A:rectRegions"];
+	instance:lineDetector	[shape=box, color=black, style=filled, fillcolor=mistyrose, label="A:lineDetector"];
+	instance:fullDetection	[shape=box, color=black, style=filled, fillcolor=mistyrose, label="A:fullDetection"];
+	instance:lorentzOnly	[shape=box, color=black, style=filled, fillcolor=mistyrose, label="A:lorentzOnly"];
+
+	subgraph A {
+	rank="same"
+	{instance:piecewiseUniform, instance:singleParticle, instance:noInteractions, instance:prescribedFields, instance:twoDMotion, instance:bPerpPlane, instance:eAxisAligned, instance:rectRegions, instance:lineDetector, instance:fullDetection, instance:lorentzOnly}
+	}
+
+	dataDefn:kappa	[shape=box, color=black, style=filled, fillcolor=paleturquoise1, label="DD:qOverm"];
+
+	subgraph DD {
+	rank="same"
+	{dataDefn:kappa}
+	}
+
+	theory:velocityTM	[shape=box, color=black, style=filled, fillcolor=pink, label="TM:velocity"];
+	theory:accelerationTM	[shape=box, color=black, style=filled, fillcolor=pink, label="TM:acceleration"];
+	theory:lorentzForceCS	[shape=box, color=black, style=filled, fillcolor=pink, label="TM:lorentzForce"];
+	theory:eqnMotionCS	[shape=box, color=black, style=filled, fillcolor=pink, label="TM:eqnMotion"];
+
+	subgraph TM {
+	rank="same"
+	{theory:velocityTM, theory:accelerationTM, theory:lorentzForceCS, theory:eqnMotionCS}
+	}
+
+	theory:ax	[shape=box, color=black, style=filled, fillcolor=palegreen, label="GD:xAccelEM"];
+	theory:ay	[shape=box, color=black, style=filled, fillcolor=palegreen, label="GD:yAccelEM"];
+
+	subgraph GD {
+	rank="same"
+	{theory:ax, theory:ay}
+	}
+
+	theory:accelXIM	[shape=box, color=black, style=filled, fillcolor=khaki1, label="IM:accelX"];
+	theory:accelYIM	[shape=box, color=black, style=filled, fillcolor=khaki1, label="IM:accelY"];
+
+	subgraph IM {
+	rank="same"
+	{theory:accelXIM, theory:accelYIM}
+	}
+
+	instance:inputValues	[shape=box, color=black, style=filled, fillcolor=ivory, label="FR:inputValues"];
+	instance:echoInputs	[shape=box, color=black, style=filled, fillcolor=ivory, label="FR:echoInputs"];
+	instance:computeTraj	[shape=box, color=black, style=filled, fillcolor=ivory, label="FR:computeTraj"];
+	instance:reportOutputs	[shape=box, color=black, style=filled, fillcolor=ivory, label="FR:reportOutputs"];
+	instance:correct	[shape=box, color=black, style=filled, fillcolor=ivory, label="NFR:correct"];
+	instance:maintainable	[shape=box, color=black, style=filled, fillcolor=ivory, label="NFR:maintainable"];
+	instance:portable	[shape=box, color=black, style=filled, fillcolor=ivory, label="NFR:portable"];
+
+	subgraph FR {
+	rank="same"
+	{instance:inputValues, instance:echoInputs, instance:computeTraj, instance:reportOutputs, instance:correct, instance:maintainable, instance:portable}
+	}
+
+	instance:predictTrajectory	[shape=box, color=black, style=filled, fillcolor=darkgoldenrod1, label="GS:predictTrajectory"];
+	instance:determineDetectorOutcome	[shape=box, color=black, style=filled, fillcolor=darkgoldenrod1, label="GS:determineDetectorOutcome"];
+
+	subgraph GS {
+	rank="same"
+	{instance:predictTrajectory, instance:determineDetectorOutcome}
+	}
+
+}

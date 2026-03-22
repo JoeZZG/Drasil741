@@ -1,0 +1,231 @@
+-- | Main SRS body for the Trajecto example.
+module Drasil.Trajecto.Body (mkSRS, si) where
+
+import Language.Drasil hiding (organization, section)
+import qualified Language.Drasil.Development as D
+import Theory.Drasil (TheoryModel)
+import Drasil.SRSDocument
+import Drasil.Generator (withCommonKnowledge)
+import qualified Drasil.DocLang.SRS as SRS
+import Drasil.System (SystemKind(Specification), mkSystem)
+import Language.Drasil.Chunk.Concept.NamedCombinators
+import qualified Language.Drasil.Sentence.Combinators as S
+import Drasil.Document.Contents (foldlSP, foldlSPCol)
+
+import Data.Drasil.Concepts.Documentation
+  ( endUser, softwareSys, sysCont, user )
+import Data.Drasil.Concepts.Education (highSchoolPhysics, calculus, undergraduate)
+import Data.Drasil.Concepts.Math (mathcon')
+import Data.Drasil.Concepts.Physics (physicCon')
+import Data.Drasil.Concepts.PhysicalProperties (physicalcon)
+import Data.Drasil.Concepts.Software (program)
+import Data.Drasil.Concepts.Theory (inModel)
+
+import Drasil.Trajecto.Assumptions (assumptions)
+import Drasil.Trajecto.Changes (likelyChgs, unlikelyChgs)
+import Drasil.Trajecto.Concepts
+  ( defs, chargedParticle, electricField, magneticField, detectorLine )
+import Drasil.Trajecto.DataDefs (dataDefs)
+import Drasil.Trajecto.GenDefs (genDefs)
+import Drasil.Trajecto.Goals (goals, goalsInputs)
+import Drasil.Trajecto.IMods (iMods)
+import Drasil.Trajecto.LabelledContent (figPhysSys, sysCtxFig, labelledContent)
+import Drasil.Trajecto.MetaConcepts (progName)
+import Drasil.Trajecto.References (citations)
+import Drasil.Trajecto.Requirements (funcReqs, nonfuncReqs, funcReqsTables)
+import Drasil.Trajecto.TMods (tMods)
+import Drasil.Trajecto.Unitals
+  ( symbols, acronyms, inputs, outputs, inConstraints, outConstraints
+  , constants, elecFieldU, chgPerMassU )
+
+---------------------------------------------------------
+-- Author
+---------------------------------------------------------
+
+authorName :: Person
+authorName = person "Zhuo" "Zhang"
+
+---------------------------------------------------------
+-- SRS Declaration
+---------------------------------------------------------
+
+mkSRS :: SRSDecl
+mkSRS =
+  [ TableOfContents
+  , RefSec $ RefProg intro
+      [ TUnits
+      , tsymb [TSPurpose, TypogConvention [Vector Bold], SymbOrder, VectorUnits]
+      , TAandA abbreviationsList
+      ]
+  , IntroSec $ IntroProg (justification progName) (phrase progName)
+      [ IPurpose $ purpDoc progName Verbose
+      , IScope scope
+      , IChar [] charsOfReader []
+      , IOrgSec inModel (SRS.inModel [] []) EmptyS
+      ]
+  , GSDSec $ GSDProg
+      [ SysCntxt [sysCtxIntro progName, LlC sysCtxFig, sysCtxDesc]
+      , UsrChars [userCharacteristicsIntro progName]
+      , SystCons [] []
+      ]
+  , SSDSec $ SSDProg
+      [ SSDProblem $ PDProg purp []
+          [ TermsAndDefs Nothing terms
+          , PhySysDesc progName physSystParts figPhysSys []
+          , Goals goalsInputs
+          ]
+      , SSDSolChSpec $ SCSProg
+          [ Assumptions
+          , TMs [] (Label : stdFields)
+          , GDs [] ([Label, Units] ++ stdFields) ShowDerivation
+          , DDs [] ([Label, Symbol, Units] ++ stdFields) ShowDerivation
+          , IMs [] ([Label, Input, Output, InConstraints, OutConstraints] ++ stdFields) ShowDerivation
+          , Constraints EmptyS inConstraints
+          , CorrSolnPpties outConstraints []
+          ]
+      ]
+  , ReqrmntSec $ ReqsProg
+      [ FReqsSub funcReqsTables
+      , NonFReqsSub
+      ]
+  , LCsSec
+  , UCsSec
+  , TraceabilitySec $ TraceabilityProg $ traceMatStandard si
+  , AuxConstntSec $ AuxConsProg progName []
+  , Bibliography
+  ]
+
+---------------------------------------------------------
+-- System Information
+---------------------------------------------------------
+
+si :: System
+si = mkSystem progName Specification [authorName]
+  [purp] [] [] []
+  tMods genDefs dataDefs iMods
+  inputs outputs inConstraints
+  constants
+  symbMap []
+
+---------------------------------------------------------
+-- Purpose
+---------------------------------------------------------
+
+purp :: Sentence
+purp = foldlSent_
+  [ S "predict the trajectory of a", phrase chargedParticle
+  , S "moving through piecewise-uniform", phrase electricField
+  , S "and", phrase magneticField, S "regions"
+  ]
+
+---------------------------------------------------------
+-- Scope
+---------------------------------------------------------
+
+scope :: Sentence
+scope = foldlSent_
+  [ S "the analysis of two-dimensional", phrase chargedParticle
+  , S "motion in the x-y plane under the Lorentz force"
+  ]
+
+---------------------------------------------------------
+-- Terminology
+---------------------------------------------------------
+
+terms :: [ConceptChunk]
+terms = defs
+
+---------------------------------------------------------
+-- Physical system parts
+---------------------------------------------------------
+
+physSystParts :: [Sentence]
+physSystParts =
+  [ D.toSent (atStartNP (a_ chargedParticle)) +:+ S "(the simulated particle)"
+  , D.toSent (atStartNP (the electricField)) +:+ S "in the particle's current region"
+  , D.toSent (atStartNP (the magneticField)) +:+ S "perpendicular to the x-y plane"
+  , D.toSent (atStartNP (the detectorLine)) +:+ S "at a specified x-coordinate"
+  ]
+
+---------------------------------------------------------
+-- Standard fields for theory/general/data/instance model tables
+---------------------------------------------------------
+
+stdFields :: Fields
+stdFields = [DefiningEquation, Description Verbose IncludeUnits, Notes, Source, RefBy]
+
+---------------------------------------------------------
+-- Concept instances
+---------------------------------------------------------
+
+concIns :: [ConceptInstance]
+concIns = assumptions ++ goals ++ funcReqs ++ nonfuncReqs ++ likelyChgs ++ unlikelyChgs
+
+---------------------------------------------------------
+-- Idea and concept dictionaries
+---------------------------------------------------------
+
+ideaDicts :: [IdeaDict]
+ideaDicts =
+  nw progName : map nw mathcon' ++ map nw physicCon'
+
+abbreviationsList :: [IdeaDict]
+abbreviationsList = map nw symbols ++ map nw acronyms
+
+conceptChunks :: [ConceptChunk]
+conceptChunks = physicalcon ++ defs
+
+---------------------------------------------------------
+-- Chunk database
+---------------------------------------------------------
+
+symbMap :: ChunkDB
+symbMap = withCommonKnowledge []
+  symbols ideaDicts conceptChunks
+  [elecFieldU, chgPerMassU]
+  dataDefs iMods genDefs tMods
+  concIns citations
+  (labelledContent ++ funcReqsTables)
+
+---------------------------------------------------------
+-- Introduction helpers
+---------------------------------------------------------
+
+justification :: CI -> Sentence
+justification prog = foldlSent
+  [ S "The motion of a charged particle through electromagnetic fields is a"
+  , S "fundamental phenomenon arising in particle accelerators, mass spectrometers,"
+  , S "and plasma confinement devices. It is therefore useful to have a"
+  , phrase program, S "to simulate", phrase prog +:+ S "trajectories"
+  , S "in piecewise-uniform fields"
+  ]
+
+charsOfReader :: [Sentence]
+charsOfReader =
+  [ phrase undergraduate +:+ S "level" +:+ phrase highSchoolPhysics
+  , phrase undergraduate +:+ S "level" +:+ phrase calculus
+  ]
+
+---------------------------------------------------------
+-- System context helpers
+---------------------------------------------------------
+
+sysCtxIntro :: CI -> Contents
+sysCtxIntro prog = foldlSP
+  [ refS sysCtxFig, S "shows the" +:+. phrase sysCont
+  , S "A rectangle represents the", phrase softwareSys, sParen (short prog) `sC`
+    S "and a circle represents the", phrase user
+  , S "providing inputs and receiving outputs"
+  ]
+
+sysCtxDesc :: Contents
+sysCtxDesc = foldlSPCol
+  [ S "The", phrase user, S "provides the particle and field parameters;"
+  , S "the", phrase softwareSys, S "computes and reports the particle trajectory"
+  ]
+
+userCharacteristicsIntro :: CI -> Contents
+userCharacteristicsIntro prog = foldlSP
+  [ S "The", phrase endUser `S.of_` short prog
+  , S "should have an understanding of undergraduate-level" +:+ phrase highSchoolPhysics
+  ]

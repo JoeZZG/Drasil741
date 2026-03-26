@@ -1,0 +1,67 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="550" viewBox="0 0 1400 550">
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#333" />
+    </marker>
+  </defs>
+  <rect width="1400" height="550" fill="white" />
+  <rect x="420" y="55" width="160" height="30" fill="#FFFFF0" stroke="black" stroke-width="1" />
+  <text x="500" y="74" text-anchor="middle" font-family="sans-serif" font-size="11">NFR:correct</text>
+  <rect x="820" y="55" width="160" height="30" fill="#FFB90F" stroke="black" stroke-width="1" />
+  <text x="900" y="74" text-anchor="middle" font-family="sans-serif" font-size="11">GS:predictTrajectory</text>
+  <rect x="20" y="55" width="160" height="30" fill="#FFE4E1" stroke="black" stroke-width="1" />
+  <text x="100" y="74" text-anchor="middle" font-family="sans-serif" font-size="11">A:lineDetector</text>
+  <rect x="1220" y="55" width="160" height="30" fill="#FFC0CB" stroke="black" stroke-width="1" />
+  <text x="1300" y="74" text-anchor="middle" font-family="sans-serif" font-size="11">TM:acceleration</text>
+  <rect x="20" y="280" width="160" height="30" fill="#FFE4E1" stroke="black" stroke-width="1" />
+  <text x="100" y="299" text-anchor="middle" font-family="sans-serif" font-size="11">A:prescribedFields</text>
+  <rect x="20" y="100" width="160" height="30" fill="#FFE4E1" stroke="black" stroke-width="1" />
+  <text x="100" y="119" text-anchor="middle" font-family="sans-serif" font-size="11">A:twoDMotion</text>
+  <rect x="20" y="145" width="160" height="30" fill="#FFE4E1" stroke="black" stroke-width="1" />
+  <text x="100" y="164" text-anchor="middle" font-family="sans-serif" font-size="11">A:fullDetection</text>
+  <rect x="420" y="145" width="160" height="30" fill="#FFFFF0" stroke="black" stroke-width="1" />
+  <text x="500" y="164" text-anchor="middle" font-family="sans-serif" font-size="11">FR:reportOutputs</text>
+  <rect x="220" y="55" width="160" height="30" fill="#BBFFFF" stroke="black" stroke-width="1" />
+  <text x="300" y="74" text-anchor="middle" font-family="sans-serif" font-size="11">DD:qOverm</text>
+  <rect x="420" y="190" width="160" height="30" fill="#FFFFF0" stroke="black" stroke-width="1" />
+  <text x="500" y="209" text-anchor="middle" font-family="sans-serif" font-size="11">FR:echoInputs</text>
+  <rect x="1020" y="55" width="160" height="30" fill="#FFFF87" stroke="black" stroke-width="1" />
+  <text x="1100" y="74" text-anchor="middle" font-family="sans-serif" font-size="11">IM:accelY</text>
+  <rect x="20" y="370" width="160" height="30" fill="#FFE4E1" stroke="black" stroke-width="1" />
+  <text x="100" y="389" text-anchor="middle" font-family="sans-serif" font-size="11">A:piecewiseUniform</text>
+  <rect x="1220" y="145" width="160" height="30" fill="#FFC0CB" stroke="black" stroke-width="1" />
+  <text x="1300" y="164" text-anchor="middle" font-family="sans-serif" font-size="11">TM:velocity</text>
+  <rect x="620" y="55" width="160" height="30" fill="#98FB98" stroke="black" stroke-width="1" />
+  <text x="700" y="74" text-anchor="middle" font-family="sans-serif" font-size="11">GD:yAccelEM</text>
+  <rect x="20" y="190" width="160" height="30" fill="#FFE4E1" stroke="black" stroke-width="1" />
+  <text x="100" y="209" text-anchor="middle" font-family="sans-serif" font-size="11">A:bPerpPlane</text>
+  <rect x="820" y="100" width="160" height="30" fill="#FFB90F" stroke="black" stroke-width="1" />
+  <text x="900" y="119" text-anchor="middle" font-family="sans-serif" font-size="11">GS:determineDetectorOutcome</text>
+  <rect x="20" y="235" width="160" height="30" fill="#FFE4E1" stroke="black" stroke-width="1" />
+  <text x="100" y="254" text-anchor="middle" font-family="sans-serif" font-size="11">A:lorentzOnly</text>
+  <rect x="1020" y="100" width="160" height="30" fill="#FFFF87" stroke="black" stroke-width="1" />
+  <text x="1100" y="119" text-anchor="middle" font-family="sans-serif" font-size="11">IM:accelX</text>
+  <rect x="20" y="325" width="160" height="30" fill="#FFE4E1" stroke="black" stroke-width="1" />
+  <text x="100" y="344" text-anchor="middle" font-family="sans-serif" font-size="11">A:noInteractions</text>
+  <rect x="420" y="235" width="160" height="30" fill="#FFFFF0" stroke="black" stroke-width="1" />
+  <text x="500" y="254" text-anchor="middle" font-family="sans-serif" font-size="11">FR:computeTraj</text>
+  <rect x="420" y="280" width="160" height="30" fill="#FFFFF0" stroke="black" stroke-width="1" />
+  <text x="500" y="299" text-anchor="middle" font-family="sans-serif" font-size="11">NFR:maintainable</text>
+  <rect x="420" y="325" width="160" height="30" fill="#FFFFF0" stroke="black" stroke-width="1" />
+  <text x="500" y="344" text-anchor="middle" font-family="sans-serif" font-size="11">NFR:portable</text>
+  <rect x="1220" y="100" width="160" height="30" fill="#FFC0CB" stroke="black" stroke-width="1" />
+  <text x="1300" y="119" text-anchor="middle" font-family="sans-serif" font-size="11">TM:eqnMotion</text>
+  <rect x="20" y="415" width="160" height="30" fill="#FFE4E1" stroke="black" stroke-width="1" />
+  <text x="100" y="434" text-anchor="middle" font-family="sans-serif" font-size="11">A:rectRegions</text>
+  <rect x="20" y="460" width="160" height="30" fill="#FFE4E1" stroke="black" stroke-width="1" />
+  <text x="100" y="479" text-anchor="middle" font-family="sans-serif" font-size="11">A:singleParticle</text>
+  <rect x="420" y="100" width="160" height="30" fill="#FFFFF0" stroke="black" stroke-width="1" />
+  <text x="500" y="119" text-anchor="middle" font-family="sans-serif" font-size="11">FR:inputValues</text>
+  <rect x="1220" y="190" width="160" height="30" fill="#FFC0CB" stroke="black" stroke-width="1" />
+  <text x="1300" y="209" text-anchor="middle" font-family="sans-serif" font-size="11">TM:lorentzForce</text>
+  <rect x="620" y="100" width="160" height="30" fill="#98FB98" stroke="black" stroke-width="1" />
+  <text x="700" y="119" text-anchor="middle" font-family="sans-serif" font-size="11">GD:xAccelEM</text>
+  <rect x="20" y="505" width="160" height="30" fill="#FFE4E1" stroke="black" stroke-width="1" />
+  <text x="100" y="524" text-anchor="middle" font-family="sans-serif" font-size="11">A:eAxisAligned</text>
+</svg>

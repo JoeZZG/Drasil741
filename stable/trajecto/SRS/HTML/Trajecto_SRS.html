@@ -1,0 +1,2371 @@
+﻿<!DOCTYPE html>
+<html>
+  <head>
+    <link rel="stylesheet" type="text/css" href="Trajecto_SRS.css">
+    <title>
+      Software Requirements Specification for Charged Particle Trajectory Simulator
+    </title>
+    <meta charset="utf-8">
+    <script>
+    MathJax = {
+      loader: {load: ['[tex]/textmacros', 'output/chtml']},
+      tex: {
+        packages: {'[+]': ['textmacros']}
+      },
+      svg: {
+        fontCache: 'global'
+      }
+    };
+    </script>
+    <script type="text/javascript" id="MathJax-script" async
+     src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js">
+    </script>
+  </head>
+  <body>
+    <div class="title">
+      <h1>
+        Software Requirements Specification for Charged Particle Trajectory Simulator
+      </h1>
+    </div>
+    <div class="author"><h2>Zhuo Zhang</h2></div>
+    <div id="Sec:ToC">
+      <div class="section">
+        <h1>Table of Contents</h1>
+        <p class="paragraph">
+          An outline of all sections included in this SRS is recorded here for easy reference.
+        </p>
+        <ul class="list">
+          <li><a href=#Sec:ToC>Table of Contents</a></li>
+          <li>
+            <a href=#Sec:RefMat>Reference Material</a>
+            <ul class="list">
+              <li><a href=#Sec:ToU>Table of Units</a></li>
+              <li><a href=#Sec:ToS>Table of Symbols</a></li>
+              <li><a href=#Sec:TAbbAcc>Abbreviations and Acronyms</a></li>
+            </ul>
+          </li>
+          <li>
+            <a href=#Sec:Intro>Introduction</a>
+            <ul class="list">
+              <li><a href=#Sec:DocPurpose>Purpose of Document</a></li>
+              <li><a href=#Sec:ReqsScope>Scope of Requirements</a></li>
+              <li>
+                <a href=#Sec:ReaderChars>Characteristics of Intended Reader</a>
+              </li>
+              <li><a href=#Sec:DocOrg>Organization of Document</a></li>
+            </ul>
+          </li>
+          <li>
+            <a href=#Sec:GenSysDesc>General System Description</a>
+            <ul class="list">
+              <li><a href=#Sec:SysContext>System Context</a></li>
+              <li><a href=#Sec:UserChars>User Characteristics</a></li>
+              <li><a href=#Sec:SysConstraints>System Constraints</a></li>
+            </ul>
+          </li>
+          <li>
+            <a href=#Sec:SpecSystDesc>Specific System Description</a>
+            <ul class="list">
+              <li>
+                <a href=#Sec:ProbDesc>Problem Description</a>
+                <ul class="list">
+                  <li><a href=#Sec:TermDefs>Terminology and Definitions</a></li>
+                  <li><a href=#Sec:PhysSyst>Physical System Description</a></li>
+                  <li><a href=#Sec:GoalStmt>Goal Statements</a></li>
+                </ul>
+              </li>
+              <li>
+                <a href=#Sec:SolCharSpec>Solution Characteristics Specification</a>
+                <ul class="list">
+                  <li><a href=#Sec:Assumps>Assumptions</a></li>
+                  <li><a href=#Sec:TMs>Theoretical Models</a></li>
+                  <li><a href=#Sec:GDs>General Definitions</a></li>
+                  <li><a href=#Sec:DDs>Data Definitions</a></li>
+                  <li><a href=#Sec:IMs>Instance Models</a></li>
+                  <li><a href=#Sec:DataConstraints>Data Constraints</a></li>
+                  <li>
+                    <a href=#Sec:CorSolProps>Properties of a Correct Solution</a>
+                  </li>
+                </ul>
+              </li>
+            </ul>
+          </li>
+          <li>
+            <a href=#Sec:Requirements>Requirements</a>
+            <ul class="list">
+              <li><a href=#Sec:FRs>Functional Requirements</a></li>
+              <li><a href=#Sec:NFRs>Non-Functional Requirements</a></li>
+            </ul>
+          </li>
+          <li><a href=#Sec:LCs>Likely Changes</a></li>
+          <li><a href=#Sec:UCs>Unlikely Changes</a></li>
+          <li>
+            <a href=#Sec:TraceMatrices>Traceability Matrices and Graphs</a>
+          </li>
+          <li>
+            <a href=#Sec:AuxConstants>Values of Auxiliary Constants</a>
+          </li>
+          <li><a href=#Sec:References>References</a></li>
+        </ul>
+      </div>
+    </div>
+    <div id="Sec:RefMat">
+      <div class="section">
+        <h1>Reference Material</h1>
+        <p class="paragraph">
+          This section records information for easy reference.
+        </p>
+        <div id="Sec:ToU">
+          <div class="subsection">
+            <h2>Table of Units</h2>
+            <p class="paragraph">
+              The unit system used throughout is SI (Syst├¿me International d'Unit├⌐s). In addition to the basic units, several derived units are also used. For each unit, the <a href=#Table:ToU>Table of Units</a> lists the symbol, a description, and the SI name.
+            </p>
+            <div id="Table:ToU">
+              <table class="table">
+                <tr>
+                  <th>Symbol</th>
+                  <th>Description</th>
+                  <th>SI Name</th>
+                </tr>
+                <tr>
+                  <td><em>C</em></td>
+                  <td>electric charge</td>
+                  <td>coulomb</td>
+                </tr>
+                <tr>
+                  <td><em>kg</em></td>
+                  <td>mass</td>
+                  <td>kilogram</td>
+                </tr>
+                <tr>
+                  <td><em>m</em></td>
+                  <td>length</td>
+                  <td>metre</td>
+                </tr>
+                <tr>
+                  <td><em>N</em></td>
+                  <td>force</td>
+                  <td>newton</td>
+                </tr>
+                <tr>
+                  <td><em>s</em></td>
+                  <td>time</td>
+                  <td>second</td>
+                </tr>
+                <tr>
+                  <td><em>T</em></td>
+                  <td>magnetic flux density</td>
+                  <td>tesla</td>
+                </tr>
+              </table>
+              <p class="caption">Table of Units</p>
+            </div>
+          </div>
+        </div>
+        <div id="Sec:ToS">
+          <div class="subsection">
+            <h2>Table of Symbols</h2>
+            <p class="paragraph">
+              The symbols used in this document are summarized in the <a href=#Table:ToS>Table of Symbols</a> along with their units. Throughout the document, symbols in bold will represent vectors, and scalars otherwise. The symbols are listed in alphabetical order. For vector quantities, the units shown are for each component of the vector.
+            </p>
+            <div id="Table:ToS">
+              <table class="table">
+                <tr>
+                  <th>Symbol</th>
+                  <th>Description</th>
+                  <th>Units</th>
+                </tr>
+                <tr>
+                  <td><em>a<sub>x</sub></em></td>
+                  <td>X-acceleration of the particle</td>
+                  <td><em>\(\frac{\text{m}}{\text{s}^{2}}\)</em></td>
+                </tr>
+                <tr>
+                  <td><em>a<sub>y</sub></em></td>
+                  <td>Y-acceleration of the particle</td>
+                  <td><em>\(\frac{\text{m}}{\text{s}^{2}}\)</em></td>
+                </tr>
+                <tr>
+                  <td><em><b>a</b>(t)</em></td>
+                  <td>Acceleration</td>
+                  <td><em>\(\frac{\text{m}}{\text{s}^{2}}\)</em></td>
+                </tr>
+                <tr>
+                  <td><em>B</em></td>
+                  <td>Out-of-plane magnetic flux density</td>
+                  <td><em>T</em></td>
+                </tr>
+                <tr>
+                  <td><em>B<sub>max</sub></em></td>
+                  <td>Maximum magnetic flux density</td>
+                  <td><em>T</em></td>
+                </tr>
+                <tr>
+                  <td><em>E<sub>max</sub></em></td>
+                  <td>Maximum electric field magnitude</td>
+                  <td><em>\(\frac{\text{N}}{\text{C}}\)</em></td>
+                </tr>
+                <tr>
+                  <td><em>E<sub>x</sub></em></td>
+                  <td>X-component of the electric field</td>
+                  <td><em>\(\frac{\text{N}}{\text{C}}\)</em></td>
+                </tr>
+                <tr>
+                  <td><em>E<sub>y</sub></em></td>
+                  <td>Y-component of the electric field</td>
+                  <td><em>\(\frac{\text{N}}{\text{C}}\)</em></td>
+                </tr>
+                <tr>
+                  <td><em><b>F</b></em></td>
+                  <td>Force</td>
+                  <td><em>N</em></td>
+                </tr>
+                <tr>
+                  <td><em>m</em></td>
+                  <td>Particle mass</td>
+                  <td><em>kg</em></td>
+                </tr>
+                <tr>
+                  <td><em>m<sub>max</sub></em></td>
+                  <td>Maximum particle mass</td>
+                  <td><em>kg</em></td>
+                </tr>
+                <tr>
+                  <td><em>m<sub>min</sub></em></td>
+                  <td>Minimum particle mass</td>
+                  <td><em>kg</em></td>
+                </tr>
+                <tr>
+                  <td><em><b>p</b>(t)</em></td>
+                  <td>Position</td>
+                  <td><em>m</em></td>
+                </tr>
+                <tr>
+                  <td><em>q</em></td>
+                  <td>Particle charge</td>
+                  <td><em>C</em></td>
+                </tr>
+                <tr>
+                  <td><em>q<sub>max</sub></em></td>
+                  <td>Maximum charge magnitude</td>
+                  <td><em>C</em></td>
+                </tr>
+                <tr>
+                  <td><em>t</em></td>
+                  <td>Time</td>
+                  <td><em>s</em></td>
+                </tr>
+                <tr>
+                  <td><em>t<sub>final</sub></em></td>
+                  <td>Final simulation time</td>
+                  <td><em>s</em></td>
+                </tr>
+                <tr>
+                  <td><em>t<sub>max</sub></em></td>
+                  <td>Maximum simulation time</td>
+                  <td><em>s</em></td>
+                </tr>
+                <tr>
+                  <td><em>v<sub>max</sub></em></td>
+                  <td>Maximum initial speed</td>
+                  <td><em>\(\frac{\text{m}}{\text{s}}\)</em></td>
+                </tr>
+                <tr>
+                  <td><em>v<sub>x</sub></em></td>
+                  <td>X-velocity of the particle</td>
+                  <td><em>\(\frac{\text{m}}{\text{s}}\)</em></td>
+                </tr>
+                <tr>
+                  <td><em>v<sub>x0</sub></em></td>
+                  <td>Initial x-velocity</td>
+                  <td><em>\(\frac{\text{m}}{\text{s}}\)</em></td>
+                </tr>
+                <tr>
+                  <td><em>v<sub>y</sub></em></td>
+                  <td>Y-velocity of the particle</td>
+                  <td><em>\(\frac{\text{m}}{\text{s}}\)</em></td>
+                </tr>
+                <tr>
+                  <td><em>v<sub>y0</sub></em></td>
+                  <td>Initial y-velocity</td>
+                  <td><em>\(\frac{\text{m}}{\text{s}}\)</em></td>
+                </tr>
+                <tr>
+                  <td><em><b>v</b>(t)</em></td>
+                  <td>Velocity</td>
+                  <td><em>\(\frac{\text{m}}{\text{s}}\)</em></td>
+                </tr>
+                <tr>
+                  <td><em>x<sub>0</sub></em></td>
+                  <td>Initial x-position</td>
+                  <td><em>m</em></td>
+                </tr>
+                <tr>
+                  <td><em>y<sub>0</sub></em></td>
+                  <td>Initial y-position</td>
+                  <td><em>m</em></td>
+                </tr>
+                <tr>
+                  <td><em>╬║</em></td>
+                  <td>Charge-to-mass ratio</td>
+                  <td><em>\(\frac{\text{C}}{\text{kg}}\)</em></td>
+                </tr>
+              </table>
+              <p class="caption">Table of Symbols</p>
+            </div>
+          </div>
+        </div>
+        <div id="Sec:TAbbAcc">
+          <div class="subsection">
+            <h2>Abbreviations and Acronyms</h2>
+            <div id="Table:TAbbAcc">
+              <table class="table">
+                <tr>
+                  <th>Abbreviation</th>
+                  <th>Full Form</th>
+                </tr>
+                <tr>
+                  <td>A</td>
+                  <td>Assumption</td>
+                </tr>
+                <tr>
+                  <td>DD</td>
+                  <td>Data Definition</td>
+                </tr>
+                <tr>
+                  <td>GD</td>
+                  <td>General Definition</td>
+                </tr>
+                <tr>
+                  <td>GS</td>
+                  <td>Goal Statement</td>
+                </tr>
+                <tr>
+                  <td>IM</td>
+                  <td>Instance Model</td>
+                </tr>
+                <tr>
+                  <td>PS</td>
+                  <td>Physical System Description</td>
+                </tr>
+                <tr>
+                  <td>R</td>
+                  <td>Requirement</td>
+                </tr>
+                <tr>
+                  <td>RefBy</td>
+                  <td>Referenced by</td>
+                </tr>
+                <tr>
+                  <td>Refname</td>
+                  <td>Reference Name</td>
+                </tr>
+                <tr>
+                  <td>SRS</td>
+                  <td>Software Requirements Specification</td>
+                </tr>
+                <tr>
+                  <td>TM</td>
+                  <td>Theoretical Model</td>
+                </tr>
+                <tr>
+                  <td>Uncert.</td>
+                  <td>Typical Uncertainty</td>
+                </tr>
+              </table>
+              <p class="caption">Abbreviations and Acronyms</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div id="Sec:Intro">
+      <div class="section">
+        <h1>Introduction</h1>
+        <p class="paragraph">
+          The motion of a charged particle through electromagnetic fields is a fundamental phenomenon arising in particle accelerators, mass spectrometers, and plasma confinement devices. It is therefore useful to have a program to simulate Charged Particle Trajectory Simulator trajectories in piecewise-uniform fields.
+        </p>
+        <p class="paragraph">
+          The following section provides an overview of the software requirements specification (<span title="software requirements specification">SRS</span>) for Charged Particle Trajectory Simulator. This section explains the purpose of this document, the scope of the requirements, the characteristics of the intended reader, and the organization of the document.
+        </p>
+        <div id="Sec:DocPurpose">
+          <div class="subsection">
+            <h2>Purpose of Document</h2>
+            <p class="paragraph">
+              The primary purpose of this document is to record the requirements of <span title="Charged Particle Trajectory Simulator">Trajecto</span>. Goals, assumptions, theoretical models, definitions, and other model derivation information are specified, allowing the reader to fully understand and verify the purpose and scientific basis of <span title="Charged Particle Trajectory Simulator">Trajecto</span>. With the exception of <a href=#Sec:SysConstraints>system constraints</a>, this <span title="software requirements specification">SRS</span> will remain abstract, describing what problem is being solved, but not how to solve it.
+            </p>
+            <p class="paragraph">
+              This document will be used as a starting point for subsequent development phases, including writing the design specification and the software verification and validation plan. The design document will show how the requirements are to be realized, including decisions on the numerical algorithms and programming environment. The verification and validation plan will show the steps that will be used to increase confidence in the software documentation and the implementation. Although the <span title="software requirements specification">SRS</span> fits in a series of documents that follow the so-called waterfall model, the actual development process is not constrained in any way. Even when the waterfall model is not followed, as Parnas and Clements point out <a href=#parnasClements1986>parnasClements1986</a>, the most logical way to present the documentation is still to "fake" a rational design process.
+            </p>
+          </div>
+        </div>
+        <div id="Sec:ReqsScope">
+          <div class="subsection">
+            <h2>Scope of Requirements</h2>
+            <p class="paragraph">
+              The scope of the requirements includes the analysis of two-dimensional charged particle motion in the x-y plane under the Lorentz force.
+            </p>
+          </div>
+        </div>
+        <div id="Sec:ReaderChars">
+          <div class="subsection">
+            <h2>Characteristics of Intended Reader</h2>
+            <p class="paragraph">
+              Reviewers of this documentation should have an understanding of undergraduate level high school physics and undergraduate level calculus. The users of <span title="Charged Particle Trajectory Simulator">Trajecto</span> can have a lower level of expertise, as explained in <a href=#Sec:UserChars>Sec:User Characteristics</a>.
+            </p>
+          </div>
+        </div>
+        <div id="Sec:DocOrg">
+          <div class="subsection">
+            <h2>Organization of Document</h2>
+            <p class="paragraph">
+              The organization of this document follows the template for an <span title="software requirements specification">SRS</span> for scientific computing software proposed by <a href=#koothoor2013>koothoor2013</a>, <a href=#smithLai2005>smithLai2005</a>, <a href=#smithEtAl2007>smithEtAl2007</a>, and <a href=#smithKoothoor2016>smithKoothoor2016</a>. The presentation follows the standard pattern of presenting goals, theories, definitions, and assumptions. For readers that would like a more bottom up approach, they can start reading the <a href=#Sec:IMs>instance models</a> and trace back to find any additional information they require.
+            </p>
+            <p class="paragraph">
+              The <a href=#Sec:GoalStmt>goal statements</a> are refined to the theoretical models and the <a href=#Sec:TMs>theoretical models</a> to the <a href=#Sec:IMs>instance models</a>.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div id="Sec:GenSysDesc">
+      <div class="section">
+        <h1>General System Description</h1>
+        <p class="paragraph">
+          This section provides general information about the system. It identifies the interfaces between the system and its environment, describes the user characteristics, and lists the system constraints.
+        </p>
+        <div id="Sec:SysContext">
+          <div class="subsection">
+            <h2>System Context</h2>
+            <p class="paragraph">
+              <a href=#Figure:sysCtxDiag>Fig:sysCtxDiag</a> shows the system context. A rectangle represents the software system (<span title="Charged Particle Trajectory Simulator">Trajecto</span>), and a circle represents the user providing inputs and receiving outputs.
+            </p>
+            <div id="Figure:sysCtxDiag">
+              <figure>
+                <img src="../../../../datafiles/trajecto/SystemContextFigure.png" alt="System Context" >
+                <figcaption>Figure: System Context</figcaption>
+              </figure>
+            </div>
+            <p class="paragraph">
+              The user provides the particle and field parameters; the software system computes and reports the particle trajectory:
+            </p>
+          </div>
+        </div>
+        <div id="Sec:UserChars">
+          <div class="subsection">
+            <h2>User Characteristics</h2>
+            <p class="paragraph">
+              The end user of <span title="Charged Particle Trajectory Simulator">Trajecto</span> should have an understanding of undergraduate-level high school physics.
+            </p>
+          </div>
+        </div>
+        <div id="Sec:SysConstraints">
+          <div class="subsection">
+            <h2>System Constraints</h2>
+            <p class="paragraph">There are no system constraints.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div id="Sec:SpecSystDesc">
+      <div class="section">
+        <h1>Specific System Description</h1>
+        <p class="paragraph">
+          This section first presents the problem description, which gives a high-level view of the problem to be solved. This is followed by the solution characteristics specification, which presents the assumptions, theories, and definitions that are used.
+        </p>
+        <div id="Sec:ProbDesc">
+          <div class="subsection">
+            <h2>Problem Description</h2>
+            <p class="paragraph">
+              A system is needed to predict the trajectory of a charged particle moving through piecewise-uniform electric field and magnetic field regions.
+            </p>
+            <div id="Sec:TermDefs">
+              <div class="subsubsection">
+                <h3>Terminology and Definitions</h3>
+                <p class="paragraph">
+                  This subsection provides a list of terms that are used in the subsequent sections and their meaning, with the purpose of reducing ambiguity and making it easier to correctly understand the requirements.
+                </p>
+                <ul class="list">
+                  <li>
+                    Charged particle: A particle that has a non-zero electric charge and can interact with electric and magnetic fields.
+                  </li>
+                  <li>
+                    Electric field: A physical field that exerts an electric force on charged particles.
+                  </li>
+                  <li>
+                    Magnetic field: A physical field that exerts a magnetic force on moving charged particles.
+                  </li>
+                  <li>
+                    Lorentz force: The force on a charged particle due to electric and magnetic fields.
+                  </li>
+                  <li>Trajectory: The path traced by a particle over time.</li>
+                  <li>
+                    Field region: A spatial region in which the electric field and magnetic field are specified, typically treated as uniform within the region.
+                  </li>
+                  <li>
+                    Detector line: A line at a specified location where the particle impact position is recorded.
+                  </li>
+                  <li>
+                    Velocity selector: A configuration of crossed electric and magnetic fields that allows only particles with a particular velocity to pass through without deflection.
+                  </li>
+                  <li>
+                    Cartesian coordinate system: A coordinate system that specifies each point uniquely in a plane by a set of numerical coordinates, which are the signed distances to the point from two fixed perpendicular oriented lines, measured in the same unit of length.
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <div id="Sec:PhysSyst">
+              <div class="subsubsection">
+                <h3>Physical System Description</h3>
+                <p class="paragraph">
+                  The physical system of <span title="Charged Particle Trajectory Simulator">Trajecto</span>, as shown in <a href=#Figure:trajectoPhysSys>Fig:trajectoPhysSys</a>, includes the following elements:
+                </p>
+                <div class="list">
+                  <p>
+                    <span title="physical system description">PS</span>1: A charged particle (the simulated particle)
+                  </p>
+                  <p>
+                    <span title="physical system description">PS</span>2: The electric field in the particle's current region
+                  </p>
+                  <p>
+                    <span title="physical system description">PS</span>3: The magnetic field perpendicular to the x-y plane
+                  </p>
+                  <p>
+                    <span title="physical system description">PS</span>4: The detector line at a specified x-coordinate
+                  </p>
+                </div>
+                <div id="Figure:trajectoPhysSys">
+                  <figure>
+                    <img src="../../../../datafiles/trajecto/trajecto.png" alt="The physical system description" width="60.0%" >
+                    <figcaption>Figure: The physical system description</figcaption>
+                  </figure>
+                </div>
+              </div>
+            </div>
+            <div id="Sec:GoalStmt">
+              <div class="subsubsection">
+                <h3>Goal Statements</h3>
+                <p class="paragraph">
+                  Given the particle properties (<em>q</em> and <em>m</em>), initial conditions (<em>x<sub>0</sub></em>, <em>y<sub>0</sub></em>, <em>v<sub>x0</sub></em>, <em>v<sub>y0</sub></em>), the specification of electric and magnetic fields (<em>E<sub>x</sub></em>, <em>E<sub>y</sub></em>, <em>B</em>), and detector geometry including <em>t<sub>final</sub></em>, the goal statements are:
+                </p>
+                <div class="list">
+                  <p>
+                    <div id="predictTrajectory">
+                      predictTrajectory: Predict the trajectory of a charged particle under prescribed electric and magnetic fields.
+                    </div>
+                  </p>
+                  <p>
+                    <div id="determineDetectorOutcome">
+                      determineDetectorOutcome: Determine impact position and time-of-flight at a specified detector line.
+                    </div>
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div id="Sec:SolCharSpec">
+          <div class="subsection">
+            <h2>Solution Characteristics Specification</h2>
+            <p class="paragraph">
+              The instance models that govern <span title="Charged Particle Trajectory Simulator">Trajecto</span> are presented in the <a href=#Sec:IMs>Instance Model Section</a>. The information to understand the meaning of the instance models and their derivation is also presented, so that the instance models can be verified.
+            </p>
+            <div id="Sec:Assumps">
+              <div class="subsubsection">
+                <h3>Assumptions</h3>
+                <p class="paragraph">
+                  This section simplifies the original problem and helps in developing the theoretical models by filling in the missing information for the physical system. The assumptions refine the scope by providing more detail.
+                </p>
+                <div class="list">
+                  <p>
+                    <div id="piecewiseUniform">
+                      piecewiseUniform: The electric and magnetic fields are uniform within each field region and may change only at region boundaries.
+                    </div>
+                  </p>
+                  <p>
+                    <div id="singleParticle">
+                      singleParticle: The particle is treated as a point mass and point charge. (<span title="referenced by">RefBy</span>: <a href=#TM:lorentzForce>TM:lorentzForce</a> and <a href=#TM:eqnMotion>TM:eqnMotion</a>.)
+                    </div>
+                  </p>
+                  <p>
+                    <div id="noInteractions">
+                      noInteractions: Collisions and particle-particle interactions (including space-charge effects) are neglected.
+                    </div>
+                  </p>
+                  <p>
+                    <div id="prescribedFields">
+                      prescribedFields: The electric and magnetic fields are user-specified and remain fixed during the simulation. (<span title="referenced by">RefBy</span>: <a href=#TM:lorentzForce>TM:lorentzForce</a>, <a href=#TM:eqnMotion>TM:eqnMotion</a>, and <a href=#GD:xAccelEM>GD:xAccelEM</a>.)
+                    </div>
+                  </p>
+                  <p>
+                    <div id="twoDMotion">
+                      twoDMotion: The particle motion is confined to the x-y plane. (<span title="referenced by">RefBy</span>: <a href=#GD:xAccelEM>GD:xAccelEM</a> and <a href=#lcExtendTo3D>LC:lcExtendTo3D</a>.)
+                    </div>
+                  </p>
+                  <p>
+                    <div id="bPerpPlane">
+                      bPerpPlane: The magnetic field is perpendicular to the x-y plane. (<span title="referenced by">RefBy</span>: <a href=#GD:xAccelEM>GD:xAccelEM</a>.)
+                    </div>
+                  </p>
+                  <p>
+                    <div id="eAxisAligned">
+                      eAxisAligned: The electric field lies in the x-y plane and is aligned with a coordinate axis. (<span title="referenced by">RefBy</span>: <a href=#GD:xAccelEM>GD:xAccelEM</a>.)
+                    </div>
+                  </p>
+                  <p>
+                    <div id="rectRegions">
+                      rectRegions: Field-region boundaries are rectangular and parallel to the x and y axes.
+                    </div>
+                  </p>
+                  <p>
+                    <div id="lineDetector">
+                      lineDetector: The detector is modeled as a line located within the field region.
+                    </div>
+                  </p>
+                  <p>
+                    <div id="fullDetection">
+                      fullDetection: The detector line is sufficiently long to record the impact point for any trajectory within the scope of the simulation.
+                    </div>
+                  </p>
+                  <p>
+                    <div id="lorentzOnly">
+                      lorentzOnly: The particle dynamics are governed only by the Lorentz force; all other forces are neglected. (<span title="referenced by">RefBy</span>: <a href=#TM:eqnMotion>TM:eqnMotion</a> and <a href=#ucLorentzForce>UC:ucLorentzForce</a>.)
+                    </div>
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div id="Sec:TMs">
+              <div class="subsubsection">
+                <h3>Theoretical Models</h3>
+                <p class="paragraph">
+                  This section focuses on the general equations and laws that <span title="Charged Particle Trajectory Simulator">Trajecto</span> is based on.
+                </p>
+                <div id="TM:velocity">
+                  <table class="tdefn">
+                    <tr>
+                      <th>Refname</th>
+                      <td><b>TM:velocity</b></td>
+                    </tr>
+                    <tr>
+                      <th>Label</th>
+                      <td><p class="paragraph">Velocity</p></td>
+                    </tr>
+                    <tr>
+                      <th>Equation</th>
+                      <td>
+                        \[\symbf{v}\text{(}t\text{)}=\frac{\,d\symbf{p}\text{(}t\text{)}}{\,dt}\]
+                      </td>
+                    </tr>
+                    <tr>
+                      <th>Description</th>
+                      <td>
+                        <ul class="hide-list-style-no-indent">
+                          <li>
+                            <em><b>v</b>(t)</em> is the velocity (<em>\(\frac{\text{m}}{\text{s}}\)</em>)
+                          </li>
+                          <li><em>t</em> is the time (<em>s</em>)</li>
+                          <li><em><b>p</b>(t)</em> is the position (<em>m</em>)</li>
+                        </ul>
+                      </td>
+                    </tr>
+                    <tr>
+                      <th>Source</th>
+                      <td>
+                        <p class="paragraph"><a href=#velocityWiki>velocityWiki</a></p>
+                      </td>
+                    </tr>
+                    <tr>
+                      <th>RefBy</th>
+                      <td><p class="paragraph"></p></td>
+                    </tr>
+                  </table>
+                </div>
+                <div id="TM:acceleration">
+                  <table class="tdefn">
+                    <tr>
+                      <th>Refname</th>
+                      <td><b>TM:acceleration</b></td>
+                    </tr>
+                    <tr>
+                      <th>Label</th>
+                      <td><p class="paragraph">Acceleration</p></td>
+                    </tr>
+                    <tr>
+                      <th>Equation</th>
+                      <td>
+                        \[\symbf{a}\text{(}t\text{)}=\frac{\,d\symbf{v}\text{(}t\text{)}}{\,dt}\]
+                      </td>
+                    </tr>
+                    <tr>
+                      <th>Description</th>
+                      <td>
+                        <ul class="hide-list-style-no-indent">
+                          <li>
+                            <em><b>a</b>(t)</em> is the acceleration (<em>\(\frac{\text{m}}{\text{s}^{2}}\)</em>)
+                          </li>
+                          <li><em>t</em> is the time (<em>s</em>)</li>
+                          <li>
+                            <em><b>v</b>(t)</em> is the velocity (<em>\(\frac{\text{m}}{\text{s}}\)</em>)
+                          </li>
+                        </ul>
+                      </td>
+                    </tr>
+                    <tr>
+                      <th>Source</th>
+                      <td>
+                        <p class="paragraph">
+                          <a href=#accelerationWiki>accelerationWiki</a>
+                        </p>
+                      </td>
+                    </tr>
+                    <tr>
+                      <th>RefBy</th>
+                      <td><p class="paragraph"></p></td>
+                    </tr>
+                  </table>
+                </div>
+                <div id="TM:lorentzForce">
+                  <table class="tdefn">
+                    <tr>
+                      <th>Refname</th>
+                      <td><b>TM:lorentzForce</b></td>
+                    </tr>
+                    <tr>
+                      <th>Label</th>
+                      <td><p class="paragraph">Lorentz force law</p></td>
+                    </tr>
+                    <tr>
+                      <th>Equation</th>
+                      <td>
+                        \[\symbf{F}=q\,\left({E_{\text{x}}}+{v_{\text{y}}}\right)\,B\]
+                      </td>
+                    </tr>
+                    <tr>
+                      <th>Description</th>
+                      <td>
+                        <ul class="hide-list-style-no-indent">
+                          <li><em><b>F</b></em> is the force (<em>N</em>)</li>
+                          <li><em>q</em> is the particle charge (<em>C</em>)</li>
+                          <li>
+                            <em>E<sub>x</sub></em> is the x-component of the electric field (<em>\(\frac{\text{N}}{\text{C}}\)</em>)
+                          </li>
+                          <li>
+                            <em>v<sub>y</sub></em> is the y-velocity of the particle (<em>\(\frac{\text{m}}{\text{s}}\)</em>)
+                          </li>
+                          <li>
+                            <em>B</em> is the out-of-plane magnetic flux density (<em>T</em>)
+                          </li>
+                        </ul>
+                      </td>
+                    </tr>
+                    <tr>
+                      <th>Notes</th>
+                      <td>
+                        <p class="paragraph">
+                          The electromagnetic force on a charged particle is the sum of the electric force (q*E) and the magnetic force (q*(v x B)). For 2D planar motion with an out-of-plane magnetic field B, the x-component of the Lorentz force is Fx = q*(Ex + vy*B). Assumes <a href=#singleParticle>A:singleParticle</a>, <a href=#prescribedFields>A:prescribedFields</a>.
+                        </p>
+                      </td>
+                    </tr>
+                    <tr>
+                      <th>Source</th>
+                      <td><p class="paragraph">--</p></td>
+                    </tr>
+                    <tr>
+                      <th>RefBy</th>
+                      <td>
+                        <p class="paragraph"><a href=#TM:eqnMotion>TM:eqnMotion</a></p>
+                      </td>
+                    </tr>
+                  </table>
+                </div>
+                <div id="TM:eqnMotion">
+                  <table class="tdefn">
+                    <tr>
+                      <th>Refname</th>
+                      <td><b>TM:eqnMotion</b></td>
+                    </tr>
+                    <tr>
+                      <th>Label</th>
+                      <td>
+                        <p class="paragraph">
+                          Equation of motion under electromagnetic fields
+                        </p>
+                      </td>
+                    </tr>
+                    <tr>
+                      <th>Equation</th>
+                      <td>
+                        \[{a_{\text{x}}}=\frac{q}{m}\,\left({E_{\text{x}}}+{v_{\text{y}}}\right)\,B\]
+                        \[{a_{\text{y}}}=\frac{q}{m}\,\left({E_{\text{y}}}-{v_{\text{x}}}\right)\,B\]
+                      </td>
+                    </tr>
+                    <tr>
+                      <th>Description</th>
+                      <td>
+                        <ul class="hide-list-style-no-indent">
+                          <li>
+                            <em>a<sub>x</sub></em> is the x-acceleration of the particle (<em>\(\frac{\text{m}}{\text{s}^{2}}\)</em>)
+                          </li>
+                          <li><em>q</em> is the particle charge (<em>C</em>)</li>
+                          <li><em>m</em> is the particle mass (<em>kg</em>)</li>
+                          <li>
+                            <em>E<sub>x</sub></em> is the x-component of the electric field (<em>\(\frac{\text{N}}{\text{C}}\)</em>)
+                          </li>
+                          <li>
+                            <em>v<sub>y</sub></em> is the y-velocity of the particle (<em>\(\frac{\text{m}}{\text{s}}\)</em>)
+                          </li>
+                          <li>
+                            <em>B</em> is the out-of-plane magnetic flux density (<em>T</em>)
+                          </li>
+                        </ul>
+                        <ul class="hide-list-style-no-indent">
+                          <li>
+                            <em>a<sub>y</sub></em> is the y-acceleration of the particle (<em>\(\frac{\text{m}}{\text{s}^{2}}\)</em>)
+                          </li>
+                          <li><em>q</em> is the particle charge (<em>C</em>)</li>
+                          <li><em>m</em> is the particle mass (<em>kg</em>)</li>
+                          <li>
+                            <em>E<sub>y</sub></em> is the y-component of the electric field (<em>\(\frac{\text{N}}{\text{C}}\)</em>)
+                          </li>
+                          <li>
+                            <em>v<sub>x</sub></em> is the x-velocity of the particle (<em>\(\frac{\text{m}}{\text{s}}\)</em>)
+                          </li>
+                          <li>
+                            <em>B</em> is the out-of-plane magnetic flux density (<em>T</em>)
+                          </li>
+                        </ul>
+                      </td>
+                    </tr>
+                    <tr>
+                      <th>Notes</th>
+                      <td>
+                        <p class="paragraph">
+                          Combining Newton's second law with the Lorentz force law, (<a href=#TM:lorentzForce>TM:lorentzForce</a>), the equations of motion for each velocity component are obtained. The quantity q/m is the charge-to-mass ratio. Assumes <a href=#singleParticle>A:singleParticle</a>, <a href=#prescribedFields>A:prescribedFields</a>, <a href=#lorentzOnly>A:lorentzOnly</a>.
+                        </p>
+                      </td>
+                    </tr>
+                    <tr>
+                      <th>Source</th>
+                      <td><p class="paragraph">--</p></td>
+                    </tr>
+                    <tr>
+                      <th>RefBy</th>
+                      <td><p class="paragraph"></p></td>
+                    </tr>
+                  </table>
+                </div>
+              </div>
+            </div>
+            <div id="Sec:GDs">
+              <div class="subsubsection">
+                <h3>General Definitions</h3>
+                <p class="paragraph">
+                  This section collects the laws and equations that will be used to build the instance models.
+                </p>
+                <div id="GD:xAccelEM">
+                  <table class="gdefn">
+                    <tr>
+                      <th>Refname</th>
+                      <td><b>GD:xAccelEM</b></td>
+                    </tr>
+                    <tr>
+                      <th>Label</th>
+                      <td>
+                        <p class="paragraph">X-acceleration under electromagnetic force</p>
+                      </td>
+                    </tr>
+                    <tr>
+                      <th>Units</th>
+                      <td>
+                        <p class="paragraph"><em>\(\frac{\text{m}}{\text{s}^{2}}\)</em></p>
+                      </td>
+                    </tr>
+                    <tr>
+                      <th>Equation</th>
+                      <td>
+                        \[{a_{\text{x}}}=╬║\,\left({E_{\text{x}}}+{v_{\text{y}}}\right)\,B\]
+                      </td>
+                    </tr>
+                    <tr>
+                      <th>Description</th>
+                      <td>
+                        <ul class="hide-list-style-no-indent">
+                          <li>
+                            <em>a<sub>x</sub></em> is the x-acceleration of the particle (<em>\(\frac{\text{m}}{\text{s}^{2}}\)</em>)
+                          </li>
+                          <li>
+                            <em>╬║</em> is the charge-to-mass ratio (<em>\(\frac{\text{C}}{\text{kg}}\)</em>)
+                          </li>
+                          <li>
+                            <em>E<sub>x</sub></em> is the x-component of the electric field (<em>\(\frac{\text{N}}{\text{C}}\)</em>)
+                          </li>
+                          <li>
+                            <em>v<sub>y</sub></em> is the y-velocity of the particle (<em>\(\frac{\text{m}}{\text{s}}\)</em>)
+                          </li>
+                          <li>
+                            <em>B</em> is the out-of-plane magnetic flux density (<em>T</em>)
+                          </li>
+                        </ul>
+                      </td>
+                    </tr>
+                    <tr>
+                      <th>Notes</th>
+                      <td>
+                        <p class="paragraph">
+                          Derived from the equation of motion by applying planar motion (<a href=#twoDMotion>A:twoDMotion</a>), out-of-plane B field (<a href=#bPerpPlane>A:bPerpPlane</a>), axis-aligned E field (<a href=#eAxisAligned>A:eAxisAligned</a>), and fixed fields (<a href=#prescribedFields>A:prescribedFields</a>). Here <em>╬║</em> = q/m is defined in <a href=#DD:qOverm>DD:qOverm</a>.
+                        </p>
+                      </td>
+                    </tr>
+                    <tr>
+                      <th>Source</th>
+                      <td><p class="paragraph">--</p></td>
+                    </tr>
+                    <tr>
+                      <th>RefBy</th>
+                      <td>
+                        <p class="paragraph"><a href=#GD:yAccelEM>GD:yAccelEM</a></p>
+                      </td>
+                    </tr>
+                  </table>
+                </div>
+                <div id="GD:yAccelEM">
+                  <table class="gdefn">
+                    <tr>
+                      <th>Refname</th>
+                      <td><b>GD:yAccelEM</b></td>
+                    </tr>
+                    <tr>
+                      <th>Label</th>
+                      <td>
+                        <p class="paragraph">Y-acceleration under electromagnetic force</p>
+                      </td>
+                    </tr>
+                    <tr>
+                      <th>Units</th>
+                      <td>
+                        <p class="paragraph"><em>\(\frac{\text{m}}{\text{s}^{2}}\)</em></p>
+                      </td>
+                    </tr>
+                    <tr>
+                      <th>Equation</th>
+                      <td>
+                        \[{a_{\text{y}}}=╬║\,\left({E_{\text{y}}}-{v_{\text{x}}}\right)\,B\]
+                      </td>
+                    </tr>
+                    <tr>
+                      <th>Description</th>
+                      <td>
+                        <ul class="hide-list-style-no-indent">
+                          <li>
+                            <em>a<sub>y</sub></em> is the y-acceleration of the particle (<em>\(\frac{\text{m}}{\text{s}^{2}}\)</em>)
+                          </li>
+                          <li>
+                            <em>╬║</em> is the charge-to-mass ratio (<em>\(\frac{\text{C}}{\text{kg}}\)</em>)
+                          </li>
+                          <li>
+                            <em>E<sub>y</sub></em> is the y-component of the electric field (<em>\(\frac{\text{N}}{\text{C}}\)</em>)
+                          </li>
+                          <li>
+                            <em>v<sub>x</sub></em> is the x-velocity of the particle (<em>\(\frac{\text{m}}{\text{s}}\)</em>)
+                          </li>
+                          <li>
+                            <em>B</em> is the out-of-plane magnetic flux density (<em>T</em>)
+                          </li>
+                        </ul>
+                      </td>
+                    </tr>
+                    <tr>
+                      <th>Notes</th>
+                      <td>
+                        <p class="paragraph">
+                          Derived from the equation of motion by applying the same 2D assumptions as for <a href=#GD:xAccelEM>GD:xAccelEM</a>.
+                        </p>
+                      </td>
+                    </tr>
+                    <tr>
+                      <th>Source</th>
+                      <td><p class="paragraph">--</p></td>
+                    </tr>
+                    <tr>
+                      <th>RefBy</th>
+                      <td><p class="paragraph"></p></td>
+                    </tr>
+                  </table>
+                </div>
+              </div>
+            </div>
+            <div id="Sec:DDs">
+              <div class="subsubsection">
+                <h3>Data Definitions</h3>
+                <p class="paragraph">
+                  This section collects and defines all the data needed to build the instance models.
+                </p>
+                <div id="DD:qOverm">
+                  <table class="ddefn">
+                    <tr>
+                      <th>Refname</th>
+                      <td><b>DD:qOverm</b></td>
+                    </tr>
+                    <tr>
+                      <th>Label</th>
+                      <td><p class="paragraph">Charge-to-mass ratio</p></td>
+                    </tr>
+                    <tr>
+                      <th>Symbol</th>
+                      <td><p class="paragraph"><em>╬║</em></p></td>
+                    </tr>
+                    <tr>
+                      <th>Units</th>
+                      <td>
+                        <p class="paragraph"><em>\(\frac{\text{C}}{\text{kg}}\)</em></p>
+                      </td>
+                    </tr>
+                    <tr>
+                      <th>Equation</th>
+                      <td>\[╬║=\frac{q}{m}\]</td>
+                    </tr>
+                    <tr>
+                      <th>Description</th>
+                      <td>
+                        <ul class="hide-list-style-no-indent">
+                          <li>
+                            <em>╬║</em> is the charge-to-mass ratio (<em>\(\frac{\text{C}}{\text{kg}}\)</em>)
+                          </li>
+                          <li><em>q</em> is the particle charge (<em>C</em>)</li>
+                          <li><em>m</em> is the particle mass (<em>kg</em>)</li>
+                        </ul>
+                      </td>
+                    </tr>
+                    <tr>
+                      <th>Notes</th>
+                      <td>
+                        <p class="paragraph">
+                          The charge-to-mass ratio simplifies the equations of motion by combining the particle's charge <em>q</em>, and mass <em>m</em> into a single parameter.
+                        </p>
+                      </td>
+                    </tr>
+                    <tr>
+                      <th>Source</th>
+                      <td><p class="paragraph">--</p></td>
+                    </tr>
+                    <tr>
+                      <th>RefBy</th>
+                      <td>
+                        <p class="paragraph"><a href=#GD:xAccelEM>GD:xAccelEM</a></p>
+                      </td>
+                    </tr>
+                  </table>
+                </div>
+              </div>
+            </div>
+            <div id="Sec:IMs">
+              <div class="subsubsection">
+                <h3>Instance Models</h3>
+                <p class="paragraph">
+                  This section transforms the problem defined in the <a href=#Sec:ProbDesc>problem description</a> into one which is expressed in mathematical terms. It uses concrete symbols defined in the <a href=#Sec:DDs>data definitions</a> to replace the abstract symbols in the models identified in <a href=#Sec:TMs>theoretical models</a> and <a href=#Sec:GDs>general definitions</a>.
+                </p>
+                <div id="IM:accelX">
+                  <table class="idefn">
+                    <tr>
+                      <th>Refname</th>
+                      <td><b>IM:accelX</b></td>
+                    </tr>
+                    <tr>
+                      <th>Label</th>
+                      <td><p class="paragraph">X-component of acceleration</p></td>
+                    </tr>
+                    <tr>
+                      <th>Input</th>
+                      <td>
+                        <p class="paragraph">
+                          <em>╬║</em>, <em>E<sub>x</sub></em>, <em>v<sub>y</sub></em>, <em>B</em>
+                        </p>
+                      </td>
+                    </tr>
+                    <tr>
+                      <th>Output</th>
+                      <td><p class="paragraph"><em>a<sub>x</sub></em></p></td>
+                    </tr>
+                    <tr>
+                      <th>Input Constraints</th>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <th>Output Constraints</th>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <th>Equation</th>
+                      <td>
+                        \[{a_{\text{x}}}=╬║\,\left({E_{\text{x}}}+{v_{\text{y}}}\right)\,B\]
+                      </td>
+                    </tr>
+                    <tr>
+                      <th>Description</th>
+                      <td>
+                        <ul class="hide-list-style-no-indent">
+                          <li>
+                            <em>a<sub>x</sub></em> is the x-acceleration of the particle (<em>\(\frac{\text{m}}{\text{s}^{2}}\)</em>)
+                          </li>
+                          <li>
+                            <em>╬║</em> is the charge-to-mass ratio (<em>\(\frac{\text{C}}{\text{kg}}\)</em>)
+                          </li>
+                          <li>
+                            <em>E<sub>x</sub></em> is the x-component of the electric field (<em>\(\frac{\text{N}}{\text{C}}\)</em>)
+                          </li>
+                          <li>
+                            <em>v<sub>y</sub></em> is the y-velocity of the particle (<em>\(\frac{\text{m}}{\text{s}}\)</em>)
+                          </li>
+                          <li>
+                            <em>B</em> is the out-of-plane magnetic flux density (<em>T</em>)
+                          </li>
+                        </ul>
+                      </td>
+                    </tr>
+                    <tr>
+                      <th>Notes</th>
+                      <td>
+                        <p class="paragraph">
+                          This gives the acceleration of the particle in the x-direction due to the Lorentz force (see GD:xAccelEM).
+                        </p>
+                      </td>
+                    </tr>
+                    <tr>
+                      <th>Source</th>
+                      <td><p class="paragraph">--</p></td>
+                    </tr>
+                    <tr>
+                      <th>RefBy</th>
+                      <td><p class="paragraph"></p></td>
+                    </tr>
+                  </table>
+                </div>
+                <div id="IM:accelY">
+                  <table class="idefn">
+                    <tr>
+                      <th>Refname</th>
+                      <td><b>IM:accelY</b></td>
+                    </tr>
+                    <tr>
+                      <th>Label</th>
+                      <td><p class="paragraph">Y-component of acceleration</p></td>
+                    </tr>
+                    <tr>
+                      <th>Input</th>
+                      <td>
+                        <p class="paragraph">
+                          <em>╬║</em>, <em>E<sub>y</sub></em>, <em>v<sub>x</sub></em>, <em>B</em>
+                        </p>
+                      </td>
+                    </tr>
+                    <tr>
+                      <th>Output</th>
+                      <td><p class="paragraph"><em>a<sub>y</sub></em></p></td>
+                    </tr>
+                    <tr>
+                      <th>Input Constraints</th>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <th>Output Constraints</th>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <th>Equation</th>
+                      <td>
+                        \[{a_{\text{y}}}=╬║\,\left({E_{\text{y}}}-{v_{\text{x}}}\right)\,B\]
+                      </td>
+                    </tr>
+                    <tr>
+                      <th>Description</th>
+                      <td>
+                        <ul class="hide-list-style-no-indent">
+                          <li>
+                            <em>a<sub>y</sub></em> is the y-acceleration of the particle (<em>\(\frac{\text{m}}{\text{s}^{2}}\)</em>)
+                          </li>
+                          <li>
+                            <em>╬║</em> is the charge-to-mass ratio (<em>\(\frac{\text{C}}{\text{kg}}\)</em>)
+                          </li>
+                          <li>
+                            <em>E<sub>y</sub></em> is the y-component of the electric field (<em>\(\frac{\text{N}}{\text{C}}\)</em>)
+                          </li>
+                          <li>
+                            <em>v<sub>x</sub></em> is the x-velocity of the particle (<em>\(\frac{\text{m}}{\text{s}}\)</em>)
+                          </li>
+                          <li>
+                            <em>B</em> is the out-of-plane magnetic flux density (<em>T</em>)
+                          </li>
+                        </ul>
+                      </td>
+                    </tr>
+                    <tr>
+                      <th>Notes</th>
+                      <td>
+                        <p class="paragraph">
+                          This gives the acceleration of the particle in the y-direction due to the Lorentz force (see GD:yAccelEM).
+                        </p>
+                      </td>
+                    </tr>
+                    <tr>
+                      <th>Source</th>
+                      <td><p class="paragraph">--</p></td>
+                    </tr>
+                    <tr>
+                      <th>RefBy</th>
+                      <td><p class="paragraph"></p></td>
+                    </tr>
+                  </table>
+                </div>
+              </div>
+            </div>
+            <div id="Sec:DataConstraints">
+              <div class="subsubsection">
+                <h3>Data Constraints</h3>
+                <p class="paragraph">
+                  The <a href=#Table:InDataConstraints>Input Data Constraints Table</a> shows the data constraints on the input variables. The column for physical constraints gives the physical limitations on the range of values that can be taken by the variable. The uncertainty column provides an estimate of the confidence with which the physical quantities can be measured. This information would be part of the input if one were performing an uncertainty quantification exercise. The constraints are conservative to give the user of the model the flexibility to experiment with unusual situations. The column of typical values is intended to provide a feel for a common scenario.
+                </p>
+                <div id="Table:InDataConstraints">
+                  <table class="table">
+                    <tr>
+                      <th>Var</th>
+                      <th>Physical Constraints</th>
+                      <th>Software Constraints</th>
+                      <th>Typical Value</th>
+                      <th><span title="typical uncertainty">Uncert.</span></th>
+                    </tr>
+                    <tr>
+                      <td><em>B</em></td>
+                      <td>--</td>
+                      <td>
+                        <em>&minus;B<sub>max</sub>&thinsp;&le;&thinsp;B&thinsp;&le;&thinsp;B<sub>max</sub></em>
+                      </td>
+                      <td><em>0.01</em> <em>T</em></td>
+                      <td>10.0<em>%</em></td>
+                    </tr>
+                    <tr>
+                      <td><em>E<sub>x</sub></em></td>
+                      <td>--</td>
+                      <td>
+                        <em>&minus;E<sub>max</sub>&thinsp;&le;&thinsp;E<sub>x</sub>&thinsp;&le;&thinsp;E<sub>max</sub></em>
+                      </td>
+                      <td><em>0</em> <em>\(\frac{\text{N}}{\text{C}}\)</em></td>
+                      <td>10.0<em>%</em></td>
+                    </tr>
+                    <tr>
+                      <td><em>E<sub>y</sub></em></td>
+                      <td>--</td>
+                      <td>
+                        <em>&minus;E<sub>max</sub>&thinsp;&le;&thinsp;E<sub>y</sub>&thinsp;&le;&thinsp;E<sub>max</sub></em>
+                      </td>
+                      <td>
+                        <em>1.0&sdot;10<sup>3</sup></em> <em>\(\frac{\text{N}}{\text{C}}\)</em>
+                      </td>
+                      <td>10.0<em>%</em></td>
+                    </tr>
+                    <tr>
+                      <td><em>m</em></td>
+                      <td><em>m&thinsp;&gt;&thinsp;0</em></td>
+                      <td>
+                        <em>m<sub>min</sub>&thinsp;&le;&thinsp;m&thinsp;&le;&thinsp;m<sub>max</sub></em>
+                      </td>
+                      <td><em>911.0&sdot;10<sup>-33</sup></em> <em>kg</em></td>
+                      <td>10.0<em>%</em></td>
+                    </tr>
+                    <tr>
+                      <td><em>q</em></td>
+                      <td><em>q&thinsp;&gt;&thinsp;0</em></td>
+                      <td><em>q&thinsp;&le;&thinsp;q<sub>max</sub></em></td>
+                      <td><em>160.0&sdot;10<sup>-21</sup></em> <em>C</em></td>
+                      <td>10.0<em>%</em></td>
+                    </tr>
+                    <tr>
+                      <td><em>t<sub>final</sub></em></td>
+                      <td><em>t<sub>final</sub>&thinsp;&gt;&thinsp;0</em></td>
+                      <td>
+                        <em>t<sub>final</sub>&thinsp;&le;&thinsp;t<sub>max</sub></em>
+                      </td>
+                      <td><em>1.0&sdot;10<sup>-6</sup></em> <em>s</em></td>
+                      <td>0.0<em>%</em></td>
+                    </tr>
+                    <tr>
+                      <td><em>v<sub>x0</sub></em></td>
+                      <td>--</td>
+                      <td>
+                        <em>&minus;v<sub>max</sub>&thinsp;&le;&thinsp;v<sub>x0</sub>&thinsp;&le;&thinsp;v<sub>max</sub></em>
+                      </td>
+                      <td>
+                        <em>1.0&sdot;10<sup>6</sup></em> <em>\(\frac{\text{m}}{\text{s}}\)</em>
+                      </td>
+                      <td>10.0<em>%</em></td>
+                    </tr>
+                    <tr>
+                      <td><em>v<sub>y0</sub></em></td>
+                      <td>--</td>
+                      <td>
+                        <em>&minus;v<sub>max</sub>&thinsp;&le;&thinsp;v<sub>y0</sub>&thinsp;&le;&thinsp;v<sub>max</sub></em>
+                      </td>
+                      <td><em>0</em> <em>\(\frac{\text{m}}{\text{s}}\)</em></td>
+                      <td>10.0<em>%</em></td>
+                    </tr>
+                    <tr>
+                      <td><em>x<sub>0</sub></em></td>
+                      <td>--</td>
+                      <td>--</td>
+                      <td><em>0</em> <em>m</em></td>
+                      <td>0.0<em>%</em></td>
+                    </tr>
+                    <tr>
+                      <td><em>y<sub>0</sub></em></td>
+                      <td>--</td>
+                      <td>--</td>
+                      <td><em>0</em> <em>m</em></td>
+                      <td>0.0<em>%</em></td>
+                    </tr>
+                  </table>
+                  <p class="caption">Input Data Constraints</p>
+                </div>
+              </div>
+            </div>
+            <div id="Sec:CorSolProps">
+              <div class="subsubsection">
+                <h3>Properties of a Correct Solution</h3>
+                <p class="paragraph">
+                  There are no properties of a correct solution.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div id="Sec:Requirements">
+      <div class="section">
+        <h1>Requirements</h1>
+        <p class="paragraph">
+          This section provides the functional requirements, the tasks and behaviours that the software is expected to complete, and the non-functional requirements, the qualities that the software is expected to exhibit.
+        </p>
+        <div id="Sec:FRs">
+          <div class="subsection">
+            <h2>Functional Requirements</h2>
+            <p class="paragraph">
+              This section provides the functional requirements, the tasks and behaviours that the software is expected to complete.
+            </p>
+            <div class="list">
+              <p>
+                <div id="inputValues">
+                  Input-Values: Input the values from <a href=#Table:ReqInputs>Tab:ReqInputs</a>.
+                </div>
+              </p>
+              <p>
+                <div id="echoInputs">Echo-Inputs: Echo the given inputs.</div>
+              </p>
+              <p>
+                <div id="computeTraj">
+                  Compute-Trajectory: Compute the trajectory of the charged particle using the equations of motion derived from the Lorentz force.
+                </div>
+              </p>
+              <p>
+                <div id="reportOutputs">
+                  Report-Outputs: Report the final position, velocity, and whether the particle reaches the detector line.
+                </div>
+              </p>
+            </div>
+            <div id="Table:ReqInputs">
+              <table class="table">
+                <tr>
+                  <th>Symbol</th>
+                  <th>Description</th>
+                  <th>Units</th>
+                </tr>
+                <tr>
+                  <td><em>B</em></td>
+                  <td>Out-of-plane magnetic flux density</td>
+                  <td><em>T</em></td>
+                </tr>
+                <tr>
+                  <td><em>E<sub>x</sub></em></td>
+                  <td>X-component of the electric field</td>
+                  <td><em>\(\frac{\text{N}}{\text{C}}\)</em></td>
+                </tr>
+                <tr>
+                  <td><em>E<sub>y</sub></em></td>
+                  <td>Y-component of the electric field</td>
+                  <td><em>\(\frac{\text{N}}{\text{C}}\)</em></td>
+                </tr>
+                <tr>
+                  <td><em>m</em></td>
+                  <td>Particle mass</td>
+                  <td><em>kg</em></td>
+                </tr>
+                <tr>
+                  <td><em>q</em></td>
+                  <td>Particle charge</td>
+                  <td><em>C</em></td>
+                </tr>
+                <tr>
+                  <td><em>t<sub>final</sub></em></td>
+                  <td>Final simulation time</td>
+                  <td><em>s</em></td>
+                </tr>
+                <tr>
+                  <td><em>v<sub>x0</sub></em></td>
+                  <td>Initial x-velocity</td>
+                  <td><em>\(\frac{\text{m}}{\text{s}}\)</em></td>
+                </tr>
+                <tr>
+                  <td><em>v<sub>y0</sub></em></td>
+                  <td>Initial y-velocity</td>
+                  <td><em>\(\frac{\text{m}}{\text{s}}\)</em></td>
+                </tr>
+                <tr>
+                  <td><em>x<sub>0</sub></em></td>
+                  <td>Initial x-position</td>
+                  <td><em>m</em></td>
+                </tr>
+                <tr>
+                  <td><em>y<sub>0</sub></em></td>
+                  <td>Initial y-position</td>
+                  <td><em>m</em></td>
+                </tr>
+              </table>
+              <p class="caption">Required Inputs</p>
+            </div>
+          </div>
+        </div>
+        <div id="Sec:NFRs">
+          <div class="subsection">
+            <h2>Non-Functional Requirements</h2>
+            <p class="paragraph">
+              This section provides the non-functional requirements, the qualities that the software is expected to exhibit.
+            </p>
+            <div class="list">
+              <p>
+                <div id="correct">
+                  Correctness: The outputs of the code have the <a href=#Sec:CorSolProps>properties of a correct solution</a>.
+                </div>
+              </p>
+              <p>
+                <div id="maintainable">
+                  Maintainability: If a likely change is made to the finished software, it will take at most 10<em>%</em> of the original development time, assuming the same development resources are available.
+                </div>
+              </p>
+              <p>
+                <div id="portable">
+                  Portability: The code shall be portable to multiple environments, particularly Windows, Mac OSX, and Linux.
+                </div>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div id="Sec:LCs">
+      <div class="section">
+        <h1>Likely Changes</h1>
+        <p class="paragraph">
+          This section lists the likely changes (<span title="likely change">LC</span>) to be made to the software.
+        </p>
+        <div class="list">
+          <p>
+            <div id="lcExtendTo3D">
+              lcExtendTo3D: <a href=#twoDMotion>A:twoDMotion</a> - extend Trajecto to support three-dimensional (3D) motion, including a z-component of position, velocity, acceleration, electric field, and magnetic field.
+            </div>
+          </p>
+        </div>
+      </div>
+    </div>
+    <div id="Sec:UCs">
+      <div class="section">
+        <h1>Unlikely Changes</h1>
+        <p class="paragraph">
+          This section lists the unlikely changes (<span title="unlikely change">UC</span>) to be made to the software.
+        </p>
+        <div class="list">
+          <p>
+            <div id="ucLorentzForce">
+              ucLorentzForce: <a href=#lorentzOnly>A:lorentzOnly</a> - the Lorentz force law is a well-established physical principle and is unlikely to change.
+            </div>
+          </p>
+        </div>
+      </div>
+    </div>
+    <div id="Sec:TraceMatrices">
+      <div class="section">
+        <h1>Traceability Matrices and Graphs</h1>
+        <p class="paragraph">
+          The purpose of the traceability matrices is to provide easy references on what has to be additionally modified if a certain component is changed. Every time a component is changed, the items in the column of that component that are marked with an "X" should be modified as well. <a href=#Table:TraceMatAvsA>Tab:TraceMatAvsA</a> shows the dependencies of the assumptions on each other. <a href=#Table:TraceMatAvsAll>Tab:TraceMatAvsAll</a> shows the dependencies of the data definitions, theoretical models, general definitions, instance models, requirements, likely changes, and unlikely changes on the assumptions. <a href=#Table:TraceMatRefvsRef>Tab:TraceMatRefvsRef</a> shows the dependencies of the data definitions, theoretical models, general definitions, and instance models on each other. <a href=#Table:TraceMatAllvsR>Tab:TraceMatAllvsR</a> shows the dependencies of the requirements and goal statements on the data definitions, theoretical models, general definitions, and instance models.
+        </p>
+        <div id="Table:TraceMatAvsA">
+          <table class="table">
+            <tr>
+              <th></th>
+              <th><a href=#piecewiseUniform>A:piecewiseUniform</a></th>
+              <th><a href=#singleParticle>A:singleParticle</a></th>
+              <th><a href=#noInteractions>A:noInteractions</a></th>
+              <th><a href=#prescribedFields>A:prescribedFields</a></th>
+              <th><a href=#twoDMotion>A:twoDMotion</a></th>
+              <th><a href=#bPerpPlane>A:bPerpPlane</a></th>
+              <th><a href=#eAxisAligned>A:eAxisAligned</a></th>
+              <th><a href=#rectRegions>A:rectRegions</a></th>
+              <th><a href=#lineDetector>A:lineDetector</a></th>
+              <th><a href=#fullDetection>A:fullDetection</a></th>
+              <th><a href=#lorentzOnly>A:lorentzOnly</a></th>
+            </tr>
+            <tr>
+              <td><a href=#piecewiseUniform>A:piecewiseUniform</a></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td><a href=#singleParticle>A:singleParticle</a></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td><a href=#noInteractions>A:noInteractions</a></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td><a href=#prescribedFields>A:prescribedFields</a></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td><a href=#twoDMotion>A:twoDMotion</a></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td><a href=#bPerpPlane>A:bPerpPlane</a></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td><a href=#eAxisAligned>A:eAxisAligned</a></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td><a href=#rectRegions>A:rectRegions</a></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td><a href=#lineDetector>A:lineDetector</a></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td><a href=#fullDetection>A:fullDetection</a></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td><a href=#lorentzOnly>A:lorentzOnly</a></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+          </table>
+          <p class="caption">
+            Traceability Matrix Showing the Connections Between Assumptions and Other Assumptions
+          </p>
+        </div>
+        <div id="Table:TraceMatAvsAll">
+          <table class="table">
+            <tr>
+              <th></th>
+              <th><a href=#piecewiseUniform>A:piecewiseUniform</a></th>
+              <th><a href=#singleParticle>A:singleParticle</a></th>
+              <th><a href=#noInteractions>A:noInteractions</a></th>
+              <th><a href=#prescribedFields>A:prescribedFields</a></th>
+              <th><a href=#twoDMotion>A:twoDMotion</a></th>
+              <th><a href=#bPerpPlane>A:bPerpPlane</a></th>
+              <th><a href=#eAxisAligned>A:eAxisAligned</a></th>
+              <th><a href=#rectRegions>A:rectRegions</a></th>
+              <th><a href=#lineDetector>A:lineDetector</a></th>
+              <th><a href=#fullDetection>A:fullDetection</a></th>
+              <th><a href=#lorentzOnly>A:lorentzOnly</a></th>
+            </tr>
+            <tr>
+              <td><a href=#DD:qOverm>DD:qOverm</a></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td><a href=#TM:velocity>TM:velocity</a></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td><a href=#TM:acceleration>TM:acceleration</a></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td><a href=#TM:lorentzForce>TM:lorentzForce</a></td>
+              <td></td>
+              <td>X</td>
+              <td></td>
+              <td>X</td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td><a href=#TM:eqnMotion>TM:eqnMotion</a></td>
+              <td></td>
+              <td>X</td>
+              <td></td>
+              <td>X</td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td>X</td>
+            </tr>
+            <tr>
+              <td><a href=#GD:xAccelEM>GD:xAccelEM</a></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td>X</td>
+              <td>X</td>
+              <td>X</td>
+              <td>X</td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td><a href=#GD:yAccelEM>GD:yAccelEM</a></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td><a href=#IM:accelX>IM:accelX</a></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td><a href=#IM:accelY>IM:accelY</a></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td><a href=#inputValues>FR:Input-Values</a></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td><a href=#echoInputs>FR:Echo-Inputs</a></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td><a href=#computeTraj>FR:Compute-Trajectory</a></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td><a href=#reportOutputs>FR:Report-Outputs</a></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td><a href=#correct>NFR:Correctness</a></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td><a href=#maintainable>NFR:Maintainability</a></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td><a href=#portable>NFR:Portability</a></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td><a href=#lcExtendTo3D>LC:lcExtendTo3D</a></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td>X</td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td><a href=#ucLorentzForce>UC:ucLorentzForce</a></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td>X</td>
+            </tr>
+          </table>
+          <p class="caption">
+            Traceability Matrix Showing the Connections Between Assumptions and Other Items
+          </p>
+        </div>
+        <div id="Table:TraceMatRefvsRef">
+          <table class="table">
+            <tr>
+              <th></th>
+              <th><a href=#DD:qOverm>DD:qOverm</a></th>
+              <th><a href=#TM:velocity>TM:velocity</a></th>
+              <th><a href=#TM:acceleration>TM:acceleration</a></th>
+              <th><a href=#TM:lorentzForce>TM:lorentzForce</a></th>
+              <th><a href=#TM:eqnMotion>TM:eqnMotion</a></th>
+              <th><a href=#GD:xAccelEM>GD:xAccelEM</a></th>
+              <th><a href=#GD:yAccelEM>GD:yAccelEM</a></th>
+              <th><a href=#IM:accelX>IM:accelX</a></th>
+              <th><a href=#IM:accelY>IM:accelY</a></th>
+            </tr>
+            <tr>
+              <td><a href=#DD:qOverm>DD:qOverm</a></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td><a href=#TM:velocity>TM:velocity</a></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td><a href=#TM:acceleration>TM:acceleration</a></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td><a href=#TM:lorentzForce>TM:lorentzForce</a></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td><a href=#TM:eqnMotion>TM:eqnMotion</a></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td>X</td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td><a href=#GD:xAccelEM>GD:xAccelEM</a></td>
+              <td>X</td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td><a href=#GD:yAccelEM>GD:yAccelEM</a></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td>X</td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td><a href=#IM:accelX>IM:accelX</a></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td><a href=#IM:accelY>IM:accelY</a></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+          </table>
+          <p class="caption">
+            Traceability Matrix Showing the Connections Between Items and Other Sections
+          </p>
+        </div>
+        <div id="Table:TraceMatAllvsR">
+          <table class="table">
+            <tr>
+              <th></th>
+              <th><a href=#DD:qOverm>DD:qOverm</a></th>
+              <th><a href=#TM:velocity>TM:velocity</a></th>
+              <th><a href=#TM:acceleration>TM:acceleration</a></th>
+              <th><a href=#TM:lorentzForce>TM:lorentzForce</a></th>
+              <th><a href=#TM:eqnMotion>TM:eqnMotion</a></th>
+              <th><a href=#GD:xAccelEM>GD:xAccelEM</a></th>
+              <th><a href=#GD:yAccelEM>GD:yAccelEM</a></th>
+              <th><a href=#IM:accelX>IM:accelX</a></th>
+              <th><a href=#IM:accelY>IM:accelY</a></th>
+              <th><a href=#inputValues>FR:Input-Values</a></th>
+              <th><a href=#echoInputs>FR:Echo-Inputs</a></th>
+              <th><a href=#computeTraj>FR:Compute-Trajectory</a></th>
+              <th><a href=#reportOutputs>FR:Report-Outputs</a></th>
+              <th><a href=#correct>NFR:Correctness</a></th>
+              <th><a href=#maintainable>NFR:Maintainability</a></th>
+              <th><a href=#portable>NFR:Portability</a></th>
+            </tr>
+            <tr>
+              <td><a href=#predictTrajectory>GS:predictTrajectory</a></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td>
+                <a href=#determineDetectorOutcome>GS:determineDetectorOutcome</a>
+              </td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td><a href=#inputValues>FR:Input-Values</a></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td><a href=#echoInputs>FR:Echo-Inputs</a></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td><a href=#computeTraj>FR:Compute-Trajectory</a></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td><a href=#reportOutputs>FR:Report-Outputs</a></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td><a href=#correct>NFR:Correctness</a></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td><a href=#maintainable>NFR:Maintainability</a></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td><a href=#portable>NFR:Portability</a></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+          </table>
+          <p class="caption">
+            Traceability Matrix Showing the Connections Between Requirements, Goal Statements and Other Items
+          </p>
+        </div>
+        <p class="paragraph">
+          The purpose of the traceability graphs is also to provide easy references on what has to be additionally modified if a certain component is changed. The arrows in the graphs represent dependencies. The component at the tail of an arrow is depended on by the component at the head of that arrow. Therefore, if a component is changed, the components that it points to should also be changed. <a href=#Figure:TraceGraphAvsA>Fig:TraceGraphAvsA</a> shows the dependencies of assumptions on each other. <a href=#Figure:TraceGraphAvsAll>Fig:TraceGraphAvsAll</a> shows the dependencies of data definitions, theoretical models, general definitions, instance models, requirements, likely changes, and unlikely changes on the assumptions. <a href=#Figure:TraceGraphRefvsRef>Fig:TraceGraphRefvsRef</a> shows the dependencies of data definitions, theoretical models, general definitions, and instance models on each other. <a href=#Figure:TraceGraphAllvsR>Fig:TraceGraphAllvsR</a> shows the dependencies of requirements and goal statements on the data definitions, theoretical models, general definitions, and instance models. <a href=#Figure:TraceGraphAllvsAll>Fig:TraceGraphAllvsAll</a> shows the dependencies of dependencies of assumptions, models, definitions, requirements, goals, and changes with each other.
+        </p>
+        <div id="Figure:TraceGraphAvsA">
+          <figure>
+            <img src="../../../../traceygraphs/trajecto/avsa.svg" alt="TraceGraphAvsA" >
+            <figcaption>Figure: TraceGraphAvsA</figcaption>
+          </figure>
+        </div>
+        <div id="Figure:TraceGraphAvsAll">
+          <figure>
+            <img src="../../../../traceygraphs/trajecto/avsall.svg" alt="TraceGraphAvsAll" >
+            <figcaption>Figure: TraceGraphAvsAll</figcaption>
+          </figure>
+        </div>
+        <div id="Figure:TraceGraphRefvsRef">
+          <figure>
+            <img src="../../../../traceygraphs/trajecto/refvsref.svg" alt="TraceGraphRefvsRef" >
+            <figcaption>Figure: TraceGraphRefvsRef</figcaption>
+          </figure>
+        </div>
+        <div id="Figure:TraceGraphAllvsR">
+          <figure>
+            <img src="../../../../traceygraphs/trajecto/allvsr.svg" alt="TraceGraphAllvsR" >
+            <figcaption>Figure: TraceGraphAllvsR</figcaption>
+          </figure>
+        </div>
+        <div id="Figure:TraceGraphAllvsAll">
+          <figure>
+            <img src="../../../../traceygraphs/trajecto/allvsall.svg" alt="TraceGraphAllvsAll" >
+            <figcaption>Figure: TraceGraphAllvsAll</figcaption>
+          </figure>
+        </div>
+        <p class="paragraph">
+          For convenience, the following graphs can be found at the links below:
+        </p>
+        <ul class="list">
+          <li>
+            <a href="../../../../traceygraphs/trajecto/avsa.svg">TraceGraphAvsA</a>
+          </li>
+          <li>
+            <a href="../../../../traceygraphs/trajecto/avsall.svg">TraceGraphAvsAll</a>
+          </li>
+          <li>
+            <a href="../../../../traceygraphs/trajecto/refvsref.svg">TraceGraphRefvsRef</a>
+          </li>
+          <li>
+            <a href="../../../../traceygraphs/trajecto/allvsr.svg">TraceGraphAllvsR</a>
+          </li>
+          <li>
+            <a href="../../../../traceygraphs/trajecto/allvsall.svg">TraceGraphAllvsAll</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div id="Sec:AuxConstants">
+      <div class="section">
+        <h1>Values of Auxiliary Constants</h1>
+        <p class="paragraph">There are no auxiliary constants.</p>
+      </div>
+    </div>
+    <div id="Sec:References">
+      <div class="section">
+        <h1>References</h1>
+        <dl class="reference-list">
+          <dt id="koothoor2013">[<b>koothoor2013</b>]</dt>
+          <dd>
+            Koothoor, Nirmitha. <em>A Document Driven Approach to Certifying Scientific Computing Software</em>. McMaster University, Hamilton, ON, Canada: 2013. Print.
+          </dd>
+          <dt id="parnasClements1986">[<b>parnasClements1986</b>]</dt>
+          <dd>
+            Parnas, David L. and Clements, P. C. "A rational design process: How and why to fake it." <em>IEEE Transactions on Software Engineering</em>, vol. 12, no. 2, Washington, USA: February, 1986. pp. 251&ndash;257. Print.
+          </dd>
+          <dt id="smithKoothoor2016">[<b>smithKoothoor2016</b>]</dt>
+          <dd>
+            Smith, W. Spencer and Koothoor, Nirmitha. "A Document-Driven Method for Certifying Scientific Computing Software for Use in Nuclear Safety Analysis." <em>Nuclear Engineering and Technology</em>, vol. 48, no. 2, April, 2016. <a href="http://www.sciencedirect.com/science/article/pii/S1738573315002582">http://www.sciencedirect.com/science/article/pii/S1738573315002582</a>. pp. 404&ndash;418.
+          </dd>
+          <dt id="smithLai2005">[<b>smithLai2005</b>]</dt>
+          <dd>
+            Smith, W. Spencer and Lai, Lei. "A new requirements template for scientific computing." <em>Proceedings of the First International Workshop on Situational Requirements Engineering Processes - Methods, Techniques and Tools to Support Situation-Specific Requirements Engineering Processes, SREP'05</em>. Edited by PJ Agerfalk, N. Kraiem, and J. Ralyte, Paris, France: 2005. pp. 107&ndash;121. In conjunction with 13th IEEE International Requirements Engineering Conference,
+          </dd>
+          <dt id="smithEtAl2007">[<b>smithEtAl2007</b>]</dt>
+          <dd>
+            Smith, W. Spencer, Lai, Lei, and Khedri, Ridha. "Requirements Analysis for Engineering Computation: A Systematic Approach for Improving Software Reliability." <em>Reliable Computing, Special Issue on Reliable Engineering Computation</em>, vol. 13, no. 1, February, 2007. <a href="https://doi.org/10.1007/s11155-006-9020-7">https://doi.org/10.1007/s11155-006-9020-7</a>. pp. 83&ndash;107.
+          </dd>
+          <dt id="accelerationWiki">[<b>accelerationWiki</b>]</dt>
+          <dd>
+            Wikipedia Contributors. <em>Acceleration</em>. June, 2019. <a href="https://en.wikipedia.org/wiki/Acceleration">https://en.wikipedia.org/wiki/Acceleration</a>.
+          </dd>
+          <dt id="velocityWiki">[<b>velocityWiki</b>]</dt>
+          <dd>
+            Wikipedia Contributors. <em>Velocity</em>. June, 2019. <a href="https://en.wikipedia.org/wiki/Velocity">https://en.wikipedia.org/wiki/Velocity</a>.
+          </dd>
+        </dl>
+      </div>
+    </div>
+  </body>
+</html>

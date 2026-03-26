@@ -1,14 +1,32 @@
 digraph refvsref {
+	dataDefn:Ei -> dataDefn:Evec;
+	dataDefn:Ei -> dataDefn:Bvec;
 	theory:eqnMotionCS -> theory:lorentzForceCS;
-	theory:ax -> dataDefn:kappa;
-	theory:ay -> theory:ax;
+	theory:kin2DRC -> theory:velocityTM;
+	theory:dyn2DRC -> dataDefn:kappa;
+	theory:dyn2DRC -> theory:lorentzForceCS;
+	theory:dyn2DRC -> theory:eqnMotionCS;
+	theory:dyn2DRC -> theory:vCrossB;
+	theory:stateEvolRC -> dataDefn:kappa;
+	theory:stateEvolRC -> dataDefn:s0;
+	theory:stateEvolRC -> dataDefn:Ei;
+	theory:stateEvolRC -> theory:kin2DRC;
+	theory:stateEvolRC -> theory:dyn2DRC;
+	theory:detHitIM -> dataDefn:Ldet;
+	theory:detHitIM -> theory:stateEvolRC;
 
 
 	dataDefn:kappa	[shape=box, color=black, style=filled, fillcolor=paleturquoise1, label="DD:qOverm"];
+	dataDefn:s0	[shape=box, color=black, style=filled, fillcolor=paleturquoise1, label="DD:initState"];
+	dataDefn:Evec	[shape=box, color=black, style=filled, fillcolor=paleturquoise1, label="DD:eField"];
+	dataDefn:Bvec	[shape=box, color=black, style=filled, fillcolor=paleturquoise1, label="DD:bField"];
+	dataDefn:Ri	[shape=box, color=black, style=filled, fillcolor=paleturquoise1, label="DD:regionRect"];
+	dataDefn:Ei	[shape=box, color=black, style=filled, fillcolor=paleturquoise1, label="DD:fieldsByRegion"];
+	dataDefn:Ldet	[shape=box, color=black, style=filled, fillcolor=paleturquoise1, label="DD:detectorLine"];
 
 	subgraph DD {
 	rank="same"
-	{dataDefn:kappa}
+	{dataDefn:kappa, dataDefn:s0, dataDefn:Evec, dataDefn:Bvec, dataDefn:Ri, dataDefn:Ei, dataDefn:Ldet}
 	}
 
 	theory:velocityTM	[shape=box, color=black, style=filled, fillcolor=pink, label="TM:velocity"];
@@ -21,20 +39,21 @@ digraph refvsref {
 	{theory:velocityTM, theory:accelerationTM, theory:lorentzForceCS, theory:eqnMotionCS}
 	}
 
-	theory:ax	[shape=box, color=black, style=filled, fillcolor=palegreen, label="GD:xAccelEM"];
-	theory:ay	[shape=box, color=black, style=filled, fillcolor=palegreen, label="GD:yAccelEM"];
+	theory:kin2DRC	[shape=box, color=black, style=filled, fillcolor=palegreen, label="GD:kin2D"];
+	theory:vCrossB	[shape=box, color=black, style=filled, fillcolor=palegreen, label="GD:vCrossB2D"];
+	theory:dyn2DRC	[shape=box, color=black, style=filled, fillcolor=palegreen, label="GD:dyn2D"];
 
 	subgraph GD {
 	rank="same"
-	{theory:ax, theory:ay}
+	{theory:kin2DRC, theory:vCrossB, theory:dyn2DRC}
 	}
 
-	theory:accelXIM	[shape=box, color=black, style=filled, fillcolor=khaki1, label="IM:accelX"];
-	theory:accelYIM	[shape=box, color=black, style=filled, fillcolor=khaki1, label="IM:accelY"];
+	theory:stateEvolRC	[shape=box, color=black, style=filled, fillcolor=khaki1, label="IM:stateEvol"];
+	theory:detHitIM	[shape=box, color=black, style=filled, fillcolor=khaki1, label="IM:detHit"];
 
 	subgraph IM {
 	rank="same"
-	{theory:accelXIM, theory:accelYIM}
+	{theory:stateEvolRC, theory:detHitIM}
 	}
 
 }

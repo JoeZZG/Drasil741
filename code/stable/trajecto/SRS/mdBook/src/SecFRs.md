@@ -12,11 +12,11 @@ Echo-Inputs: Echo the given inputs.
 
 <div id="computeTraj"></div>
 
-Compute-Trajectory: Compute the trajectory of the charged particle using the equations of motion derived from the Lorentz force.
+Compute-Trajectory: Compute the trajectory of the charged particle using the equations of motion derived from the Lorentz force ([IM:stateEvol](./SecIMs.md#IM:stateEvol)).
 
 <div id="reportOutputs"></div>
 
-Report-Outputs: Report the final position, velocity, and whether the particle reaches the detector line.
+Report-Outputs: Report the final position, velocity, and whether the particle reaches the detector line, based on [IM:stateEvol](./SecIMs.md#IM:stateEvol) and [IM:detHit](./SecIMs.md#IM:detHit)..
 
 <div id="Table:ReqInputs"></div>
 

@@ -9,6 +9,7 @@ import Data.Drasil.Concepts.Documentation (funcReqDom, output_, value)
 import Data.Drasil.Concepts.Computation (inValue)
 
 import Drasil.Trajecto.Unitals (inputs, outputs)
+import Drasil.Trajecto.IMods (stateEvolIM, detHitIM)
 
 ---------------------------------------------------------
 -- Functional Requirements
@@ -34,13 +35,15 @@ computeTraj = cic "computeTraj"
   (foldlSent
     [ S "Compute the trajectory of the charged particle using"
     , S "the equations of motion derived from the Lorentz force"
+    , sParen (refS stateEvolIM)
     ])
   "Compute-Trajectory" funcReqDom
 
 reportOutputs = cic "reportOutputs"
   (foldlSent
     [ S "Report the final position, velocity, and whether the"
-    , S "particle reaches the detector line"
+    , S "particle reaches the detector line, based on"
+    , refS stateEvolIM +:+ S "and" +:+. refS detHitIM
     ])
   "Report-Outputs" funcReqDom
 

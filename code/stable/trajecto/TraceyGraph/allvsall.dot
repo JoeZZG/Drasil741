@@ -1,16 +1,49 @@
 digraph allvsall {
+	dataDefn:Evec -> instance:prescribedFields;
+	dataDefn:Evec -> instance:eAxisAligned;
+	dataDefn:Bvec -> instance:prescribedFields;
+	dataDefn:Bvec -> instance:bPerpPlane;
+	dataDefn:Ri -> instance:rectRegions;
+	dataDefn:Ei -> instance:piecewiseUniform;
+	dataDefn:Ei -> dataDefn:Evec;
+	dataDefn:Ei -> dataDefn:Bvec;
+	dataDefn:Ldet -> instance:lineDetector;
 	theory:lorentzForceCS -> instance:singleParticle;
 	theory:lorentzForceCS -> instance:prescribedFields;
 	theory:eqnMotionCS -> instance:singleParticle;
 	theory:eqnMotionCS -> instance:prescribedFields;
 	theory:eqnMotionCS -> instance:lorentzOnly;
 	theory:eqnMotionCS -> theory:lorentzForceCS;
-	theory:ax -> instance:prescribedFields;
-	theory:ax -> instance:twoDMotion;
-	theory:ax -> instance:bPerpPlane;
-	theory:ax -> instance:eAxisAligned;
-	theory:ax -> dataDefn:kappa;
-	theory:ay -> theory:ax;
+	theory:kin2DRC -> instance:twoDMotion;
+	theory:kin2DRC -> theory:velocityTM;
+	theory:vCrossB -> instance:twoDMotion;
+	theory:vCrossB -> instance:bPerpPlane;
+	theory:dyn2DRC -> instance:prescribedFields;
+	theory:dyn2DRC -> instance:twoDMotion;
+	theory:dyn2DRC -> instance:bPerpPlane;
+	theory:dyn2DRC -> instance:eAxisAligned;
+	theory:dyn2DRC -> dataDefn:kappa;
+	theory:dyn2DRC -> theory:lorentzForceCS;
+	theory:dyn2DRC -> theory:eqnMotionCS;
+	theory:dyn2DRC -> theory:vCrossB;
+	theory:stateEvolRC -> instance:singleParticle;
+	theory:stateEvolRC -> instance:noInteractions;
+	theory:stateEvolRC -> instance:twoDMotion;
+	theory:stateEvolRC -> instance:lorentzOnly;
+	theory:stateEvolRC -> dataDefn:kappa;
+	theory:stateEvolRC -> dataDefn:s0;
+	theory:stateEvolRC -> dataDefn:Ei;
+	theory:stateEvolRC -> theory:kin2DRC;
+	theory:stateEvolRC -> theory:dyn2DRC;
+	theory:detHitIM -> instance:lineDetector;
+	theory:detHitIM -> instance:fullDetection;
+	theory:detHitIM -> dataDefn:Ldet;
+	theory:detHitIM -> theory:stateEvolRC;
+	instance:computeTraj -> theory:stateEvolRC;
+	instance:reportOutputs -> theory:stateEvolRC;
+	instance:reportOutputs -> theory:detHitIM;
+	instance:predictTrajectory -> theory:stateEvolRC;
+	instance:determineDetectorOutcome -> theory:detHitIM;
 	instance:lcExtendTo3D -> instance:twoDMotion;
 	instance:ucLorentzForce -> instance:lorentzOnly;
 
@@ -33,10 +66,16 @@ digraph allvsall {
 	}
 
 	dataDefn:kappa	[shape=box, color=black, style=filled, fillcolor=paleturquoise1, label="DD:qOverm"];
+	dataDefn:s0	[shape=box, color=black, style=filled, fillcolor=paleturquoise1, label="DD:initState"];
+	dataDefn:Evec	[shape=box, color=black, style=filled, fillcolor=paleturquoise1, label="DD:eField"];
+	dataDefn:Bvec	[shape=box, color=black, style=filled, fillcolor=paleturquoise1, label="DD:bField"];
+	dataDefn:Ri	[shape=box, color=black, style=filled, fillcolor=paleturquoise1, label="DD:regionRect"];
+	dataDefn:Ei	[shape=box, color=black, style=filled, fillcolor=paleturquoise1, label="DD:fieldsByRegion"];
+	dataDefn:Ldet	[shape=box, color=black, style=filled, fillcolor=paleturquoise1, label="DD:detectorLine"];
 
 	subgraph DD {
 	rank="same"
-	{dataDefn:kappa}
+	{dataDefn:kappa, dataDefn:s0, dataDefn:Evec, dataDefn:Bvec, dataDefn:Ri, dataDefn:Ei, dataDefn:Ldet}
 	}
 
 	theory:velocityTM	[shape=box, color=black, style=filled, fillcolor=pink, label="TM:velocity"];
@@ -49,20 +88,21 @@ digraph allvsall {
 	{theory:velocityTM, theory:accelerationTM, theory:lorentzForceCS, theory:eqnMotionCS}
 	}
 
-	theory:ax	[shape=box, color=black, style=filled, fillcolor=palegreen, label="GD:xAccelEM"];
-	theory:ay	[shape=box, color=black, style=filled, fillcolor=palegreen, label="GD:yAccelEM"];
+	theory:kin2DRC	[shape=box, color=black, style=filled, fillcolor=palegreen, label="GD:kin2D"];
+	theory:vCrossB	[shape=box, color=black, style=filled, fillcolor=palegreen, label="GD:vCrossB2D"];
+	theory:dyn2DRC	[shape=box, color=black, style=filled, fillcolor=palegreen, label="GD:dyn2D"];
 
 	subgraph GD {
 	rank="same"
-	{theory:ax, theory:ay}
+	{theory:kin2DRC, theory:vCrossB, theory:dyn2DRC}
 	}
 
-	theory:accelXIM	[shape=box, color=black, style=filled, fillcolor=khaki1, label="IM:accelX"];
-	theory:accelYIM	[shape=box, color=black, style=filled, fillcolor=khaki1, label="IM:accelY"];
+	theory:stateEvolRC	[shape=box, color=black, style=filled, fillcolor=khaki1, label="IM:stateEvol"];
+	theory:detHitIM	[shape=box, color=black, style=filled, fillcolor=khaki1, label="IM:detHit"];
 
 	subgraph IM {
 	rank="same"
-	{theory:accelXIM, theory:accelYIM}
+	{theory:stateEvolRC, theory:detHitIM}
 	}
 
 	instance:inputValues	[shape=box, color=black, style=filled, fillcolor=ivory, label="FR:inputValues"];

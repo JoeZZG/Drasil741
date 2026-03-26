@@ -79,13 +79,23 @@ $B$ & Out-of-plane magnetic flux density & ${\text{T}}$
 \\
 ${B_{\text{max}}}$ & Maximum magnetic flux density & ${\text{T}}$
 \\
+$\symbf{B}$ & Magnetic flux density vector & ${\text{T}}$
+\\
+${\symbf{B}_{i}}$ & Magnetic flux density in region i & ${\text{T}}$
+\\
 ${E_{\text{max}}}$ & Maximum electric field magnitude & $\frac{\text{N}}{\text{C}}$
 \\
 ${E_{\text{x}}}$ & X-component of the electric field & $\frac{\text{N}}{\text{C}}$
 \\
 ${E_{\text{y}}}$ & Y-component of the electric field & $\frac{\text{N}}{\text{C}}$
 \\
+$\symbf{E}$ & Electric field vector & $\frac{\text{N}}{\text{C}}$
+\\
+${\symbf{E}_{i}}$ & Electric field in region i & $\frac{\text{N}}{\text{C}}$
+\\
 $\symbf{F}$ & Force & ${\text{N}}$
+\\
+${L_{\text{det}}}$ & Detector line & --
 \\
 $m$ & Particle mass & ${\text{kg}}$
 \\
@@ -99,9 +109,15 @@ $q$ & Particle charge & ${\text{C}}$
 \\
 ${q_{\text{max}}}$ & Maximum charge magnitude & ${\text{C}}$
 \\
+${R_{i}}$ & Rectangular field region & --
+\\
+${s_{0}}$ & Initial state vector & --
+\\
 $t$ & Time & ${\text{s}}$
 \\
 ${t_{\text{final}}}$ & Final simulation time & ${\text{s}}$
+\\
+${t_{\text{hit}}}$ & Time of detector hit & ${\text{s}}$
 \\
 ${t_{\text{max}}}$ & Maximum simulation time & ${\text{s}}$
 \\
@@ -117,9 +133,23 @@ ${v_{\text{y}0}}$ & Initial y-velocity & $\frac{\text{m}}{\text{s}}$
 \\
 $\symbf{v}\text{(}t\text{)}$ & Velocity & $\frac{\text{m}}{\text{s}}$
 \\
+$\symbf{v}\text{×}\symbf{B}$ & Cross product of velocity and magnetic field & --
+\\
+$x$ & X-position of the particle & ${\text{m}}$
+\\
 ${x_{0}}$ & Initial x-position & ${\text{m}}$
 \\
+${x_{\text{det}}}$ & Detector line x-position & ${\text{m}}$
+\\
+$y$ & Y-position of the particle & ${\text{m}}$
+\\
 ${y_{0}}$ & Initial y-position & ${\text{m}}$
+\\
+${y_{\text{hit}}}$ & Y-coordinate of impact point & ${\text{m}}$
+\\
+${{y_{\text{max}}}^{\text{det}}}$ & Maximum y-coordinate of detector & ${\text{m}}$
+\\
+${{y_{\text{min}}}^{\text{det}}}$ & Minimum y-coordinate of detector & ${\text{m}}$
 \\
 $κ$ & Charge-to-mass ratio & $\frac{\text{C}}{\text{kg}}$
 \label{Table:ToS}
@@ -252,8 +282,8 @@ The physical system of Trajecto, as shown in \hyperref[Figure:trajectoPhysSys]{F
 Given the particle properties ($q$ and $m$), initial conditions (${x_{0}}$, ${y_{0}}$, ${v_{\text{x}0}}$, ${v_{\text{y}0}}$), the specification of electric and magnetic fields (${E_{\text{x}}}$, ${E_{\text{y}}}$, $B$), and detector geometry including ${t_{\text{final}}}$, the goal statements are:
 
 \begin{description}[font=\normalfont]
-\item[predictTrajectory:\phantomsection\label{predictTrajectory}]{Predict the trajectory of a charged particle under prescribed electric and magnetic fields.}
-\item[determineDetectorOutcome:\phantomsection\label{determineDetectorOutcome}]{Determine impact position and time-of-flight at a specified detector line.}
+\item[predictTrajectory:\phantomsection\label{predictTrajectory}]{Predict the trajectory of a charged particle under prescribed electric and magnetic fields, computed using \hyperref[IM:stateEvol]{IM:stateEvol}.}
+\item[determineDetectorOutcome:\phantomsection\label{determineDetectorOutcome}]{Determine impact position and time-of-flight at a specified detector line, computed using \hyperref[IM:detHit]{IM:detHit}.}
 \end{description}
 \subsection{Solution Characteristics Specification}
 \label{Sec:SolCharSpec}
@@ -264,17 +294,17 @@ The instance models that govern Trajecto are presented in the \hyperref[Sec:IMs]
 This section simplifies the original problem and helps in developing the theoretical models by filling in the missing information for the physical system. The assumptions refine the scope by providing more detail.
 
 \begin{description}[font=\normalfont]
-\item[piecewiseUniform:\phantomsection\label{piecewiseUniform}]{The electric and magnetic fields are uniform within each field region and may change only at region boundaries.}
-\item[singleParticle:\phantomsection\label{singleParticle}]{The particle is treated as a point mass and point charge. (RefBy: \hyperref[TM:lorentzForce]{TM:lorentzForce} and \hyperref[TM:eqnMotion]{TM:eqnMotion}.)}
-\item[noInteractions:\phantomsection\label{noInteractions}]{Collisions and particle-particle interactions (including space-charge effects) are neglected.}
-\item[prescribedFields:\phantomsection\label{prescribedFields}]{The electric and magnetic fields are user-specified and remain fixed during the simulation. (RefBy: \hyperref[TM:lorentzForce]{TM:lorentzForce}, \hyperref[TM:eqnMotion]{TM:eqnMotion}, and \hyperref[GD:xAccelEM]{GD:xAccelEM}.)}
-\item[twoDMotion:\phantomsection\label{twoDMotion}]{The particle motion is confined to the x-y plane. (RefBy: \hyperref[GD:xAccelEM]{GD:xAccelEM} and \hyperref[lcExtendTo3D]{LC:lcExtendTo3D}.)}
-\item[bPerpPlane:\phantomsection\label{bPerpPlane}]{The magnetic field is perpendicular to the x-y plane. (RefBy: \hyperref[GD:xAccelEM]{GD:xAccelEM}.)}
-\item[eAxisAligned:\phantomsection\label{eAxisAligned}]{The electric field lies in the x-y plane and is aligned with a coordinate axis. (RefBy: \hyperref[GD:xAccelEM]{GD:xAccelEM}.)}
-\item[rectRegions:\phantomsection\label{rectRegions}]{Field-region boundaries are rectangular and parallel to the x and y axes.}
-\item[lineDetector:\phantomsection\label{lineDetector}]{The detector is modeled as a line located within the field region.}
-\item[fullDetection:\phantomsection\label{fullDetection}]{The detector line is sufficiently long to record the impact point for any trajectory within the scope of the simulation.}
-\item[lorentzOnly:\phantomsection\label{lorentzOnly}]{The particle dynamics are governed only by the Lorentz force; all other forces are neglected. (RefBy: \hyperref[TM:eqnMotion]{TM:eqnMotion} and \hyperref[ucLorentzForce]{UC:ucLorentzForce}.)}
+\item[piecewiseUniform:\phantomsection\label{piecewiseUniform}]{The electric and magnetic fields are uniform within each field region and may change only at region boundaries. (RefBy: \hyperref[DD:fieldsByRegion]{DD:fieldsByRegion}.)}
+\item[singleParticle:\phantomsection\label{singleParticle}]{The particle is treated as a point mass and point charge. (RefBy: \hyperref[IM:stateEvol]{IM:stateEvol}, \hyperref[TM:lorentzForce]{TM:lorentzForce}, and \hyperref[TM:eqnMotion]{TM:eqnMotion}.)}
+\item[noInteractions:\phantomsection\label{noInteractions}]{Collisions and particle-particle interactions (including space-charge effects) are neglected. (RefBy: \hyperref[IM:stateEvol]{IM:stateEvol}.)}
+\item[prescribedFields:\phantomsection\label{prescribedFields}]{The electric and magnetic fields are user-specified and remain fixed during the simulation. (RefBy: \hyperref[TM:lorentzForce]{TM:lorentzForce}, \hyperref[TM:eqnMotion]{TM:eqnMotion}, \hyperref[GD:dyn2D]{GD:dyn2D}, \hyperref[DD:eField]{DD:eField}, and \hyperref[DD:bField]{DD:bField}.)}
+\item[twoDMotion:\phantomsection\label{twoDMotion}]{The particle motion is confined to the x-y plane. (RefBy: \hyperref[GD:vCrossB2D]{GD:vCrossB2D}, \hyperref[IM:stateEvol]{IM:stateEvol}, \hyperref[GD:kin2D]{GD:kin2D}, \hyperref[GD:dyn2D]{GD:dyn2D}, and \hyperref[lcExtendTo3D]{LC:lcExtendTo3D}.)}
+\item[bPerpPlane:\phantomsection\label{bPerpPlane}]{The magnetic field is perpendicular to the x-y plane. (RefBy: \hyperref[GD:vCrossB2D]{GD:vCrossB2D}, \hyperref[GD:dyn2D]{GD:dyn2D}, and \hyperref[DD:bField]{DD:bField}.)}
+\item[eAxisAligned:\phantomsection\label{eAxisAligned}]{The electric field lies in the x-y plane and is aligned with a coordinate axis. (RefBy: \hyperref[GD:dyn2D]{GD:dyn2D} and \hyperref[DD:eField]{DD:eField}.)}
+\item[rectRegions:\phantomsection\label{rectRegions}]{Field-region boundaries are rectangular and parallel to the x and y axes. (RefBy: \hyperref[DD:regionRect]{DD:regionRect}.)}
+\item[lineDetector:\phantomsection\label{lineDetector}]{The detector is modeled as a line located within the field region. (RefBy: \hyperref[IM:detHit]{IM:detHit} and \hyperref[DD:detectorLine]{DD:detectorLine}.)}
+\item[fullDetection:\phantomsection\label{fullDetection}]{The detector line is sufficiently long to record the impact point for any trajectory within the scope of the simulation. (RefBy: \hyperref[IM:detHit]{IM:detHit}.)}
+\item[lorentzOnly:\phantomsection\label{lorentzOnly}]{The particle dynamics are governed only by the Lorentz force; all other forces are neglected. (RefBy: \hyperref[IM:stateEvol]{IM:stateEvol}, \hyperref[TM:eqnMotion]{TM:eqnMotion}, and \hyperref[ucLorentzForce]{UC:ucLorentzForce}.)}
 \end{description}
 \subsubsection{Theoretical Models}
 \label{Sec:TMs}
@@ -304,7 +334,8 @@ Description & \begin{symbDescription}
 Source & \cite{velocityWiki}
          
 \\ \midrule
-RefBy & 
+RefBy & \hyperref[GD:kin2D]{GD:kin2D}
+        
 \\ \bottomrule
 \end{tabular}
 \end{minipage}
@@ -367,7 +398,7 @@ Notes & The electromagnetic force on a charged particle is the sum of the electr
 Source & --
          
 \\ \midrule
-RefBy & \hyperref[TM:eqnMotion]{TM:eqnMotion}
+RefBy & \hyperref[TM:eqnMotion]{TM:eqnMotion} and \hyperref[GD:dyn2D]{GD:dyn2D}
         
 \\ \bottomrule
 \end{tabular}
@@ -414,7 +445,8 @@ Notes & Combining Newton's second law with the Lorentz force law, (\hyperref[TM:
 Source & --
          
 \\ \midrule
-RefBy & 
+RefBy & \hyperref[GD:dyn2D]{GD:dyn2D}
+        
 \\ \bottomrule
 \end{tabular}
 \end{minipage}
@@ -427,35 +459,35 @@ This section collects the laws and equations that will be used to build the inst
 \noindent
 \begin{minipage}{\textwidth}
 \begin{tabular}{>{\raggedright}p{0.13\textwidth}>{\raggedright\arraybackslash}p{0.82\textwidth}}
-\toprule \textbf{Refname} & \textbf{GD:xAccelEM}
+\toprule \textbf{Refname} & \textbf{GD:kin2D}
 \phantomsection 
-\label{GD:xAccelEM}
+\label{GD:kin2D}
 \\ \midrule
-Label & X-acceleration under electromagnetic force
+Label & Two-dimensional kinematics in Cartesian coordinates
         
 \\ \midrule
-Units & $\frac{\text{m}}{\text{s}^{2}}$
+Units & $\frac{\text{m}}{\text{s}}$
         
 \\ \midrule
 Equation & \begin{displaymath}
-           \resizeExpression{{a_{\text{x}}}=κ\,\left({E_{\text{x}}}+{v_{\text{y}}}\right)\,B}
+           \resizeExpression{\frac{\,dx}{\,dt}={v_{\text{x}}}\land{}\frac{\,dy}{\,dt}={v_{\text{y}}}}
            \end{displaymath}
 \\ \midrule
 Description & \begin{symbDescription}
-              \item{${a_{\text{x}}}$ is the x-acceleration of the particle ($\frac{\text{m}}{\text{s}^{2}}$)}
-              \item{$κ$ is the charge-to-mass ratio ($\frac{\text{C}}{\text{kg}}$)}
-              \item{${E_{\text{x}}}$ is the x-component of the electric field ($\frac{\text{N}}{\text{C}}$)}
+              \item{$t$ is the time (${\text{s}}$)}
+              \item{$x$ is the x-position of the particle (${\text{m}}$)}
+              \item{${v_{\text{x}}}$ is the x-velocity of the particle ($\frac{\text{m}}{\text{s}}$)}
+              \item{$y$ is the y-position of the particle (${\text{m}}$)}
               \item{${v_{\text{y}}}$ is the y-velocity of the particle ($\frac{\text{m}}{\text{s}}$)}
-              \item{$B$ is the out-of-plane magnetic flux density (${\text{T}}$)}
               \end{symbDescription}
 \\ \midrule
-Notes & Derived from the equation of motion by applying planar motion (\hyperref[twoDMotion]{A:twoDMotion}), out-of-plane B field (\hyperref[bPerpPlane]{A:bPerpPlane}), axis-aligned E field (\hyperref[eAxisAligned]{A:eAxisAligned}), and fixed fields (\hyperref[prescribedFields]{A:prescribedFields}). Here $κ$ = q/m is defined in \hyperref[DD:qOverm]{DD:qOverm}.
+Notes & The planar motion assumption (\hyperref[twoDMotion]{A:twoDMotion}) allows the particle position to be represented by $x$ and $y$ with velocity components ${v_{\text{x}}}$ and ${v_{\text{y}}}$ respectively. Velocity is defined in \hyperref[TM:velocity]{TM:velocity}..
         
 \\ \midrule
 Source & --
          
 \\ \midrule
-RefBy & \hyperref[GD:yAccelEM]{GD:yAccelEM}
+RefBy & \hyperref[IM:stateEvol]{IM:stateEvol}
         
 \\ \bottomrule
 \end{tabular}
@@ -465,35 +497,74 @@ RefBy & \hyperref[GD:yAccelEM]{GD:yAccelEM}
 \noindent
 \begin{minipage}{\textwidth}
 \begin{tabular}{>{\raggedright}p{0.13\textwidth}>{\raggedright\arraybackslash}p{0.82\textwidth}}
-\toprule \textbf{Refname} & \textbf{GD:yAccelEM}
+\toprule \textbf{Refname} & \textbf{GD:vCrossB2D}
 \phantomsection 
-\label{GD:yAccelEM}
+\label{GD:vCrossB2D}
 \\ \midrule
-Label & Y-acceleration under electromagnetic force
+Label & Cross product v x B for out-of-plane magnetic field
+        
+\\ \midrule
+Equation & \begin{displaymath}
+           \resizeExpression{\symbf{v}\text{×}\symbf{B}=\begin{bmatrix}
+                                                        {v_{\text{y}}}\,B & -{v_{\text{x}}}\,B & 0
+                                                        \end{bmatrix}}
+           \end{displaymath}
+\\ \midrule
+Description & \begin{symbDescription}
+              \item{$\symbf{v}\text{×}\symbf{B}$ is the cross product of velocity and magnetic field (Unitless)}
+              \item{${v_{\text{y}}}$ is the y-velocity of the particle ($\frac{\text{m}}{\text{s}}$)}
+              \item{$B$ is the out-of-plane magnetic flux density (${\text{T}}$)}
+              \item{${v_{\text{x}}}$ is the x-velocity of the particle ($\frac{\text{m}}{\text{s}}$)}
+              \end{symbDescription}
+\\ \midrule
+Notes & Under planar motion (\hyperref[twoDMotion]{A:twoDMotion}) and an out-of-plane magnetic field (\hyperref[bPerpPlane]{A:bPerpPlane}), the velocity has the form v(t) = (vx(t), vy(t), 0) and the magnetic field has the form B = (0, 0, B). The cross product then reduces to the stated component form..
+        
+\\ \midrule
+Source & --
+         
+\\ \midrule
+RefBy & \hyperref[GD:dyn2D]{GD:dyn2D}
+        
+\\ \bottomrule
+\end{tabular}
+\end{minipage}
+
+\medskip
+\noindent
+\begin{minipage}{\textwidth}
+\begin{tabular}{>{\raggedright}p{0.13\textwidth}>{\raggedright\arraybackslash}p{0.82\textwidth}}
+\toprule \textbf{Refname} & \textbf{GD:dyn2D}
+\phantomsection 
+\label{GD:dyn2D}
+\\ \midrule
+Label & Two-dimensional equations of motion under E and B
         
 \\ \midrule
 Units & $\frac{\text{m}}{\text{s}^{2}}$
         
 \\ \midrule
 Equation & \begin{displaymath}
-           \resizeExpression{{a_{\text{y}}}=κ\,\left({E_{\text{y}}}-{v_{\text{x}}}\right)\,B}
+           \resizeExpression{\frac{\,d{v_{\text{x}}}}{\,dt}=κ\,\left({E_{\text{x}}}+{v_{\text{y}}}\right)\,B\land{}\frac{\,d{v_{\text{y}}}}{\,dt}=κ\,\left({E_{\text{y}}}-{v_{\text{x}}}\right)\,B}
            \end{displaymath}
 \\ \midrule
 Description & \begin{symbDescription}
-              \item{${a_{\text{y}}}$ is the y-acceleration of the particle ($\frac{\text{m}}{\text{s}^{2}}$)}
-              \item{$κ$ is the charge-to-mass ratio ($\frac{\text{C}}{\text{kg}}$)}
-              \item{${E_{\text{y}}}$ is the y-component of the electric field ($\frac{\text{N}}{\text{C}}$)}
+              \item{$t$ is the time (${\text{s}}$)}
               \item{${v_{\text{x}}}$ is the x-velocity of the particle ($\frac{\text{m}}{\text{s}}$)}
+              \item{$κ$ is the charge-to-mass ratio ($\frac{\text{C}}{\text{kg}}$)}
+              \item{${E_{\text{x}}}$ is the x-component of the electric field ($\frac{\text{N}}{\text{C}}$)}
+              \item{${v_{\text{y}}}$ is the y-velocity of the particle ($\frac{\text{m}}{\text{s}}$)}
               \item{$B$ is the out-of-plane magnetic flux density (${\text{T}}$)}
+              \item{${E_{\text{y}}}$ is the y-component of the electric field ($\frac{\text{N}}{\text{C}}$)}
               \end{symbDescription}
 \\ \midrule
-Notes & Derived from the equation of motion by applying the same 2D assumptions as for \hyperref[GD:xAccelEM]{GD:xAccelEM}.
+Notes & Assuming planar motion (\hyperref[twoDMotion]{A:twoDMotion}), prescribed fields (\hyperref[prescribedFields]{A:prescribedFields}), out-of-plane magnetic field (\hyperref[bPerpPlane]{A:bPerpPlane}), and axis-aligned electric field (\hyperref[eAxisAligned]{A:eAxisAligned}). Here $κ$ = q/m is the charge-to-mass ratio defined in \hyperref[DD:qOverm]{DD:qOverm} .. The equations are obtained from \hyperref[TM:lorentzForce]{TM:lorentzForce} and \hyperref[TM:eqnMotion]{TM:eqnMotion} by applying \hyperref[GD:vCrossB2D]{GD:vCrossB2D}..
         
 \\ \midrule
 Source & --
          
 \\ \midrule
-RefBy & 
+RefBy & \hyperref[IM:stateEvol]{IM:stateEvol}
+        
 \\ \bottomrule
 \end{tabular}
 \end{minipage}
@@ -529,13 +600,259 @@ Description & \begin{symbDescription}
               \item{$m$ is the particle mass (${\text{kg}}$)}
               \end{symbDescription}
 \\ \midrule
-Notes & The charge-to-mass ratio simplifies the equations of motion by combining the particle's charge $q$, and mass $m$ into a single parameter.
+Notes & $q$ is the particle charge and $m$ is the particle mass. The ratio $κ$ is used to simplify the equations of motion..
         
 \\ \midrule
 Source & --
          
 \\ \midrule
-RefBy & \hyperref[GD:xAccelEM]{GD:xAccelEM}
+RefBy & \hyperref[IM:stateEvol]{IM:stateEvol} and \hyperref[GD:dyn2D]{GD:dyn2D}
+        
+\\ \bottomrule
+\end{tabular}
+\end{minipage}
+
+\medskip
+\noindent
+\begin{minipage}{\textwidth}
+\begin{tabular}{>{\raggedright}p{0.13\textwidth}>{\raggedright\arraybackslash}p{0.82\textwidth}}
+\toprule \textbf{Refname} & \textbf{DD:initState}
+\phantomsection 
+\label{DD:initState}
+\\ \midrule
+Label & Initial state vector
+        
+\\ \midrule
+Symbol & ${s_{0}}$
+         
+\\ \midrule
+Units & Unitless
+        
+\\ \midrule
+Equation & \begin{displaymath}
+           \resizeExpression{{s_{0}}=\begin{bmatrix}
+                                     {x_{0}} & {y_{0}} & {v_{\text{x}0}} & {v_{\text{y}0}}
+                                     \end{bmatrix}}
+           \end{displaymath}
+\\ \midrule
+Description & \begin{symbDescription}
+              \item{${s_{0}}$ is the initial state vector (Unitless)}
+              \item{${x_{0}}$ is the initial x-position (${\text{m}}$)}
+              \item{${y_{0}}$ is the initial y-position (${\text{m}}$)}
+              \item{${v_{\text{x}0}}$ is the initial x-velocity ($\frac{\text{m}}{\text{s}}$)}
+              \item{${v_{\text{y}0}}$ is the initial y-velocity ($\frac{\text{m}}{\text{s}}$)}
+              \end{symbDescription}
+\\ \midrule
+Notes & ${x_{0}}$, ${y_{0}}$ are the initial position components (m) and ${v_{\text{x}0}}$, ${v_{\text{y}0}}$ are the initial velocity components (m/s)..
+        
+\\ \midrule
+Source & --
+         
+\\ \midrule
+RefBy & \hyperref[IM:stateEvol]{IM:stateEvol}
+        
+\\ \bottomrule
+\end{tabular}
+\end{minipage}
+
+\medskip
+\noindent
+\begin{minipage}{\textwidth}
+\begin{tabular}{>{\raggedright}p{0.13\textwidth}>{\raggedright\arraybackslash}p{0.82\textwidth}}
+\toprule \textbf{Refname} & \textbf{DD:eField}
+\phantomsection 
+\label{DD:eField}
+\\ \midrule
+Label & Electric field vector
+        
+\\ \midrule
+Symbol & $\symbf{E}$
+         
+\\ \midrule
+Units & $\frac{\text{N}}{\text{C}}$
+        
+\\ \midrule
+Equation & \begin{displaymath}
+           \resizeExpression{\symbf{E}=\begin{bmatrix}
+                                       {E_{\text{x}}} & {E_{\text{y}}} & 0
+                                       \end{bmatrix}}
+           \end{displaymath}
+\\ \midrule
+Description & \begin{symbDescription}
+              \item{$\symbf{E}$ is the electric field vector ($\frac{\text{N}}{\text{C}}$)}
+              \item{${E_{\text{x}}}$ is the x-component of the electric field ($\frac{\text{N}}{\text{C}}$)}
+              \item{${E_{\text{y}}}$ is the y-component of the electric field ($\frac{\text{N}}{\text{C}}$)}
+              \end{symbDescription}
+\\ \midrule
+Notes & $\symbf{E}$ is the electric field vector. ${E_{\text{x}}}$ and ${E_{\text{y}}}$ are the in-plane components (N/C). The out-of-plane component is zero by \hyperref[eAxisAligned]{A:eAxisAligned} and the fields are user-specified per. \hyperref[prescribedFields]{A:prescribedFields}.
+        
+\\ \midrule
+Source & --
+         
+\\ \midrule
+RefBy & \hyperref[DD:fieldsByRegion]{DD:fieldsByRegion}
+        
+\\ \bottomrule
+\end{tabular}
+\end{minipage}
+
+\medskip
+\noindent
+\begin{minipage}{\textwidth}
+\begin{tabular}{>{\raggedright}p{0.13\textwidth}>{\raggedright\arraybackslash}p{0.82\textwidth}}
+\toprule \textbf{Refname} & \textbf{DD:bField}
+\phantomsection 
+\label{DD:bField}
+\\ \midrule
+Label & Magnetic flux density vector
+        
+\\ \midrule
+Symbol & $\symbf{B}$
+         
+\\ \midrule
+Units & ${\text{T}}$
+        
+\\ \midrule
+Equation & \begin{displaymath}
+           \resizeExpression{\symbf{B}=\begin{bmatrix}
+                                       0 & 0 & B
+                                       \end{bmatrix}}
+           \end{displaymath}
+\\ \midrule
+Description & \begin{symbDescription}
+              \item{$\symbf{B}$ is the magnetic flux density vector (${\text{T}}$)}
+              \item{$B$ is the out-of-plane magnetic flux density (${\text{T}}$)}
+              \end{symbDescription}
+\\ \midrule
+Notes & $\symbf{B}$ is the magnetic flux density vector. $B$ is the out-of-plane (z) component (T). The in-plane components are zero by \hyperref[bPerpPlane]{A:bPerpPlane} ; fields are fixed by. \hyperref[prescribedFields]{A:prescribedFields}.
+        
+\\ \midrule
+Source & --
+         
+\\ \midrule
+RefBy & \hyperref[DD:fieldsByRegion]{DD:fieldsByRegion}
+        
+\\ \bottomrule
+\end{tabular}
+\end{minipage}
+
+\medskip
+\noindent
+\begin{minipage}{\textwidth}
+\begin{tabular}{>{\raggedright}p{0.13\textwidth}>{\raggedright\arraybackslash}p{0.82\textwidth}}
+\toprule \textbf{Refname} & \textbf{DD:regionRect}
+\phantomsection 
+\label{DD:regionRect}
+\\ \midrule
+Label & Rectangular field region
+        
+\\ \midrule
+Symbol & ${R_{i}}$
+         
+\\ \midrule
+Units & Unitless
+        
+\\ \midrule
+Equation & \begin{displaymath}
+           \resizeExpression{{R_{i}}=\begin{bmatrix}
+                                     {x_{0}} & {x_{\text{det}}} & {{y_{\text{min}}}^{\text{det}}} & {{y_{\text{max}}}^{\text{det}}}
+                                     \end{bmatrix}}
+           \end{displaymath}
+\\ \midrule
+Description & \begin{symbDescription}
+              \item{${R_{i}}$ is the rectangular field region (Unitless)}
+              \item{${x_{0}}$ is the initial x-position (${\text{m}}$)}
+              \item{${x_{\text{det}}}$ is the detector line x-position (${\text{m}}$)}
+              \item{${{y_{\text{min}}}^{\text{det}}}$ is the minimum y-coordinate of detector (${\text{m}}$)}
+              \item{${{y_{\text{max}}}^{\text{det}}}$ is the maximum y-coordinate of detector (${\text{m}}$)}
+              \end{symbDescription}
+\\ \midrule
+Notes & Each field region is defined as the Cartesian product of two intervals: R\_i = [x\_min(i), x\_max(i)] x [y\_min(i), y\_max(i)], where x\_min(i), x\_max(i), y\_min(i), y\_max(i) are the axis-aligned rectangular boundary coordinates (all in m), per \hyperref[rectRegions]{A:rectRegions}..
+        
+\\ \midrule
+Source & --
+         
+\\ \midrule
+RefBy & 
+\\ \bottomrule
+\end{tabular}
+\end{minipage}
+
+\medskip
+\noindent
+\begin{minipage}{\textwidth}
+\begin{tabular}{>{\raggedright}p{0.13\textwidth}>{\raggedright\arraybackslash}p{0.82\textwidth}}
+\toprule \textbf{Refname} & \textbf{DD:fieldsByRegion}
+\phantomsection 
+\label{DD:fieldsByRegion}
+\\ \midrule
+Label & Electric field in region i
+        
+\\ \midrule
+Symbol & ${\symbf{E}_{i}}$
+         
+\\ \midrule
+Units & $\frac{\text{N}}{\text{C}}$
+        
+\\ \midrule
+Equation & \begin{displaymath}
+           \resizeExpression{{\symbf{E}_{i}}=\symbf{E}}
+           \end{displaymath}
+\\ \midrule
+Description & \begin{symbDescription}
+              \item{${\symbf{E}_{i}}$ is the electric field in region i ($\frac{\text{N}}{\text{C}}$)}
+              \item{$\symbf{E}$ is the electric field vector ($\frac{\text{N}}{\text{C}}$)}
+              \end{symbDescription}
+\\ \midrule
+Notes & The electric field ${\symbf{E}_{i}}$ and the magnetic flux density ${\symbf{B}_{i}}$ are constant within each region R\_i: E(r) = E\_i and B(r) = B\_i for all r in R\_i, per \hyperref[piecewiseUniform]{A:piecewiseUniform}. The fields may differ between regions. ${\symbf{E}_{i}}$ depends on \hyperref[DD:eField]{DD:eField} and. ${\symbf{B}_{i}}$ depends on \hyperref[DD:bField]{DD:bField}..
+        
+\\ \midrule
+Source & --
+         
+\\ \midrule
+RefBy & \hyperref[IM:stateEvol]{IM:stateEvol}
+        
+\\ \bottomrule
+\end{tabular}
+\end{minipage}
+
+\medskip
+\noindent
+\begin{minipage}{\textwidth}
+\begin{tabular}{>{\raggedright}p{0.13\textwidth}>{\raggedright\arraybackslash}p{0.82\textwidth}}
+\toprule \textbf{Refname} & \textbf{DD:detectorLine}
+\phantomsection 
+\label{DD:detectorLine}
+\\ \midrule
+Label & Detector line
+        
+\\ \midrule
+Symbol & ${L_{\text{det}}}$
+         
+\\ \midrule
+Units & Unitless
+        
+\\ \midrule
+Equation & \begin{displaymath}
+           \resizeExpression{{L_{\text{det}}}=\begin{bmatrix}
+                                              {x_{\text{det}}} & {{y_{\text{min}}}^{\text{det}}} & {{y_{\text{max}}}^{\text{det}}}
+                                              \end{bmatrix}}
+           \end{displaymath}
+\\ \midrule
+Description & \begin{symbDescription}
+              \item{${L_{\text{det}}}$ is the detector line (Unitless)}
+              \item{${x_{\text{det}}}$ is the detector line x-position (${\text{m}}$)}
+              \item{${{y_{\text{min}}}^{\text{det}}}$ is the minimum y-coordinate of detector (${\text{m}}$)}
+              \item{${{y_{\text{max}}}^{\text{det}}}$ is the maximum y-coordinate of detector (${\text{m}}$)}
+              \end{symbDescription}
+\\ \midrule
+Notes & ${L_{\text{det}}}$ is the detector line segment. It is defined as the set of points L\_det = the set of (x,y) where x = x\_det and y in [y\_min(det), y\_max(det)], per \hyperref[lineDetector]{A:lineDetector}. where ${x_{\text{det}}}$ is the x-coordinate of the detector, and ${{y_{\text{min}}}^{\text{det}}}$, ${{y_{\text{max}}}^{\text{det}}}$ are the lower and upper y-bounds of the detector (all in m)..
+        
+\\ \midrule
+Source & --
+         
+\\ \midrule
+RefBy & \hyperref[IM:detHit]{IM:detHit}
         
 \\ \bottomrule
 \end{tabular}
@@ -549,17 +866,17 @@ This section transforms the problem defined in the \hyperref[Sec:ProbDesc]{probl
 \noindent
 \begin{minipage}{\textwidth}
 \begin{tabular}{>{\raggedright}p{0.13\textwidth}>{\raggedright\arraybackslash}p{0.82\textwidth}}
-\toprule \textbf{Refname} & \textbf{IM:accelX}
+\toprule \textbf{Refname} & \textbf{IM:stateEvol}
 \phantomsection 
-\label{IM:accelX}
+\label{IM:stateEvol}
 \\ \midrule
-Label & X-component of acceleration
+Label & Particle state evolution in the x-y plane
         
 \\ \midrule
-Input & $κ$, ${E_{\text{x}}}$, ${v_{\text{y}}}$, $B$
+Input & $m$, $q$, ${x_{0}}$, ${y_{0}}$, ${v_{\text{x}0}}$, ${v_{\text{y}0}}$, ${E_{\text{x}}}$, ${E_{\text{y}}}$, $B$, ${t_{\text{final}}}$
         
 \\ \midrule
-Output & ${a_{\text{x}}}$
+Output & $x$
          
 \\ \midrule
 Input Constraints & 
@@ -567,24 +884,29 @@ Input Constraints &
 Output Constraints & 
 \\ \midrule
 Equation & \begin{displaymath}
-           \resizeExpression{{a_{\text{x}}}=κ\,\left({E_{\text{x}}}+{v_{\text{y}}}\right)\,B}
+           \resizeExpression{\frac{\,dx}{\,dt}={v_{\text{x}}}\land{}\frac{\,dy}{\,dt}={v_{\text{y}}}\land{}\frac{\,d{v_{\text{x}}}}{\,dt}=κ\,\left({E_{\text{x}}}+{v_{\text{y}}}\right)\,B\land{}\frac{\,d{v_{\text{y}}}}{\,dt}=κ\,\left({E_{\text{y}}}-{v_{\text{x}}}\right)\,B}
            \end{displaymath}
 \\ \midrule
 Description & \begin{symbDescription}
-              \item{${a_{\text{x}}}$ is the x-acceleration of the particle ($\frac{\text{m}}{\text{s}^{2}}$)}
+              \item{$t$ is the time (${\text{s}}$)}
+              \item{$x$ is the x-position of the particle (${\text{m}}$)}
+              \item{${v_{\text{x}}}$ is the x-velocity of the particle ($\frac{\text{m}}{\text{s}}$)}
+              \item{$y$ is the y-position of the particle (${\text{m}}$)}
+              \item{${v_{\text{y}}}$ is the y-velocity of the particle ($\frac{\text{m}}{\text{s}}$)}
               \item{$κ$ is the charge-to-mass ratio ($\frac{\text{C}}{\text{kg}}$)}
               \item{${E_{\text{x}}}$ is the x-component of the electric field ($\frac{\text{N}}{\text{C}}$)}
-              \item{${v_{\text{y}}}$ is the y-velocity of the particle ($\frac{\text{m}}{\text{s}}$)}
               \item{$B$ is the out-of-plane magnetic flux density (${\text{T}}$)}
+              \item{${E_{\text{y}}}$ is the y-component of the electric field ($\frac{\text{N}}{\text{C}}$)}
               \end{symbDescription}
 \\ \midrule
-Notes & This gives the acceleration of the particle in the x-direction due to the Lorentz force (see GD:xAccelEM).
+Notes & Bold symbols denote vectors; the state vector s(t) = (x(t), y(t), vx(t), vy(t)) collects position and velocity components. $κ$ = q/m is the charge-to-mass ratio (\hyperref[DD:qOverm]{DD:qOverm}). The initial condition is s(0) = (x0, y0, v0x, v0y) (\hyperref[DD:initState]{DD:initState}). The fields (Ex(t), Ey(t)) and B(t) are determined by which region R\_i contains (x(t), y(t)) at time t (\hyperref[DD:fieldsByRegion]{DD:fieldsByRegion}). If (x(t), y(t)) lies outside all defined regions, the fields default to zero and the particle undergoes free (force-free) motion. The model is derived by combining \hyperref[GD:kin2D]{GD:kin2D} and \hyperref[GD:dyn2D]{GD:dyn2D}. Applicable assumptions: \hyperref[singleParticle]{A:singleParticle}, \hyperref[noInteractions]{A:noInteractions}, \hyperref[twoDMotion]{A:twoDMotion} and. \hyperref[lorentzOnly]{A:lorentzOnly}.
         
 \\ \midrule
 Source & --
          
 \\ \midrule
-RefBy & 
+RefBy & \hyperref[IM:detHit]{IM:detHit}, \hyperref[reportOutputs]{FR:Report-Outputs}, \hyperref[predictTrajectory]{GS:predictTrajectory}, and \hyperref[computeTraj]{FR:Compute-Trajectory}
+        
 \\ \bottomrule
 \end{tabular}
 \end{minipage}
@@ -593,17 +915,17 @@ RefBy &
 \noindent
 \begin{minipage}{\textwidth}
 \begin{tabular}{>{\raggedright}p{0.13\textwidth}>{\raggedright\arraybackslash}p{0.82\textwidth}}
-\toprule \textbf{Refname} & \textbf{IM:accelY}
+\toprule \textbf{Refname} & \textbf{IM:detHit}
 \phantomsection 
-\label{IM:accelY}
+\label{IM:detHit}
 \\ \midrule
-Label & Y-component of acceleration
+Label & First detector intersection (hit time and hit location)
         
 \\ \midrule
-Input & $κ$, ${E_{\text{y}}}$, ${v_{\text{x}}}$, $B$
+Input & ${x_{\text{det}}}$, ${{y_{\text{min}}}^{\text{det}}}$, ${{y_{\text{max}}}^{\text{det}}}$, ${t_{\text{final}}}$, $x$, $y$
         
 \\ \midrule
-Output & ${a_{\text{y}}}$
+Output & ${t_{\text{hit}}}$
          
 \\ \midrule
 Input Constraints & 
@@ -611,24 +933,22 @@ Input Constraints &
 Output Constraints & 
 \\ \midrule
 Equation & \begin{displaymath}
-           \resizeExpression{{a_{\text{y}}}=κ\,\left({E_{\text{y}}}-{v_{\text{x}}}\right)\,B}
+           \resizeExpression{{t_{\text{hit}}}={t_{\text{final}}}}
            \end{displaymath}
 \\ \midrule
 Description & \begin{symbDescription}
-              \item{${a_{\text{y}}}$ is the y-acceleration of the particle ($\frac{\text{m}}{\text{s}^{2}}$)}
-              \item{$κ$ is the charge-to-mass ratio ($\frac{\text{C}}{\text{kg}}$)}
-              \item{${E_{\text{y}}}$ is the y-component of the electric field ($\frac{\text{N}}{\text{C}}$)}
-              \item{${v_{\text{x}}}$ is the x-velocity of the particle ($\frac{\text{m}}{\text{s}}$)}
-              \item{$B$ is the out-of-plane magnetic flux density (${\text{T}}$)}
+              \item{${t_{\text{hit}}}$ is the time of detector hit (${\text{s}}$)}
+              \item{${t_{\text{final}}}$ is the final simulation time (${\text{s}}$)}
               \end{symbDescription}
 \\ \midrule
-Notes & This gives the acceleration of the particle in the y-direction due to the Lorentz force (see GD:yAccelEM).
+Notes & The detector is modelled as a vertical line segment at ${x_{\text{det}}}$ with y-bounds ${{y_{\text{min}}}^{\text{det}}}$ and ${{y_{\text{max}}}^{\text{det}}}$ (\hyperref[DD:detectorLine]{DD:detectorLine}). The hit time is defined as: t\_hit = min t in [0, t\_final] such that x(t) = x\_det and y(t) in [y\_min(det), y\_max(det)]. The hit location is: x\_hit = x\_det, and y\_hit = y(t\_hit), ${y_{\text{hit}}}$. If no such t exists within [0, t\_final], then no detector hit occurs. The trajectory (x(t), y(t)) is provided by \hyperref[IM:stateEvol]{IM:stateEvol}. Applicable assumptions: \hyperref[fullDetection]{A:fullDetection} and. \hyperref[lineDetector]{A:lineDetector}.
         
 \\ \midrule
 Source & --
          
 \\ \midrule
-RefBy & 
+RefBy & \hyperref[reportOutputs]{FR:Report-Outputs} and \hyperref[determineDetectorOutcome]{GS:determineDetectorOutcome}
+        
 \\ \bottomrule
 \end{tabular}
 \end{minipage}
@@ -678,8 +998,8 @@ This section provides the functional requirements, the tasks and behaviours that
 \begin{description}[font=\normalfont]
 \item[Input-Values:\phantomsection\label{inputValues}]{Input the values from \hyperref[Table:ReqInputs]{Tab:ReqInputs}.}
 \item[Echo-Inputs:\phantomsection\label{echoInputs}]{Echo the given inputs.}
-\item[Compute-Trajectory:\phantomsection\label{computeTraj}]{Compute the trajectory of the charged particle using the equations of motion derived from the Lorentz force.}
-\item[Report-Outputs:\phantomsection\label{reportOutputs}]{Report the final position, velocity, and whether the particle reaches the detector line.}
+\item[Compute-Trajectory:\phantomsection\label{computeTraj}]{Compute the trajectory of the charged particle using the equations of motion derived from the Lorentz force (\hyperref[IM:stateEvol]{IM:stateEvol}).}
+\item[Report-Outputs:\phantomsection\label{reportOutputs}]{Report the final position, velocity, and whether the particle reaches the detector line, based on \hyperref[IM:stateEvol]{IM:stateEvol} and \hyperref[IM:detHit]{IM:detHit}..}
 \end{description}
 \begin{longtblr}
 [caption={Required Inputs}]
@@ -769,6 +1089,18 @@ The purpose of the traceability matrices is to provide easy references on what h
 \\
 \hyperref[DD:qOverm]{DD:qOverm} &  &  &  &  &  &  &  &  &  &  & 
 \\
+\hyperref[DD:initState]{DD:initState} &  &  &  &  &  &  &  &  &  &  & 
+\\
+\hyperref[DD:eField]{DD:eField} &  &  &  & X &  &  & X &  &  &  & 
+\\
+\hyperref[DD:bField]{DD:bField} &  &  &  & X &  & X &  &  &  &  & 
+\\
+\hyperref[DD:regionRect]{DD:regionRect} &  &  &  &  &  &  &  & X &  &  & 
+\\
+\hyperref[DD:fieldsByRegion]{DD:fieldsByRegion} & X &  &  &  &  &  &  &  &  &  & 
+\\
+\hyperref[DD:detectorLine]{DD:detectorLine} &  &  &  &  &  &  &  &  & X &  & 
+\\
 \hyperref[TM:velocity]{TM:velocity} &  &  &  &  &  &  &  &  &  &  & 
 \\
 \hyperref[TM:acceleration]{TM:acceleration} &  &  &  &  &  &  &  &  &  &  & 
@@ -777,13 +1109,15 @@ The purpose of the traceability matrices is to provide easy references on what h
 \\
 \hyperref[TM:eqnMotion]{TM:eqnMotion} &  & X &  & X &  &  &  &  &  &  & X
 \\
-\hyperref[GD:xAccelEM]{GD:xAccelEM} &  &  &  & X & X & X & X &  &  &  & 
+\hyperref[GD:kin2D]{GD:kin2D} &  &  &  &  & X &  &  &  &  &  & 
 \\
-\hyperref[GD:yAccelEM]{GD:yAccelEM} &  &  &  &  &  &  &  &  &  &  & 
+\hyperref[GD:vCrossB2D]{GD:vCrossB2D} &  &  &  &  & X & X &  &  &  &  & 
 \\
-\hyperref[IM:accelX]{IM:accelX} &  &  &  &  &  &  &  &  &  &  & 
+\hyperref[GD:dyn2D]{GD:dyn2D} &  &  &  & X & X & X & X &  &  &  & 
 \\
-\hyperref[IM:accelY]{IM:accelY} &  &  &  &  &  &  &  &  &  &  & 
+\hyperref[IM:stateEvol]{IM:stateEvol} &  & X & X &  & X &  &  &  &  &  & X
+\\
+\hyperref[IM:detHit]{IM:detHit} &  &  &  &  &  &  &  &  & X & X & 
 \\
 \hyperref[inputValues]{FR:Input-Values} &  &  &  &  &  &  &  &  &  &  & 
 \\
@@ -806,50 +1140,64 @@ The purpose of the traceability matrices is to provide easy references on what h
 \end{longtblr}
 \begin{longtblr}
 [caption={Traceability Matrix Showing the Connections Between Items and Other Sections}]
-{colspec={l l l l l l l l l l}, rowhead=1, hline{1,Z}=\heavyrulewidth, hline{2}=\lightrulewidth}
-\textbf{} & \textbf{\hyperref[DD:qOverm]{DD:qOverm}} & \textbf{\hyperref[TM:velocity]{TM:velocity}} & \textbf{\hyperref[TM:acceleration]{TM:acceleration}} & \textbf{\hyperref[TM:lorentzForce]{TM:lorentzForce}} & \textbf{\hyperref[TM:eqnMotion]{TM:eqnMotion}} & \textbf{\hyperref[GD:xAccelEM]{GD:xAccelEM}} & \textbf{\hyperref[GD:yAccelEM]{GD:yAccelEM}} & \textbf{\hyperref[IM:accelX]{IM:accelX}} & \textbf{\hyperref[IM:accelY]{IM:accelY}}
+{colspec={l l l l l l l l l l l l l l l l l}, rowhead=1, hline{1,Z}=\heavyrulewidth, hline{2}=\lightrulewidth}
+\textbf{} & \textbf{\hyperref[DD:qOverm]{DD:qOverm}} & \textbf{\hyperref[DD:initState]{DD:initState}} & \textbf{\hyperref[DD:eField]{DD:eField}} & \textbf{\hyperref[DD:bField]{DD:bField}} & \textbf{\hyperref[DD:regionRect]{DD:regionRect}} & \textbf{\hyperref[DD:fieldsByRegion]{DD:fieldsByRegion}} & \textbf{\hyperref[DD:detectorLine]{DD:detectorLine}} & \textbf{\hyperref[TM:velocity]{TM:velocity}} & \textbf{\hyperref[TM:acceleration]{TM:acceleration}} & \textbf{\hyperref[TM:lorentzForce]{TM:lorentzForce}} & \textbf{\hyperref[TM:eqnMotion]{TM:eqnMotion}} & \textbf{\hyperref[GD:kin2D]{GD:kin2D}} & \textbf{\hyperref[GD:vCrossB2D]{GD:vCrossB2D}} & \textbf{\hyperref[GD:dyn2D]{GD:dyn2D}} & \textbf{\hyperref[IM:stateEvol]{IM:stateEvol}} & \textbf{\hyperref[IM:detHit]{IM:detHit}}
 \\
-\hyperref[DD:qOverm]{DD:qOverm} &  &  &  &  &  &  &  &  & 
+\hyperref[DD:qOverm]{DD:qOverm} &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  & 
 \\
-\hyperref[TM:velocity]{TM:velocity} &  &  &  &  &  &  &  &  & 
+\hyperref[DD:initState]{DD:initState} &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  & 
 \\
-\hyperref[TM:acceleration]{TM:acceleration} &  &  &  &  &  &  &  &  & 
+\hyperref[DD:eField]{DD:eField} &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  & 
 \\
-\hyperref[TM:lorentzForce]{TM:lorentzForce} &  &  &  &  &  &  &  &  & 
+\hyperref[DD:bField]{DD:bField} &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  & 
 \\
-\hyperref[TM:eqnMotion]{TM:eqnMotion} &  &  &  & X &  &  &  &  & 
+\hyperref[DD:regionRect]{DD:regionRect} &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  & 
 \\
-\hyperref[GD:xAccelEM]{GD:xAccelEM} & X &  &  &  &  &  &  &  & 
+\hyperref[DD:fieldsByRegion]{DD:fieldsByRegion} &  &  & X & X &  &  &  &  &  &  &  &  &  &  &  & 
 \\
-\hyperref[GD:yAccelEM]{GD:yAccelEM} &  &  &  &  &  & X &  &  & 
+\hyperref[DD:detectorLine]{DD:detectorLine} &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  & 
 \\
-\hyperref[IM:accelX]{IM:accelX} &  &  &  &  &  &  &  &  & 
+\hyperref[TM:velocity]{TM:velocity} &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  & 
 \\
-\hyperref[IM:accelY]{IM:accelY} &  &  &  &  &  &  &  &  & 
+\hyperref[TM:acceleration]{TM:acceleration} &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  & 
+\\
+\hyperref[TM:lorentzForce]{TM:lorentzForce} &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  & 
+\\
+\hyperref[TM:eqnMotion]{TM:eqnMotion} &  &  &  &  &  &  &  &  &  & X &  &  &  &  &  & 
+\\
+\hyperref[GD:kin2D]{GD:kin2D} &  &  &  &  &  &  &  & X &  &  &  &  &  &  &  & 
+\\
+\hyperref[GD:vCrossB2D]{GD:vCrossB2D} &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  & 
+\\
+\hyperref[GD:dyn2D]{GD:dyn2D} & X &  &  &  &  &  &  &  &  & X & X &  & X &  &  & 
+\\
+\hyperref[IM:stateEvol]{IM:stateEvol} & X & X &  &  &  & X &  &  &  &  &  & X &  & X &  & 
+\\
+\hyperref[IM:detHit]{IM:detHit} &  &  &  &  &  &  & X &  &  &  &  &  &  &  & X & 
 \label{Table:TraceMatRefvsRef}
 \end{longtblr}
 \begin{longtblr}
 [caption={Traceability Matrix Showing the Connections Between Requirements, Goal Statements and Other Items}]
-{colspec={l l l l l l l l l l l l l l l l l}, rowhead=1, hline{1,Z}=\heavyrulewidth, hline{2}=\lightrulewidth}
-\textbf{} & \textbf{\hyperref[DD:qOverm]{DD:qOverm}} & \textbf{\hyperref[TM:velocity]{TM:velocity}} & \textbf{\hyperref[TM:acceleration]{TM:acceleration}} & \textbf{\hyperref[TM:lorentzForce]{TM:lorentzForce}} & \textbf{\hyperref[TM:eqnMotion]{TM:eqnMotion}} & \textbf{\hyperref[GD:xAccelEM]{GD:xAccelEM}} & \textbf{\hyperref[GD:yAccelEM]{GD:yAccelEM}} & \textbf{\hyperref[IM:accelX]{IM:accelX}} & \textbf{\hyperref[IM:accelY]{IM:accelY}} & \textbf{\hyperref[inputValues]{FR:Input-Values}} & \textbf{\hyperref[echoInputs]{FR:Echo-Inputs}} & \textbf{\hyperref[computeTraj]{FR:Compute-Trajectory}} & \textbf{\hyperref[reportOutputs]{FR:Report-Outputs}} & \textbf{\hyperref[correct]{NFR:Correctness}} & \textbf{\hyperref[maintainable]{NFR:Maintainability}} & \textbf{\hyperref[portable]{NFR:Portability}}
+{colspec={l l l l l l l l l l l l l l l l l l l l l l l l}, rowhead=1, hline{1,Z}=\heavyrulewidth, hline{2}=\lightrulewidth}
+\textbf{} & \textbf{\hyperref[DD:qOverm]{DD:qOverm}} & \textbf{\hyperref[DD:initState]{DD:initState}} & \textbf{\hyperref[DD:eField]{DD:eField}} & \textbf{\hyperref[DD:bField]{DD:bField}} & \textbf{\hyperref[DD:regionRect]{DD:regionRect}} & \textbf{\hyperref[DD:fieldsByRegion]{DD:fieldsByRegion}} & \textbf{\hyperref[DD:detectorLine]{DD:detectorLine}} & \textbf{\hyperref[TM:velocity]{TM:velocity}} & \textbf{\hyperref[TM:acceleration]{TM:acceleration}} & \textbf{\hyperref[TM:lorentzForce]{TM:lorentzForce}} & \textbf{\hyperref[TM:eqnMotion]{TM:eqnMotion}} & \textbf{\hyperref[GD:kin2D]{GD:kin2D}} & \textbf{\hyperref[GD:vCrossB2D]{GD:vCrossB2D}} & \textbf{\hyperref[GD:dyn2D]{GD:dyn2D}} & \textbf{\hyperref[IM:stateEvol]{IM:stateEvol}} & \textbf{\hyperref[IM:detHit]{IM:detHit}} & \textbf{\hyperref[inputValues]{FR:Input-Values}} & \textbf{\hyperref[echoInputs]{FR:Echo-Inputs}} & \textbf{\hyperref[computeTraj]{FR:Compute-Trajectory}} & \textbf{\hyperref[reportOutputs]{FR:Report-Outputs}} & \textbf{\hyperref[correct]{NFR:Correctness}} & \textbf{\hyperref[maintainable]{NFR:Maintainability}} & \textbf{\hyperref[portable]{NFR:Portability}}
 \\
-\hyperref[predictTrajectory]{GS:predictTrajectory} &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  & 
+\hyperref[predictTrajectory]{GS:predictTrajectory} &  &  &  &  &  &  &  &  &  &  &  &  &  &  & X &  &  &  &  &  &  &  & 
 \\
-\hyperref[determineDetectorOutcome]{GS:determineDetectorOutcome} &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  & 
+\hyperref[determineDetectorOutcome]{GS:determineDetectorOutcome} &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  & X &  &  &  &  &  &  & 
 \\
-\hyperref[inputValues]{FR:Input-Values} &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  & 
+\hyperref[inputValues]{FR:Input-Values} &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  & 
 \\
-\hyperref[echoInputs]{FR:Echo-Inputs} &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  & 
+\hyperref[echoInputs]{FR:Echo-Inputs} &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  & 
 \\
-\hyperref[computeTraj]{FR:Compute-Trajectory} &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  & 
+\hyperref[computeTraj]{FR:Compute-Trajectory} &  &  &  &  &  &  &  &  &  &  &  &  &  &  & X &  &  &  &  &  &  &  & 
 \\
-\hyperref[reportOutputs]{FR:Report-Outputs} &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  & 
+\hyperref[reportOutputs]{FR:Report-Outputs} &  &  &  &  &  &  &  &  &  &  &  &  &  &  & X & X &  &  &  &  &  &  & 
 \\
-\hyperref[correct]{NFR:Correctness} &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  & 
+\hyperref[correct]{NFR:Correctness} &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  & 
 \\
-\hyperref[maintainable]{NFR:Maintainability} &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  & 
+\hyperref[maintainable]{NFR:Maintainability} &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  & 
 \\
-\hyperref[portable]{NFR:Portability} &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  & 
+\hyperref[portable]{NFR:Portability} &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  & 
 \label{Table:TraceMatAllvsR}
 \end{longtblr}
 The purpose of the traceability graphs is also to provide easy references on what has to be additionally modified if a certain component is changed. The arrows in the graphs represent dependencies. The component at the tail of an arrow is depended on by the component at the head of that arrow. Therefore, if a component is changed, the components that it points to should also be changed. \hyperref[Figure:TraceGraphAvsA]{Fig:TraceGraphAvsA} shows the dependencies of assumptions on each other. \hyperref[Figure:TraceGraphAvsAll]{Fig:TraceGraphAvsAll} shows the dependencies of data definitions, theoretical models, general definitions, instance models, requirements, likely changes, and unlikely changes on the assumptions. \hyperref[Figure:TraceGraphRefvsRef]{Fig:TraceGraphRefvsRef} shows the dependencies of data definitions, theoretical models, general definitions, and instance models on each other. \hyperref[Figure:TraceGraphAllvsR]{Fig:TraceGraphAllvsR} shows the dependencies of requirements and goal statements on the data definitions, theoretical models, general definitions, and instance models. \hyperref[Figure:TraceGraphAllvsAll]{Fig:TraceGraphAllvsAll} shows the dependencies of dependencies of assumptions, models, definitions, requirements, goals, and changes with each other.

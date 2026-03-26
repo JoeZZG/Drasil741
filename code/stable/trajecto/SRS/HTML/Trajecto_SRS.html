@@ -202,6 +202,16 @@
                   <td><em>T</em></td>
                 </tr>
                 <tr>
+                  <td><em><b>B</b></em></td>
+                  <td>Magnetic flux density vector</td>
+                  <td><em>T</em></td>
+                </tr>
+                <tr>
+                  <td><em><b>B</b><sub>i</sub></em></td>
+                  <td>Magnetic flux density in region i</td>
+                  <td><em>T</em></td>
+                </tr>
+                <tr>
                   <td><em>E<sub>max</sub></em></td>
                   <td>Maximum electric field magnitude</td>
                   <td><em>\(\frac{\text{N}}{\text{C}}\)</em></td>
@@ -217,9 +227,24 @@
                   <td><em>\(\frac{\text{N}}{\text{C}}\)</em></td>
                 </tr>
                 <tr>
+                  <td><em><b>E</b></em></td>
+                  <td>Electric field vector</td>
+                  <td><em>\(\frac{\text{N}}{\text{C}}\)</em></td>
+                </tr>
+                <tr>
+                  <td><em><b>E</b><sub>i</sub></em></td>
+                  <td>Electric field in region i</td>
+                  <td><em>\(\frac{\text{N}}{\text{C}}\)</em></td>
+                </tr>
+                <tr>
                   <td><em><b>F</b></em></td>
                   <td>Force</td>
                   <td><em>N</em></td>
+                </tr>
+                <tr>
+                  <td><em>L<sub>det</sub></em></td>
+                  <td>Detector line</td>
+                  <td>--</td>
                 </tr>
                 <tr>
                   <td><em>m</em></td>
@@ -252,6 +277,16 @@
                   <td><em>C</em></td>
                 </tr>
                 <tr>
+                  <td><em>R<sub>i</sub></em></td>
+                  <td>Rectangular field region</td>
+                  <td>--</td>
+                </tr>
+                <tr>
+                  <td><em>s<sub>0</sub></em></td>
+                  <td>Initial state vector</td>
+                  <td>--</td>
+                </tr>
+                <tr>
                   <td><em>t</em></td>
                   <td>Time</td>
                   <td><em>s</em></td>
@@ -259,6 +294,11 @@
                 <tr>
                   <td><em>t<sub>final</sub></em></td>
                   <td>Final simulation time</td>
+                  <td><em>s</em></td>
+                </tr>
+                <tr>
+                  <td><em>t<sub>hit</sub></em></td>
+                  <td>Time of detector hit</td>
                   <td><em>s</em></td>
                 </tr>
                 <tr>
@@ -297,13 +337,48 @@
                   <td><em>\(\frac{\text{m}}{\text{s}}\)</em></td>
                 </tr>
                 <tr>
+                  <td><em><b>v</b>×<b>B</b></em></td>
+                  <td>Cross product of velocity and magnetic field</td>
+                  <td>--</td>
+                </tr>
+                <tr>
+                  <td><em>x</em></td>
+                  <td>X-position of the particle</td>
+                  <td><em>m</em></td>
+                </tr>
+                <tr>
                   <td><em>x<sub>0</sub></em></td>
                   <td>Initial x-position</td>
                   <td><em>m</em></td>
                 </tr>
                 <tr>
+                  <td><em>x<sub>det</sub></em></td>
+                  <td>Detector line x-position</td>
+                  <td><em>m</em></td>
+                </tr>
+                <tr>
+                  <td><em>y</em></td>
+                  <td>Y-position of the particle</td>
+                  <td><em>m</em></td>
+                </tr>
+                <tr>
                   <td><em>y<sub>0</sub></em></td>
                   <td>Initial y-position</td>
+                  <td><em>m</em></td>
+                </tr>
+                <tr>
+                  <td><em>y<sub>hit</sub></em></td>
+                  <td>Y-coordinate of impact point</td>
+                  <td><em>m</em></td>
+                </tr>
+                <tr>
+                  <td><em>y<sub>max</sub><sup>det</sup></em></td>
+                  <td>Maximum y-coordinate of detector</td>
+                  <td><em>m</em></td>
+                </tr>
+                <tr>
+                  <td><em>y<sub>min</sub><sup>det</sup></em></td>
+                  <td>Minimum y-coordinate of detector</td>
                   <td><em>m</em></td>
                 </tr>
                 <tr>
@@ -552,12 +627,12 @@
                 <div class="list">
                   <p>
                     <div id="predictTrajectory">
-                      predictTrajectory: Predict the trajectory of a charged particle under prescribed electric and magnetic fields.
+                      predictTrajectory: Predict the trajectory of a charged particle under prescribed electric and magnetic fields, computed using <a href=#IM:stateEvol>IM:stateEvol</a>.
                     </div>
                   </p>
                   <p>
                     <div id="determineDetectorOutcome">
-                      determineDetectorOutcome: Determine impact position and time-of-flight at a specified detector line.
+                      determineDetectorOutcome: Determine impact position and time-of-flight at a specified detector line, computed using <a href=#IM:detHit>IM:detHit</a>.
                     </div>
                   </p>
                 </div>
@@ -580,57 +655,57 @@
                 <div class="list">
                   <p>
                     <div id="piecewiseUniform">
-                      piecewiseUniform: The electric and magnetic fields are uniform within each field region and may change only at region boundaries.
+                      piecewiseUniform: The electric and magnetic fields are uniform within each field region and may change only at region boundaries. (<span title="referenced by">RefBy</span>: <a href=#DD:fieldsByRegion>DD:fieldsByRegion</a>.)
                     </div>
                   </p>
                   <p>
                     <div id="singleParticle">
-                      singleParticle: The particle is treated as a point mass and point charge. (<span title="referenced by">RefBy</span>: <a href=#TM:lorentzForce>TM:lorentzForce</a> and <a href=#TM:eqnMotion>TM:eqnMotion</a>.)
+                      singleParticle: The particle is treated as a point mass and point charge. (<span title="referenced by">RefBy</span>: <a href=#IM:stateEvol>IM:stateEvol</a>, <a href=#TM:lorentzForce>TM:lorentzForce</a>, and <a href=#TM:eqnMotion>TM:eqnMotion</a>.)
                     </div>
                   </p>
                   <p>
                     <div id="noInteractions">
-                      noInteractions: Collisions and particle-particle interactions (including space-charge effects) are neglected.
+                      noInteractions: Collisions and particle-particle interactions (including space-charge effects) are neglected. (<span title="referenced by">RefBy</span>: <a href=#IM:stateEvol>IM:stateEvol</a>.)
                     </div>
                   </p>
                   <p>
                     <div id="prescribedFields">
-                      prescribedFields: The electric and magnetic fields are user-specified and remain fixed during the simulation. (<span title="referenced by">RefBy</span>: <a href=#TM:lorentzForce>TM:lorentzForce</a>, <a href=#TM:eqnMotion>TM:eqnMotion</a>, and <a href=#GD:xAccelEM>GD:xAccelEM</a>.)
+                      prescribedFields: The electric and magnetic fields are user-specified and remain fixed during the simulation. (<span title="referenced by">RefBy</span>: <a href=#TM:lorentzForce>TM:lorentzForce</a>, <a href=#TM:eqnMotion>TM:eqnMotion</a>, <a href=#GD:dyn2D>GD:dyn2D</a>, <a href=#DD:eField>DD:eField</a>, and <a href=#DD:bField>DD:bField</a>.)
                     </div>
                   </p>
                   <p>
                     <div id="twoDMotion">
-                      twoDMotion: The particle motion is confined to the x-y plane. (<span title="referenced by">RefBy</span>: <a href=#GD:xAccelEM>GD:xAccelEM</a> and <a href=#lcExtendTo3D>LC:lcExtendTo3D</a>.)
+                      twoDMotion: The particle motion is confined to the x-y plane. (<span title="referenced by">RefBy</span>: <a href=#GD:vCrossB2D>GD:vCrossB2D</a>, <a href=#IM:stateEvol>IM:stateEvol</a>, <a href=#GD:kin2D>GD:kin2D</a>, <a href=#GD:dyn2D>GD:dyn2D</a>, and <a href=#lcExtendTo3D>LC:lcExtendTo3D</a>.)
                     </div>
                   </p>
                   <p>
                     <div id="bPerpPlane">
-                      bPerpPlane: The magnetic field is perpendicular to the x-y plane. (<span title="referenced by">RefBy</span>: <a href=#GD:xAccelEM>GD:xAccelEM</a>.)
+                      bPerpPlane: The magnetic field is perpendicular to the x-y plane. (<span title="referenced by">RefBy</span>: <a href=#GD:vCrossB2D>GD:vCrossB2D</a>, <a href=#GD:dyn2D>GD:dyn2D</a>, and <a href=#DD:bField>DD:bField</a>.)
                     </div>
                   </p>
                   <p>
                     <div id="eAxisAligned">
-                      eAxisAligned: The electric field lies in the x-y plane and is aligned with a coordinate axis. (<span title="referenced by">RefBy</span>: <a href=#GD:xAccelEM>GD:xAccelEM</a>.)
+                      eAxisAligned: The electric field lies in the x-y plane and is aligned with a coordinate axis. (<span title="referenced by">RefBy</span>: <a href=#GD:dyn2D>GD:dyn2D</a> and <a href=#DD:eField>DD:eField</a>.)
                     </div>
                   </p>
                   <p>
                     <div id="rectRegions">
-                      rectRegions: Field-region boundaries are rectangular and parallel to the x and y axes.
+                      rectRegions: Field-region boundaries are rectangular and parallel to the x and y axes. (<span title="referenced by">RefBy</span>: <a href=#DD:regionRect>DD:regionRect</a>.)
                     </div>
                   </p>
                   <p>
                     <div id="lineDetector">
-                      lineDetector: The detector is modeled as a line located within the field region.
+                      lineDetector: The detector is modeled as a line located within the field region. (<span title="referenced by">RefBy</span>: <a href=#IM:detHit>IM:detHit</a> and <a href=#DD:detectorLine>DD:detectorLine</a>.)
                     </div>
                   </p>
                   <p>
                     <div id="fullDetection">
-                      fullDetection: The detector line is sufficiently long to record the impact point for any trajectory within the scope of the simulation.
+                      fullDetection: The detector line is sufficiently long to record the impact point for any trajectory within the scope of the simulation. (<span title="referenced by">RefBy</span>: <a href=#IM:detHit>IM:detHit</a>.)
                     </div>
                   </p>
                   <p>
                     <div id="lorentzOnly">
-                      lorentzOnly: The particle dynamics are governed only by the Lorentz force; all other forces are neglected. (<span title="referenced by">RefBy</span>: <a href=#TM:eqnMotion>TM:eqnMotion</a> and <a href=#ucLorentzForce>UC:ucLorentzForce</a>.)
+                      lorentzOnly: The particle dynamics are governed only by the Lorentz force; all other forces are neglected. (<span title="referenced by">RefBy</span>: <a href=#IM:stateEvol>IM:stateEvol</a>, <a href=#TM:eqnMotion>TM:eqnMotion</a>, and <a href=#ucLorentzForce>UC:ucLorentzForce</a>.)
                     </div>
                   </p>
                 </div>
@@ -678,7 +753,7 @@
                     </tr>
                     <tr>
                       <th>RefBy</th>
-                      <td><p class="paragraph"></p></td>
+                      <td><p class="paragraph"><a href=#GD:kin2D>GD:kin2D</a></p></td>
                     </tr>
                   </table>
                 </div>
@@ -775,7 +850,9 @@
                     <tr>
                       <th>RefBy</th>
                       <td>
-                        <p class="paragraph"><a href=#TM:eqnMotion>TM:eqnMotion</a></p>
+                        <p class="paragraph">
+                          <a href=#TM:eqnMotion>TM:eqnMotion</a> and <a href=#GD:dyn2D>GD:dyn2D</a>
+                        </p>
                       </td>
                     </tr>
                   </table>
@@ -852,7 +929,7 @@
                     </tr>
                     <tr>
                       <th>RefBy</th>
-                      <td><p class="paragraph"></p></td>
+                      <td><p class="paragraph"><a href=#GD:dyn2D>GD:dyn2D</a></p></td>
                     </tr>
                   </table>
                 </div>
@@ -864,16 +941,139 @@
                 <p class="paragraph">
                   This section collects the laws and equations that will be used to build the instance models.
                 </p>
-                <div id="GD:xAccelEM">
+                <div id="GD:kin2D">
                   <table class="gdefn">
                     <tr>
                       <th>Refname</th>
-                      <td><b>GD:xAccelEM</b></td>
+                      <td><b>GD:kin2D</b></td>
                     </tr>
                     <tr>
                       <th>Label</th>
                       <td>
-                        <p class="paragraph">X-acceleration under electromagnetic force</p>
+                        <p class="paragraph">
+                          Two-dimensional kinematics in Cartesian coordinates
+                        </p>
+                      </td>
+                    </tr>
+                    <tr>
+                      <th>Units</th>
+                      <td>
+                        <p class="paragraph"><em>\(\frac{\text{m}}{\text{s}}\)</em></p>
+                      </td>
+                    </tr>
+                    <tr>
+                      <th>Equation</th>
+                      <td>
+                        \[\frac{\,dx}{\,dt}={v_{\text{x}}}\land{}\frac{\,dy}{\,dt}={v_{\text{y}}}\]
+                      </td>
+                    </tr>
+                    <tr>
+                      <th>Description</th>
+                      <td>
+                        <ul class="hide-list-style-no-indent">
+                          <li><em>t</em> is the time (<em>s</em>)</li>
+                          <li><em>x</em> is the x-position of the particle (<em>m</em>)</li>
+                          <li>
+                            <em>v<sub>x</sub></em> is the x-velocity of the particle (<em>\(\frac{\text{m}}{\text{s}}\)</em>)
+                          </li>
+                          <li><em>y</em> is the y-position of the particle (<em>m</em>)</li>
+                          <li>
+                            <em>v<sub>y</sub></em> is the y-velocity of the particle (<em>\(\frac{\text{m}}{\text{s}}\)</em>)
+                          </li>
+                        </ul>
+                      </td>
+                    </tr>
+                    <tr>
+                      <th>Notes</th>
+                      <td>
+                        <p class="paragraph">
+                          The planar motion assumption (<a href=#twoDMotion>A:twoDMotion</a>) allows the particle position to be represented by <em>x</em> and <em>y</em> with velocity components <em>v<sub>x</sub></em> and <em>v<sub>y</sub></em> respectively. Velocity is defined in <a href=#TM:velocity>TM:velocity</a>..
+                        </p>
+                      </td>
+                    </tr>
+                    <tr>
+                      <th>Source</th>
+                      <td><p class="paragraph">--</p></td>
+                    </tr>
+                    <tr>
+                      <th>RefBy</th>
+                      <td>
+                        <p class="paragraph"><a href=#IM:stateEvol>IM:stateEvol</a></p>
+                      </td>
+                    </tr>
+                  </table>
+                </div>
+                <div id="GD:vCrossB2D">
+                  <table class="gdefn">
+                    <tr>
+                      <th>Refname</th>
+                      <td><b>GD:vCrossB2D</b></td>
+                    </tr>
+                    <tr>
+                      <th>Label</th>
+                      <td>
+                        <p class="paragraph">
+                          Cross product v x B for out-of-plane magnetic field
+                        </p>
+                      </td>
+                    </tr>
+                    <tr>
+                      <th>Equation</th>
+                      <td>
+                        \[\symbf{v}\text{×}\symbf{B}=\begin{bmatrix}
+                                                     {v_{\text{y}}}\,B & -{v_{\text{x}}}\,B & 0
+                                                     \end{bmatrix}\]
+                      </td>
+                    </tr>
+                    <tr>
+                      <th>Description</th>
+                      <td>
+                        <ul class="hide-list-style-no-indent">
+                          <li>
+                            <em><b>v</b>×<b>B</b></em> is the cross product of velocity and magnetic field (Unitless)
+                          </li>
+                          <li>
+                            <em>v<sub>y</sub></em> is the y-velocity of the particle (<em>\(\frac{\text{m}}{\text{s}}\)</em>)
+                          </li>
+                          <li>
+                            <em>B</em> is the out-of-plane magnetic flux density (<em>T</em>)
+                          </li>
+                          <li>
+                            <em>v<sub>x</sub></em> is the x-velocity of the particle (<em>\(\frac{\text{m}}{\text{s}}\)</em>)
+                          </li>
+                        </ul>
+                      </td>
+                    </tr>
+                    <tr>
+                      <th>Notes</th>
+                      <td>
+                        <p class="paragraph">
+                          Under planar motion (<a href=#twoDMotion>A:twoDMotion</a>) and an out-of-plane magnetic field (<a href=#bPerpPlane>A:bPerpPlane</a>), the velocity has the form v(t) = (vx(t), vy(t), 0) and the magnetic field has the form B = (0, 0, B). The cross product then reduces to the stated component form..
+                        </p>
+                      </td>
+                    </tr>
+                    <tr>
+                      <th>Source</th>
+                      <td><p class="paragraph">--</p></td>
+                    </tr>
+                    <tr>
+                      <th>RefBy</th>
+                      <td><p class="paragraph"><a href=#GD:dyn2D>GD:dyn2D</a></p></td>
+                    </tr>
+                  </table>
+                </div>
+                <div id="GD:dyn2D">
+                  <table class="gdefn">
+                    <tr>
+                      <th>Refname</th>
+                      <td><b>GD:dyn2D</b></td>
+                    </tr>
+                    <tr>
+                      <th>Label</th>
+                      <td>
+                        <p class="paragraph">
+                          Two-dimensional equations of motion under E and B
+                        </p>
                       </td>
                     </tr>
                     <tr>
@@ -885,15 +1085,16 @@
                     <tr>
                       <th>Equation</th>
                       <td>
-                        \[{a_{\text{x}}}=κ\,\left({E_{\text{x}}}+{v_{\text{y}}}\right)\,B\]
+                        \[\frac{\,d{v_{\text{x}}}}{\,dt}=κ\,\left({E_{\text{x}}}+{v_{\text{y}}}\right)\,B\land{}\frac{\,d{v_{\text{y}}}}{\,dt}=κ\,\left({E_{\text{y}}}-{v_{\text{x}}}\right)\,B\]
                       </td>
                     </tr>
                     <tr>
                       <th>Description</th>
                       <td>
                         <ul class="hide-list-style-no-indent">
+                          <li><em>t</em> is the time (<em>s</em>)</li>
                           <li>
-                            <em>a<sub>x</sub></em> is the x-acceleration of the particle (<em>\(\frac{\text{m}}{\text{s}^{2}}\)</em>)
+                            <em>v<sub>x</sub></em> is the x-velocity of the particle (<em>\(\frac{\text{m}}{\text{s}}\)</em>)
                           </li>
                           <li>
                             <em>κ</em> is the charge-to-mass ratio (<em>\(\frac{\text{C}}{\text{kg}}\)</em>)
@@ -907,72 +1108,9 @@
                           <li>
                             <em>B</em> is the out-of-plane magnetic flux density (<em>T</em>)
                           </li>
-                        </ul>
-                      </td>
-                    </tr>
-                    <tr>
-                      <th>Notes</th>
-                      <td>
-                        <p class="paragraph">
-                          Derived from the equation of motion by applying planar motion (<a href=#twoDMotion>A:twoDMotion</a>), out-of-plane B field (<a href=#bPerpPlane>A:bPerpPlane</a>), axis-aligned E field (<a href=#eAxisAligned>A:eAxisAligned</a>), and fixed fields (<a href=#prescribedFields>A:prescribedFields</a>). Here <em>κ</em> = q/m is defined in <a href=#DD:qOverm>DD:qOverm</a>.
-                        </p>
-                      </td>
-                    </tr>
-                    <tr>
-                      <th>Source</th>
-                      <td><p class="paragraph">--</p></td>
-                    </tr>
-                    <tr>
-                      <th>RefBy</th>
-                      <td>
-                        <p class="paragraph"><a href=#GD:yAccelEM>GD:yAccelEM</a></p>
-                      </td>
-                    </tr>
-                  </table>
-                </div>
-                <div id="GD:yAccelEM">
-                  <table class="gdefn">
-                    <tr>
-                      <th>Refname</th>
-                      <td><b>GD:yAccelEM</b></td>
-                    </tr>
-                    <tr>
-                      <th>Label</th>
-                      <td>
-                        <p class="paragraph">Y-acceleration under electromagnetic force</p>
-                      </td>
-                    </tr>
-                    <tr>
-                      <th>Units</th>
-                      <td>
-                        <p class="paragraph"><em>\(\frac{\text{m}}{\text{s}^{2}}\)</em></p>
-                      </td>
-                    </tr>
-                    <tr>
-                      <th>Equation</th>
-                      <td>
-                        \[{a_{\text{y}}}=κ\,\left({E_{\text{y}}}-{v_{\text{x}}}\right)\,B\]
-                      </td>
-                    </tr>
-                    <tr>
-                      <th>Description</th>
-                      <td>
-                        <ul class="hide-list-style-no-indent">
-                          <li>
-                            <em>a<sub>y</sub></em> is the y-acceleration of the particle (<em>\(\frac{\text{m}}{\text{s}^{2}}\)</em>)
-                          </li>
-                          <li>
-                            <em>κ</em> is the charge-to-mass ratio (<em>\(\frac{\text{C}}{\text{kg}}\)</em>)
-                          </li>
                           <li>
                             <em>E<sub>y</sub></em> is the y-component of the electric field (<em>\(\frac{\text{N}}{\text{C}}\)</em>)
                           </li>
-                          <li>
-                            <em>v<sub>x</sub></em> is the x-velocity of the particle (<em>\(\frac{\text{m}}{\text{s}}\)</em>)
-                          </li>
-                          <li>
-                            <em>B</em> is the out-of-plane magnetic flux density (<em>T</em>)
-                          </li>
                         </ul>
                       </td>
                     </tr>
@@ -980,7 +1118,7 @@
                       <th>Notes</th>
                       <td>
                         <p class="paragraph">
-                          Derived from the equation of motion by applying the same 2D assumptions as for <a href=#GD:xAccelEM>GD:xAccelEM</a>.
+                          Assuming planar motion (<a href=#twoDMotion>A:twoDMotion</a>), prescribed fields (<a href=#prescribedFields>A:prescribedFields</a>), out-of-plane magnetic field (<a href=#bPerpPlane>A:bPerpPlane</a>), and axis-aligned electric field (<a href=#eAxisAligned>A:eAxisAligned</a>). Here <em>κ</em> = q/m is the charge-to-mass ratio defined in <a href=#DD:qOverm>DD:qOverm</a> .. The equations are obtained from <a href=#TM:lorentzForce>TM:lorentzForce</a> and <a href=#TM:eqnMotion>TM:eqnMotion</a> by applying <a href=#GD:vCrossB2D>GD:vCrossB2D</a>..
                         </p>
                       </td>
                     </tr>
@@ -990,7 +1128,9 @@
                     </tr>
                     <tr>
                       <th>RefBy</th>
-                      <td><p class="paragraph"></p></td>
+                      <td>
+                        <p class="paragraph"><a href=#IM:stateEvol>IM:stateEvol</a></p>
+                      </td>
                     </tr>
                   </table>
                 </div>
@@ -1042,7 +1182,7 @@
                       <th>Notes</th>
                       <td>
                         <p class="paragraph">
-                          The charge-to-mass ratio simplifies the equations of motion by combining the particle's charge <em>q</em>, and mass <em>m</em> into a single parameter.
+                          <em>q</em> is the particle charge and <em>m</em> is the particle mass. The ratio <em>κ</em> is used to simplify the equations of motion..
                         </p>
                       </td>
                     </tr>
@@ -1053,8 +1193,389 @@
                     <tr>
                       <th>RefBy</th>
                       <td>
-                        <p class="paragraph"><a href=#GD:xAccelEM>GD:xAccelEM</a></p>
+                        <p class="paragraph">
+                          <a href=#IM:stateEvol>IM:stateEvol</a> and <a href=#GD:dyn2D>GD:dyn2D</a>
+                        </p>
                       </td>
+                    </tr>
+                  </table>
+                </div>
+                <div id="DD:initState">
+                  <table class="ddefn">
+                    <tr>
+                      <th>Refname</th>
+                      <td><b>DD:initState</b></td>
+                    </tr>
+                    <tr>
+                      <th>Label</th>
+                      <td><p class="paragraph">Initial state vector</p></td>
+                    </tr>
+                    <tr>
+                      <th>Symbol</th>
+                      <td><p class="paragraph"><em>s<sub>0</sub></em></p></td>
+                    </tr>
+                    <tr>
+                      <th>Units</th>
+                      <td><p class="paragraph">Unitless</p></td>
+                    </tr>
+                    <tr>
+                      <th>Equation</th>
+                      <td>
+                        \[{s_{0}}=\begin{bmatrix}
+                                  {x_{0}} & {y_{0}} & {v_{\text{x}0}} & {v_{\text{y}0}}
+                                  \end{bmatrix}\]
+                      </td>
+                    </tr>
+                    <tr>
+                      <th>Description</th>
+                      <td>
+                        <ul class="hide-list-style-no-indent">
+                          <li>
+                            <em>s<sub>0</sub></em> is the initial state vector (Unitless)
+                          </li>
+                          <li>
+                            <em>x<sub>0</sub></em> is the initial x-position (<em>m</em>)
+                          </li>
+                          <li>
+                            <em>y<sub>0</sub></em> is the initial y-position (<em>m</em>)
+                          </li>
+                          <li>
+                            <em>v<sub>x0</sub></em> is the initial x-velocity (<em>\(\frac{\text{m}}{\text{s}}\)</em>)
+                          </li>
+                          <li>
+                            <em>v<sub>y0</sub></em> is the initial y-velocity (<em>\(\frac{\text{m}}{\text{s}}\)</em>)
+                          </li>
+                        </ul>
+                      </td>
+                    </tr>
+                    <tr>
+                      <th>Notes</th>
+                      <td>
+                        <p class="paragraph">
+                          <em>x<sub>0</sub></em>, <em>y<sub>0</sub></em> are the initial position components (m) and <em>v<sub>x0</sub></em>, <em>v<sub>y0</sub></em> are the initial velocity components (m/s)..
+                        </p>
+                      </td>
+                    </tr>
+                    <tr>
+                      <th>Source</th>
+                      <td><p class="paragraph">--</p></td>
+                    </tr>
+                    <tr>
+                      <th>RefBy</th>
+                      <td>
+                        <p class="paragraph"><a href=#IM:stateEvol>IM:stateEvol</a></p>
+                      </td>
+                    </tr>
+                  </table>
+                </div>
+                <div id="DD:eField">
+                  <table class="ddefn">
+                    <tr>
+                      <th>Refname</th>
+                      <td><b>DD:eField</b></td>
+                    </tr>
+                    <tr>
+                      <th>Label</th>
+                      <td><p class="paragraph">Electric field vector</p></td>
+                    </tr>
+                    <tr>
+                      <th>Symbol</th>
+                      <td><p class="paragraph"><em><b>E</b></em></p></td>
+                    </tr>
+                    <tr>
+                      <th>Units</th>
+                      <td>
+                        <p class="paragraph"><em>\(\frac{\text{N}}{\text{C}}\)</em></p>
+                      </td>
+                    </tr>
+                    <tr>
+                      <th>Equation</th>
+                      <td>
+                        \[\symbf{E}=\begin{bmatrix}
+                                    {E_{\text{x}}} & {E_{\text{y}}} & 0
+                                    \end{bmatrix}\]
+                      </td>
+                    </tr>
+                    <tr>
+                      <th>Description</th>
+                      <td>
+                        <ul class="hide-list-style-no-indent">
+                          <li>
+                            <em><b>E</b></em> is the electric field vector (<em>\(\frac{\text{N}}{\text{C}}\)</em>)
+                          </li>
+                          <li>
+                            <em>E<sub>x</sub></em> is the x-component of the electric field (<em>\(\frac{\text{N}}{\text{C}}\)</em>)
+                          </li>
+                          <li>
+                            <em>E<sub>y</sub></em> is the y-component of the electric field (<em>\(\frac{\text{N}}{\text{C}}\)</em>)
+                          </li>
+                        </ul>
+                      </td>
+                    </tr>
+                    <tr>
+                      <th>Notes</th>
+                      <td>
+                        <p class="paragraph">
+                          <em><b>E</b></em> is the electric field vector. <em>E<sub>x</sub></em> and <em>E<sub>y</sub></em> are the in-plane components (N/C). The out-of-plane component is zero by <a href=#eAxisAligned>A:eAxisAligned</a> and the fields are user-specified per. <a href=#prescribedFields>A:prescribedFields</a>.
+                        </p>
+                      </td>
+                    </tr>
+                    <tr>
+                      <th>Source</th>
+                      <td><p class="paragraph">--</p></td>
+                    </tr>
+                    <tr>
+                      <th>RefBy</th>
+                      <td>
+                        <p class="paragraph">
+                          <a href=#DD:fieldsByRegion>DD:fieldsByRegion</a>
+                        </p>
+                      </td>
+                    </tr>
+                  </table>
+                </div>
+                <div id="DD:bField">
+                  <table class="ddefn">
+                    <tr>
+                      <th>Refname</th>
+                      <td><b>DD:bField</b></td>
+                    </tr>
+                    <tr>
+                      <th>Label</th>
+                      <td><p class="paragraph">Magnetic flux density vector</p></td>
+                    </tr>
+                    <tr>
+                      <th>Symbol</th>
+                      <td><p class="paragraph"><em><b>B</b></em></p></td>
+                    </tr>
+                    <tr>
+                      <th>Units</th>
+                      <td><p class="paragraph"><em>T</em></p></td>
+                    </tr>
+                    <tr>
+                      <th>Equation</th>
+                      <td>
+                        \[\symbf{B}=\begin{bmatrix}
+                                    0 & 0 & B
+                                    \end{bmatrix}\]
+                      </td>
+                    </tr>
+                    <tr>
+                      <th>Description</th>
+                      <td>
+                        <ul class="hide-list-style-no-indent">
+                          <li>
+                            <em><b>B</b></em> is the magnetic flux density vector (<em>T</em>)
+                          </li>
+                          <li>
+                            <em>B</em> is the out-of-plane magnetic flux density (<em>T</em>)
+                          </li>
+                        </ul>
+                      </td>
+                    </tr>
+                    <tr>
+                      <th>Notes</th>
+                      <td>
+                        <p class="paragraph">
+                          <em><b>B</b></em> is the magnetic flux density vector. <em>B</em> is the out-of-plane (z) component (T). The in-plane components are zero by <a href=#bPerpPlane>A:bPerpPlane</a> ; fields are fixed by. <a href=#prescribedFields>A:prescribedFields</a>.
+                        </p>
+                      </td>
+                    </tr>
+                    <tr>
+                      <th>Source</th>
+                      <td><p class="paragraph">--</p></td>
+                    </tr>
+                    <tr>
+                      <th>RefBy</th>
+                      <td>
+                        <p class="paragraph">
+                          <a href=#DD:fieldsByRegion>DD:fieldsByRegion</a>
+                        </p>
+                      </td>
+                    </tr>
+                  </table>
+                </div>
+                <div id="DD:regionRect">
+                  <table class="ddefn">
+                    <tr>
+                      <th>Refname</th>
+                      <td><b>DD:regionRect</b></td>
+                    </tr>
+                    <tr>
+                      <th>Label</th>
+                      <td><p class="paragraph">Rectangular field region</p></td>
+                    </tr>
+                    <tr>
+                      <th>Symbol</th>
+                      <td><p class="paragraph"><em>R<sub>i</sub></em></p></td>
+                    </tr>
+                    <tr>
+                      <th>Units</th>
+                      <td><p class="paragraph">Unitless</p></td>
+                    </tr>
+                    <tr>
+                      <th>Equation</th>
+                      <td>
+                        \[{R_{i}}=\begin{bmatrix}
+                                  {x_{0}} & {x_{\text{det}}} & {{y_{\text{min}}}^{\text{det}}} & {{y_{\text{max}}}^{\text{det}}}
+                                  \end{bmatrix}\]
+                      </td>
+                    </tr>
+                    <tr>
+                      <th>Description</th>
+                      <td>
+                        <ul class="hide-list-style-no-indent">
+                          <li>
+                            <em>R<sub>i</sub></em> is the rectangular field region (Unitless)
+                          </li>
+                          <li>
+                            <em>x<sub>0</sub></em> is the initial x-position (<em>m</em>)
+                          </li>
+                          <li>
+                            <em>x<sub>det</sub></em> is the detector line x-position (<em>m</em>)
+                          </li>
+                          <li>
+                            <em>y<sub>min</sub><sup>det</sup></em> is the minimum y-coordinate of detector (<em>m</em>)
+                          </li>
+                          <li>
+                            <em>y<sub>max</sub><sup>det</sup></em> is the maximum y-coordinate of detector (<em>m</em>)
+                          </li>
+                        </ul>
+                      </td>
+                    </tr>
+                    <tr>
+                      <th>Notes</th>
+                      <td>
+                        <p class="paragraph">
+                          Each field region is defined as the Cartesian product of two intervals: R_i = [x_min(i), x_max(i)] x [y_min(i), y_max(i)], where x_min(i), x_max(i), y_min(i), y_max(i) are the axis-aligned rectangular boundary coordinates (all in m), per <a href=#rectRegions>A:rectRegions</a>..
+                        </p>
+                      </td>
+                    </tr>
+                    <tr>
+                      <th>Source</th>
+                      <td><p class="paragraph">--</p></td>
+                    </tr>
+                    <tr>
+                      <th>RefBy</th>
+                      <td><p class="paragraph"></p></td>
+                    </tr>
+                  </table>
+                </div>
+                <div id="DD:fieldsByRegion">
+                  <table class="ddefn">
+                    <tr>
+                      <th>Refname</th>
+                      <td><b>DD:fieldsByRegion</b></td>
+                    </tr>
+                    <tr>
+                      <th>Label</th>
+                      <td><p class="paragraph">Electric field in region i</p></td>
+                    </tr>
+                    <tr>
+                      <th>Symbol</th>
+                      <td><p class="paragraph"><em><b>E</b><sub>i</sub></em></p></td>
+                    </tr>
+                    <tr>
+                      <th>Units</th>
+                      <td>
+                        <p class="paragraph"><em>\(\frac{\text{N}}{\text{C}}\)</em></p>
+                      </td>
+                    </tr>
+                    <tr>
+                      <th>Equation</th>
+                      <td>\[{\symbf{E}_{i}}=\symbf{E}\]</td>
+                    </tr>
+                    <tr>
+                      <th>Description</th>
+                      <td>
+                        <ul class="hide-list-style-no-indent">
+                          <li>
+                            <em><b>E</b><sub>i</sub></em> is the electric field in region i (<em>\(\frac{\text{N}}{\text{C}}\)</em>)
+                          </li>
+                          <li>
+                            <em><b>E</b></em> is the electric field vector (<em>\(\frac{\text{N}}{\text{C}}\)</em>)
+                          </li>
+                        </ul>
+                      </td>
+                    </tr>
+                    <tr>
+                      <th>Notes</th>
+                      <td>
+                        <p class="paragraph">
+                          The electric field <em><b>E</b><sub>i</sub></em> and the magnetic flux density <em><b>B</b><sub>i</sub></em> are constant within each region R_i: E(r) = E_i and B(r) = B_i for all r in R_i, per <a href=#piecewiseUniform>A:piecewiseUniform</a>. The fields may differ between regions. <em><b>E</b><sub>i</sub></em> depends on <a href=#DD:eField>DD:eField</a> and. <em><b>B</b><sub>i</sub></em> depends on <a href=#DD:bField>DD:bField</a>..
+                        </p>
+                      </td>
+                    </tr>
+                    <tr>
+                      <th>Source</th>
+                      <td><p class="paragraph">--</p></td>
+                    </tr>
+                    <tr>
+                      <th>RefBy</th>
+                      <td>
+                        <p class="paragraph"><a href=#IM:stateEvol>IM:stateEvol</a></p>
+                      </td>
+                    </tr>
+                  </table>
+                </div>
+                <div id="DD:detectorLine">
+                  <table class="ddefn">
+                    <tr>
+                      <th>Refname</th>
+                      <td><b>DD:detectorLine</b></td>
+                    </tr>
+                    <tr>
+                      <th>Label</th>
+                      <td><p class="paragraph">Detector line</p></td>
+                    </tr>
+                    <tr>
+                      <th>Symbol</th>
+                      <td><p class="paragraph"><em>L<sub>det</sub></em></p></td>
+                    </tr>
+                    <tr>
+                      <th>Units</th>
+                      <td><p class="paragraph">Unitless</p></td>
+                    </tr>
+                    <tr>
+                      <th>Equation</th>
+                      <td>
+                        \[{L_{\text{det}}}=\begin{bmatrix}
+                                           {x_{\text{det}}} & {{y_{\text{min}}}^{\text{det}}} & {{y_{\text{max}}}^{\text{det}}}
+                                           \end{bmatrix}\]
+                      </td>
+                    </tr>
+                    <tr>
+                      <th>Description</th>
+                      <td>
+                        <ul class="hide-list-style-no-indent">
+                          <li><em>L<sub>det</sub></em> is the detector line (Unitless)</li>
+                          <li>
+                            <em>x<sub>det</sub></em> is the detector line x-position (<em>m</em>)
+                          </li>
+                          <li>
+                            <em>y<sub>min</sub><sup>det</sup></em> is the minimum y-coordinate of detector (<em>m</em>)
+                          </li>
+                          <li>
+                            <em>y<sub>max</sub><sup>det</sup></em> is the maximum y-coordinate of detector (<em>m</em>)
+                          </li>
+                        </ul>
+                      </td>
+                    </tr>
+                    <tr>
+                      <th>Notes</th>
+                      <td>
+                        <p class="paragraph">
+                          <em>L<sub>det</sub></em> is the detector line segment. It is defined as the set of points L_det = the set of (x,y) where x = x_det and y in [y_min(det), y_max(det)], per <a href=#lineDetector>A:lineDetector</a>. where <em>x<sub>det</sub></em> is the x-coordinate of the detector, and <em>y<sub>min</sub><sup>det</sup></em>, <em>y<sub>max</sub><sup>det</sup></em> are the lower and upper y-bounds of the detector (all in m)..
+                        </p>
+                      </td>
+                    </tr>
+                    <tr>
+                      <th>Source</th>
+                      <td><p class="paragraph">--</p></td>
+                    </tr>
+                    <tr>
+                      <th>RefBy</th>
+                      <td><p class="paragraph"><a href=#IM:detHit>IM:detHit</a></p></td>
                     </tr>
                   </table>
                 </div>
@@ -1066,27 +1587,29 @@
                 <p class="paragraph">
                   This section transforms the problem defined in the <a href=#Sec:ProbDesc>problem description</a> into one which is expressed in mathematical terms. It uses concrete symbols defined in the <a href=#Sec:DDs>data definitions</a> to replace the abstract symbols in the models identified in <a href=#Sec:TMs>theoretical models</a> and <a href=#Sec:GDs>general definitions</a>.
                 </p>
-                <div id="IM:accelX">
+                <div id="IM:stateEvol">
                   <table class="idefn">
                     <tr>
                       <th>Refname</th>
-                      <td><b>IM:accelX</b></td>
+                      <td><b>IM:stateEvol</b></td>
                     </tr>
                     <tr>
                       <th>Label</th>
-                      <td><p class="paragraph">X-component of acceleration</p></td>
+                      <td>
+                        <p class="paragraph">Particle state evolution in the x-y plane</p>
+                      </td>
                     </tr>
                     <tr>
                       <th>Input</th>
                       <td>
                         <p class="paragraph">
-                          <em>κ</em>, <em>E<sub>x</sub></em>, <em>v<sub>y</sub></em>, <em>B</em>
+                          <em>m</em>, <em>q</em>, <em>x<sub>0</sub></em>, <em>y<sub>0</sub></em>, <em>v<sub>x0</sub></em>, <em>v<sub>y0</sub></em>, <em>E<sub>x</sub></em>, <em>E<sub>y</sub></em>, <em>B</em>, <em>t<sub>final</sub></em>
                         </p>
                       </td>
                     </tr>
                     <tr>
                       <th>Output</th>
-                      <td><p class="paragraph"><em>a<sub>x</sub></em></p></td>
+                      <td><p class="paragraph"><em>x</em></p></td>
                     </tr>
                     <tr>
                       <th>Input Constraints</th>
@@ -1099,15 +1622,21 @@
                     <tr>
                       <th>Equation</th>
                       <td>
-                        \[{a_{\text{x}}}=κ\,\left({E_{\text{x}}}+{v_{\text{y}}}\right)\,B\]
+                        \[\frac{\,dx}{\,dt}={v_{\text{x}}}\land{}\frac{\,dy}{\,dt}={v_{\text{y}}}\land{}\frac{\,d{v_{\text{x}}}}{\,dt}=κ\,\left({E_{\text{x}}}+{v_{\text{y}}}\right)\,B\land{}\frac{\,d{v_{\text{y}}}}{\,dt}=κ\,\left({E_{\text{y}}}-{v_{\text{x}}}\right)\,B\]
                       </td>
                     </tr>
                     <tr>
                       <th>Description</th>
                       <td>
                         <ul class="hide-list-style-no-indent">
+                          <li><em>t</em> is the time (<em>s</em>)</li>
+                          <li><em>x</em> is the x-position of the particle (<em>m</em>)</li>
                           <li>
-                            <em>a<sub>x</sub></em> is the x-acceleration of the particle (<em>\(\frac{\text{m}}{\text{s}^{2}}\)</em>)
+                            <em>v<sub>x</sub></em> is the x-velocity of the particle (<em>\(\frac{\text{m}}{\text{s}}\)</em>)
+                          </li>
+                          <li><em>y</em> is the y-position of the particle (<em>m</em>)</li>
+                          <li>
+                            <em>v<sub>y</sub></em> is the y-velocity of the particle (<em>\(\frac{\text{m}}{\text{s}}\)</em>)
                           </li>
                           <li>
                             <em>κ</em> is the charge-to-mass ratio (<em>\(\frac{\text{C}}{\text{kg}}\)</em>)
@@ -1116,10 +1645,10 @@
                             <em>E<sub>x</sub></em> is the x-component of the electric field (<em>\(\frac{\text{N}}{\text{C}}\)</em>)
                           </li>
                           <li>
-                            <em>v<sub>y</sub></em> is the y-velocity of the particle (<em>\(\frac{\text{m}}{\text{s}}\)</em>)
+                            <em>B</em> is the out-of-plane magnetic flux density (<em>T</em>)
                           </li>
                           <li>
-                            <em>B</em> is the out-of-plane magnetic flux density (<em>T</em>)
+                            <em>E<sub>y</sub></em> is the y-component of the electric field (<em>\(\frac{\text{N}}{\text{C}}\)</em>)
                           </li>
                         </ul>
                       </td>
@@ -1128,7 +1657,7 @@
                       <th>Notes</th>
                       <td>
                         <p class="paragraph">
-                          This gives the acceleration of the particle in the x-direction due to the Lorentz force (see GD:xAccelEM).
+                          Bold symbols denote vectors; the state vector s(t) = (x(t), y(t), vx(t), vy(t)) collects position and velocity components. <em>κ</em> = q/m is the charge-to-mass ratio (<a href=#DD:qOverm>DD:qOverm</a>). The initial condition is s(0) = (x0, y0, v0x, v0y) (<a href=#DD:initState>DD:initState</a>). The fields (Ex(t), Ey(t)) and B(t) are determined by which region R_i contains (x(t), y(t)) at time t (<a href=#DD:fieldsByRegion>DD:fieldsByRegion</a>). If (x(t), y(t)) lies outside all defined regions, the fields default to zero and the particle undergoes free (force-free) motion. The model is derived by combining <a href=#GD:kin2D>GD:kin2D</a> and <a href=#GD:dyn2D>GD:dyn2D</a>. Applicable assumptions: <a href=#singleParticle>A:singleParticle</a>, <a href=#noInteractions>A:noInteractions</a>, <a href=#twoDMotion>A:twoDMotion</a> and. <a href=#lorentzOnly>A:lorentzOnly</a>.
                         </p>
                       </td>
                     </tr>
@@ -1138,31 +1667,39 @@
                     </tr>
                     <tr>
                       <th>RefBy</th>
-                      <td><p class="paragraph"></p></td>
+                      <td>
+                        <p class="paragraph">
+                          <a href=#IM:detHit>IM:detHit</a>, <a href=#reportOutputs>FR:Report-Outputs</a>, <a href=#predictTrajectory>GS:predictTrajectory</a>, and <a href=#computeTraj>FR:Compute-Trajectory</a>
+                        </p>
+                      </td>
                     </tr>
                   </table>
                 </div>
-                <div id="IM:accelY">
+                <div id="IM:detHit">
                   <table class="idefn">
                     <tr>
                       <th>Refname</th>
-                      <td><b>IM:accelY</b></td>
+                      <td><b>IM:detHit</b></td>
                     </tr>
                     <tr>
                       <th>Label</th>
-                      <td><p class="paragraph">Y-component of acceleration</p></td>
+                      <td>
+                        <p class="paragraph">
+                          First detector intersection (hit time and hit location)
+                        </p>
+                      </td>
                     </tr>
                     <tr>
                       <th>Input</th>
                       <td>
                         <p class="paragraph">
-                          <em>κ</em>, <em>E<sub>y</sub></em>, <em>v<sub>x</sub></em>, <em>B</em>
+                          <em>x<sub>det</sub></em>, <em>y<sub>min</sub><sup>det</sup></em>, <em>y<sub>max</sub><sup>det</sup></em>, <em>t<sub>final</sub></em>, <em>x</em>, <em>y</em>
                         </p>
                       </td>
                     </tr>
                     <tr>
                       <th>Output</th>
-                      <td><p class="paragraph"><em>a<sub>y</sub></em></p></td>
+                      <td><p class="paragraph"><em>t<sub>hit</sub></em></p></td>
                     </tr>
                     <tr>
                       <th>Input Constraints</th>
@@ -1174,28 +1711,17 @@
                     </tr>
                     <tr>
                       <th>Equation</th>
-                      <td>
-                        \[{a_{\text{y}}}=κ\,\left({E_{\text{y}}}-{v_{\text{x}}}\right)\,B\]
-                      </td>
+                      <td>\[{t_{\text{hit}}}={t_{\text{final}}}\]</td>
                     </tr>
                     <tr>
                       <th>Description</th>
                       <td>
                         <ul class="hide-list-style-no-indent">
                           <li>
-                            <em>a<sub>y</sub></em> is the y-acceleration of the particle (<em>\(\frac{\text{m}}{\text{s}^{2}}\)</em>)
+                            <em>t<sub>hit</sub></em> is the time of detector hit (<em>s</em>)
                           </li>
                           <li>
-                            <em>κ</em> is the charge-to-mass ratio (<em>\(\frac{\text{C}}{\text{kg}}\)</em>)
-                          </li>
-                          <li>
-                            <em>E<sub>y</sub></em> is the y-component of the electric field (<em>\(\frac{\text{N}}{\text{C}}\)</em>)
-                          </li>
-                          <li>
-                            <em>v<sub>x</sub></em> is the x-velocity of the particle (<em>\(\frac{\text{m}}{\text{s}}\)</em>)
-                          </li>
-                          <li>
-                            <em>B</em> is the out-of-plane magnetic flux density (<em>T</em>)
+                            <em>t<sub>final</sub></em> is the final simulation time (<em>s</em>)
                           </li>
                         </ul>
                       </td>
@@ -1204,7 +1730,7 @@
                       <th>Notes</th>
                       <td>
                         <p class="paragraph">
-                          This gives the acceleration of the particle in the y-direction due to the Lorentz force (see GD:yAccelEM).
+                          The detector is modelled as a vertical line segment at <em>x<sub>det</sub></em> with y-bounds <em>y<sub>min</sub><sup>det</sup></em> and <em>y<sub>max</sub><sup>det</sup></em> (<a href=#DD:detectorLine>DD:detectorLine</a>). The hit time is defined as: t_hit = min t in [0, t_final] such that x(t) = x_det and y(t) in [y_min(det), y_max(det)]. The hit location is: x_hit = x_det, and y_hit = y(t_hit), <em>y<sub>hit</sub></em>. If no such t exists within [0, t_final], then no detector hit occurs. The trajectory (x(t), y(t)) is provided by <a href=#IM:stateEvol>IM:stateEvol</a>. Applicable assumptions: <a href=#fullDetection>A:fullDetection</a> and. <a href=#lineDetector>A:lineDetector</a>.
                         </p>
                       </td>
                     </tr>
@@ -1214,7 +1740,11 @@
                     </tr>
                     <tr>
                       <th>RefBy</th>
-                      <td><p class="paragraph"></p></td>
+                      <td>
+                        <p class="paragraph">
+                          <a href=#reportOutputs>FR:Report-Outputs</a> and <a href=#determineDetectorOutcome>GS:determineDetectorOutcome</a>
+                        </p>
+                      </td>
                     </tr>
                   </table>
                 </div>
@@ -1363,12 +1893,12 @@
               </p>
               <p>
                 <div id="computeTraj">
-                  Compute-Trajectory: Compute the trajectory of the charged particle using the equations of motion derived from the Lorentz force.
+                  Compute-Trajectory: Compute the trajectory of the charged particle using the equations of motion derived from the Lorentz force (<a href=#IM:stateEvol>IM:stateEvol</a>).
                 </div>
               </p>
               <p>
                 <div id="reportOutputs">
-                  Report-Outputs: Report the final position, velocity, and whether the particle reaches the detector line.
+                  Report-Outputs: Report the final position, velocity, and whether the particle reaches the detector line, based on <a href=#IM:stateEvol>IM:stateEvol</a> and <a href=#IM:detHit>IM:detHit</a>..
                 </div>
               </p>
             </div>
@@ -1703,6 +2233,90 @@
               <td></td>
             </tr>
             <tr>
+              <td><a href=#DD:initState>DD:initState</a></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td><a href=#DD:eField>DD:eField</a></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td>X</td>
+              <td></td>
+              <td></td>
+              <td>X</td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td><a href=#DD:bField>DD:bField</a></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td>X</td>
+              <td></td>
+              <td>X</td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td><a href=#DD:regionRect>DD:regionRect</a></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td>X</td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td><a href=#DD:fieldsByRegion>DD:fieldsByRegion</a></td>
+              <td>X</td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td><a href=#DD:detectorLine>DD:detectorLine</a></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td>X</td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
               <td><a href=#TM:velocity>TM:velocity</a></td>
               <td></td>
               <td></td>
@@ -1759,7 +2373,35 @@
               <td>X</td>
             </tr>
             <tr>
-              <td><a href=#GD:xAccelEM>GD:xAccelEM</a></td>
+              <td><a href=#GD:kin2D>GD:kin2D</a></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td>X</td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td><a href=#GD:vCrossB2D>GD:vCrossB2D</a></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td>X</td>
+              <td>X</td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td><a href=#GD:dyn2D>GD:dyn2D</a></td>
               <td></td>
               <td></td>
               <td></td>
@@ -1773,21 +2415,21 @@
               <td></td>
             </tr>
             <tr>
-              <td><a href=#GD:yAccelEM>GD:yAccelEM</a></td>
+              <td><a href=#IM:stateEvol>IM:stateEvol</a></td>
+              <td></td>
+              <td>X</td>
+              <td>X</td>
+              <td></td>
+              <td>X</td>
               <td></td>
               <td></td>
               <td></td>
               <td></td>
               <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
+              <td>X</td>
             </tr>
             <tr>
-              <td><a href=#IM:accelX>IM:accelX</a></td>
+              <td><a href=#IM:detHit>IM:detHit</a></td>
               <td></td>
               <td></td>
               <td></td>
@@ -1796,22 +2438,8 @@
               <td></td>
               <td></td>
               <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-            </tr>
-            <tr>
-              <td><a href=#IM:accelY>IM:accelY</a></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
+              <td>X</td>
+              <td>X</td>
               <td></td>
             </tr>
             <tr>
@@ -1950,17 +2578,145 @@
             <tr>
               <th></th>
               <th><a href=#DD:qOverm>DD:qOverm</a></th>
+              <th><a href=#DD:initState>DD:initState</a></th>
+              <th><a href=#DD:eField>DD:eField</a></th>
+              <th><a href=#DD:bField>DD:bField</a></th>
+              <th><a href=#DD:regionRect>DD:regionRect</a></th>
+              <th><a href=#DD:fieldsByRegion>DD:fieldsByRegion</a></th>
+              <th><a href=#DD:detectorLine>DD:detectorLine</a></th>
               <th><a href=#TM:velocity>TM:velocity</a></th>
               <th><a href=#TM:acceleration>TM:acceleration</a></th>
               <th><a href=#TM:lorentzForce>TM:lorentzForce</a></th>
               <th><a href=#TM:eqnMotion>TM:eqnMotion</a></th>
-              <th><a href=#GD:xAccelEM>GD:xAccelEM</a></th>
-              <th><a href=#GD:yAccelEM>GD:yAccelEM</a></th>
-              <th><a href=#IM:accelX>IM:accelX</a></th>
-              <th><a href=#IM:accelY>IM:accelY</a></th>
+              <th><a href=#GD:kin2D>GD:kin2D</a></th>
+              <th><a href=#GD:vCrossB2D>GD:vCrossB2D</a></th>
+              <th><a href=#GD:dyn2D>GD:dyn2D</a></th>
+              <th><a href=#IM:stateEvol>IM:stateEvol</a></th>
+              <th><a href=#IM:detHit>IM:detHit</a></th>
             </tr>
             <tr>
               <td><a href=#DD:qOverm>DD:qOverm</a></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td><a href=#DD:initState>DD:initState</a></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td><a href=#DD:eField>DD:eField</a></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td><a href=#DD:bField>DD:bField</a></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td><a href=#DD:regionRect>DD:regionRect</a></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td><a href=#DD:fieldsByRegion>DD:fieldsByRegion</a></td>
+              <td></td>
+              <td></td>
+              <td>X</td>
+              <td>X</td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td><a href=#DD:detectorLine>DD:detectorLine</a></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
               <td></td>
               <td></td>
               <td></td>
@@ -1982,9 +2738,23 @@
               <td></td>
               <td></td>
               <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
             </tr>
             <tr>
               <td><a href=#TM:acceleration>TM:acceleration</a></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
               <td></td>
               <td></td>
               <td></td>
@@ -2006,33 +2776,20 @@
               <td></td>
               <td></td>
               <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
             </tr>
             <tr>
               <td><a href=#TM:eqnMotion>TM:eqnMotion</a></td>
               <td></td>
               <td></td>
               <td></td>
-              <td>X</td>
               <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-            </tr>
-            <tr>
-              <td><a href=#GD:xAccelEM>GD:xAccelEM</a></td>
-              <td>X</td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-            </tr>
-            <tr>
-              <td><a href=#GD:yAccelEM>GD:yAccelEM</a></td>
               <td></td>
               <td></td>
               <td></td>
@@ -2042,21 +2799,20 @@
               <td></td>
               <td></td>
               <td></td>
-            </tr>
-            <tr>
-              <td><a href=#IM:accelX>IM:accelX</a></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
               <td></td>
               <td></td>
               <td></td>
             </tr>
             <tr>
-              <td><a href=#IM:accelY>IM:accelY</a></td>
+              <td><a href=#GD:kin2D>GD:kin2D</a></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td>X</td>
               <td></td>
               <td></td>
               <td></td>
@@ -2065,6 +2821,81 @@
               <td></td>
               <td></td>
               <td></td>
+            </tr>
+            <tr>
+              <td><a href=#GD:vCrossB2D>GD:vCrossB2D</a></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td><a href=#GD:dyn2D>GD:dyn2D</a></td>
+              <td>X</td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td>X</td>
+              <td>X</td>
+              <td></td>
+              <td>X</td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td><a href=#IM:stateEvol>IM:stateEvol</a></td>
+              <td>X</td>
+              <td>X</td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td>X</td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td>X</td>
+              <td></td>
+              <td>X</td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td><a href=#IM:detHit>IM:detHit</a></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td>X</td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td>X</td>
               <td></td>
             </tr>
           </table>
@@ -2077,14 +2908,21 @@
             <tr>
               <th></th>
               <th><a href=#DD:qOverm>DD:qOverm</a></th>
+              <th><a href=#DD:initState>DD:initState</a></th>
+              <th><a href=#DD:eField>DD:eField</a></th>
+              <th><a href=#DD:bField>DD:bField</a></th>
+              <th><a href=#DD:regionRect>DD:regionRect</a></th>
+              <th><a href=#DD:fieldsByRegion>DD:fieldsByRegion</a></th>
+              <th><a href=#DD:detectorLine>DD:detectorLine</a></th>
               <th><a href=#TM:velocity>TM:velocity</a></th>
               <th><a href=#TM:acceleration>TM:acceleration</a></th>
               <th><a href=#TM:lorentzForce>TM:lorentzForce</a></th>
               <th><a href=#TM:eqnMotion>TM:eqnMotion</a></th>
-              <th><a href=#GD:xAccelEM>GD:xAccelEM</a></th>
-              <th><a href=#GD:yAccelEM>GD:yAccelEM</a></th>
-              <th><a href=#IM:accelX>IM:accelX</a></th>
-              <th><a href=#IM:accelY>IM:accelY</a></th>
+              <th><a href=#GD:kin2D>GD:kin2D</a></th>
+              <th><a href=#GD:vCrossB2D>GD:vCrossB2D</a></th>
+              <th><a href=#GD:dyn2D>GD:dyn2D</a></th>
+              <th><a href=#IM:stateEvol>IM:stateEvol</a></th>
+              <th><a href=#IM:detHit>IM:detHit</a></th>
               <th><a href=#inputValues>FR:Input-Values</a></th>
               <th><a href=#echoInputs>FR:Echo-Inputs</a></th>
               <th><a href=#computeTraj>FR:Compute-Trajectory</a></th>
@@ -2103,6 +2941,13 @@
               <td></td>
               <td></td>
               <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td>X</td>
               <td></td>
               <td></td>
               <td></td>
@@ -2131,10 +2976,24 @@
               <td></td>
               <td></td>
               <td></td>
+              <td>X</td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
               <td></td>
             </tr>
             <tr>
               <td><a href=#inputValues>FR:Input-Values</a></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
               <td></td>
               <td></td>
               <td></td>
@@ -2170,6 +3029,13 @@
               <td></td>
               <td></td>
               <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
             </tr>
             <tr>
               <td><a href=#computeTraj>FR:Compute-Trajectory</a></td>
@@ -2181,6 +3047,13 @@
               <td></td>
               <td></td>
               <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td>X</td>
               <td></td>
               <td></td>
               <td></td>
@@ -2206,11 +3079,25 @@
               <td></td>
               <td></td>
               <td></td>
+              <td>X</td>
+              <td>X</td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
               <td></td>
               <td></td>
             </tr>
             <tr>
               <td><a href=#correct>NFR:Correctness</a></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
               <td></td>
               <td></td>
               <td></td>
@@ -2246,9 +3133,23 @@
               <td></td>
               <td></td>
               <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
             </tr>
             <tr>
               <td><a href=#portable>NFR:Portability</a></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
               <td></td>
               <td></td>
               <td></td>

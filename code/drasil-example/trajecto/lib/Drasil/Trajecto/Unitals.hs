@@ -43,9 +43,13 @@ symbols = map dqdWr
   , xVel, yVel, xVel0, yVel0
   , xAccel, yAccel
   , elecFieldX, elecFieldY, magField
+  , elecFieldVec, magFieldVec
+  , fieldRegionE, fieldRegionB
   , chargeToMass
   , tFinal, tHit, xDet, xHit, yHit
+  , yDetMin, yDetMax
   , mMin, mMax, qMax, vMax0, eMax, bMax, tMax ]
+  ++ [ initStateVec, fieldRegion, detLine, vCrossBVec ]
   ++ map dqdWr [QP.velocity, QP.acceleration, QP.force, QP.time, QP.position]
   ++ map dqdWr constants
 
@@ -201,6 +205,76 @@ yHit :: UnitalChunk
 yHit = uc' "y_hit" (nounPhraseSP "y-coordinate of impact point")
   (S "the y-coordinate of the particle impact point on the detector")
   (sub lY (label "hit")) Real metre
+
+---------------------------------------------------------
+-- Vector field quantities (for DataDefs DD3, DD4)
+---------------------------------------------------------
+
+elecFieldVec :: UnitalChunk
+elecFieldVec = uc' "Evec" (nounPhraseSP "electric field vector")
+  (S "the electric field vector in the particle's current region")
+  (vec cE) Real elecFieldU
+
+magFieldVec :: UnitalChunk
+magFieldVec = uc' "Bvec" (nounPhraseSP "magnetic flux density vector")
+  (S "the magnetic flux density vector, perpendicular to the x-y plane")
+  (vec cB) Real tesla
+
+---------------------------------------------------------
+-- Field region and piecewise-field quantities (DD5, DD6)
+---------------------------------------------------------
+
+fieldRegion :: DefinedQuantityDict
+fieldRegion = dqdNoUnit
+  (dccA "Ri" (nounPhraseSP "rectangular field region")
+    "the i-th axis-aligned rectangular field region" Nothing)
+  (sub cR lI) Real
+
+fieldRegionE :: UnitalChunk
+fieldRegionE = uc' "Ei" (nounPhraseSP "electric field in region i")
+  (S "the constant electric field value assigned to region R_i")
+  (sub (vec cE) lI) Real elecFieldU
+
+fieldRegionB :: UnitalChunk
+fieldRegionB = uc' "Bi" (nounPhraseSP "magnetic flux density in region i")
+  (S "the constant magnetic flux density value assigned to region R_i")
+  (sub (vec cB) lI) Real tesla
+
+---------------------------------------------------------
+-- Detector line (DD7)
+---------------------------------------------------------
+
+detLine :: DefinedQuantityDict
+detLine = dqdNoUnit
+  (dccA "Ldet" (nounPhraseSP "detector line")
+    "the vertical line segment defining the particle detector" Nothing)
+  (sub cL (label "det")) Real
+
+yDetMin :: UnitalChunk
+yDetMin = uc' "y_det_min" (nounPhraseSP "minimum y-coordinate of detector")
+  (S "the lower y-bound of the detector line segment")
+  (sup (sub lY (label "min")) (label "det")) Real metre
+
+yDetMax :: UnitalChunk
+yDetMax = uc' "y_det_max" (nounPhraseSP "maximum y-coordinate of detector")
+  (S "the upper y-bound of the detector line segment")
+  (sup (sub lY (label "max")) (label "det")) Real metre
+
+---------------------------------------------------------
+-- State vector and cross-product result (DD2, GD2)
+---------------------------------------------------------
+
+initStateVec :: DefinedQuantityDict
+initStateVec = dqdNoUnit
+  (dccA "s0" (nounPhraseSP "initial state vector")
+    "the combined initial position and velocity of the particle" Nothing)
+  (sub lS (Integ 0)) Real
+
+vCrossBVec :: DefinedQuantityDict
+vCrossBVec = dqdNoUnit
+  (dccA "vCrossB" (nounPhraseSP "cross product of velocity and magnetic field")
+    "the result of the cross product of velocity v and magnetic flux density B in 2D" Nothing)
+  (Concat [vec lV, label "\xD7", vec cB]) Real
 
 ---------------------------------------------------------
 -- Symbol helpers

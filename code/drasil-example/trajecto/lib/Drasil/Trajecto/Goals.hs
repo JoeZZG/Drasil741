@@ -9,6 +9,7 @@ import Data.Drasil.Concepts.Documentation (goalStmtDom)
 
 import Drasil.Trajecto.Unitals (parMass, parCharge,
   xPos0, yPos0, xVel0, yVel0, elecFieldX, elecFieldY, magField, tFinal)
+import Drasil.Trajecto.IMods (stateEvolIM, detHitIM)
 
 goals :: [ConceptInstance]
 goals = [predictTrajectory, determineDetectorOutcome]
@@ -25,10 +26,10 @@ goalsInputs =
 predictTrajectory :: ConceptInstance
 predictTrajectory = cic "predictTrajectory"
   (S "Predict the trajectory of a charged particle under prescribed" +:+
-   S "electric and magnetic fields" !.)
+   S "electric and magnetic fields, computed using" +:+. refS stateEvolIM)
   "predictTrajectory" goalStmtDom
 
 determineDetectorOutcome :: ConceptInstance
 determineDetectorOutcome = cic "determineDetectorOutcome"
-  (S "Determine impact position and time-of-flight at a specified detector line" !.)
+  (S "Determine impact position and time-of-flight at a specified detector line, computed using" +:+. refS detHitIM)
   "determineDetectorOutcome" goalStmtDom

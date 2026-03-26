@@ -4,8 +4,8 @@ Given the particle properties (\\(q\\) and \\(m\\)), initial conditions (\\({x\_
 
 <div id="predictTrajectory"></div>
 
-predictTrajectory: Predict the trajectory of a charged particle under prescribed electric and magnetic fields.
+predictTrajectory: Predict the trajectory of a charged particle under prescribed electric and magnetic fields, computed using [IM:stateEvol](./SecIMs.md#IM:stateEvol).
 
 <div id="determineDetectorOutcome"></div>
 
-determineDetectorOutcome: Determine impact position and time-of-flight at a specified detector line.
+determineDetectorOutcome: Determine impact position and time-of-flight at a specified detector line, computed using [IM:detHit](./SecIMs.md#IM:detHit).

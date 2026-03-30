@@ -52,6 +52,7 @@ symbols = map dqdWr
   ++ [ initStateVec, fieldRegion, detLine, vCrossBVec ]
   ++ map dqdWr [QP.velocity, QP.acceleration, QP.force, QP.time, QP.position]
   ++ map dqdWr constants
+  ++ [dqdWr particleState]
 
 acronyms :: [CI]
 acronyms = [assumption, dataDefn, genDefn, goalStmt,
@@ -65,9 +66,9 @@ inputs = map dqdWr
   , elecFieldX, elecFieldY, magField
   , tFinal ]
 
--- | Output variables
+-- | Output variables (ODE state vector: [x, y, vx, vy])
 outputs :: [DefinedQuantityDict]
-outputs = map dqdWr [xPos, yPos, xVel, yVel, tHit, xHit, yHit]
+outputs = [dqdWr particleState]
 
 -- | Named constants
 constants :: [ConstQDef]
@@ -405,4 +406,19 @@ inConstraints =
 
 -- | Output constraints
 outConstraints :: [UncertQ]
-outConstraints = []
+outConstraints = [particleState `uq` defaultUncrt]
+
+---------------------------------------------------------
+-- ODE state vector: dependent variable [x, y, vx, vy]
+---------------------------------------------------------
+
+-- | Combined ODE state vector for the charged particle.
+-- Under the current Drasil ODE pipeline, only index 0 (x-position)
+-- is recorded per time step; y, vx, vy are computed internally
+-- but not individually captured in the output list.
+particleState :: ConstrConcept
+particleState = cuc' "particleState"
+  (nounPhraseSP "dependent variables")
+  "column vector of particle position and velocity [x, y, vx, vy]"
+  lS metre (Vect Real)
+  [] (exactDbl 0)

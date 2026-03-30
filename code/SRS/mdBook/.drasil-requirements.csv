@@ -1,0 +1,8 @@
+Original,Copy
+../../../../datafiles/trajecto/trajecto.png,src/assets/trajecto.png
+../../../../datafiles/trajecto/SystemContextFigure.png,src/assets/SystemContextFigure.png
+../../../../traceygraphs/trajecto/avsa.svg,src/assets/avsa.svg
+../../../../traceygraphs/trajecto/avsall.svg,src/assets/avsall.svg
+../../../../traceygraphs/trajecto/refvsref.svg,src/assets/refvsref.svg
+../../../../traceygraphs/trajecto/allvsr.svg,src/assets/allvsr.svg
+../../../../traceygraphs/trajecto/allvsall.svg,src/assets/allvsall.svg

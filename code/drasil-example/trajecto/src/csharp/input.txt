@@ -1,0 +1,20 @@
+# particle mass (kg)
+9.11e-31
+# particle charge (C)
+1.6e-19
+# initial x-position (m)
+0.0
+# initial y-position (m)
+0.0
+# initial x-velocity (m/s)
+1000000.0
+# initial y-velocity (m/s)
+0.0
+# x-component of the electric field (N/C)
+0.0
+# y-component of the electric field (N/C)
+1000.0
+# out-of-plane magnetic flux density (T)
+1.0e-2
+# final simulation time (s)
+1.0e-6

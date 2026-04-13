@@ -92,8 +92,8 @@ dyn2DRC = makeRC "dyn2DRC"
 
 dyn2DRel :: ModelExpr
 dyn2DRel =
-  (deriv (sy xVel) QP.time $= sy chargeToMass $* (sy elecFieldX $+ sy yVel $* sy magField))
-  $&& (deriv (sy yVel) QP.time $= sy chargeToMass $* (sy elecFieldY $- sy xVel $* sy magField))
+  (deriv (sy xVel) QP.time $= sy chargeToMass $* (sy elecFieldX $+ (sy yVel $* sy magField)))
+  $&& (deriv (sy yVel) QP.time $= sy chargeToMass $* (sy elecFieldY $- (sy xVel $* sy magField)))
 
 dyn2DNote :: Sentence
 dyn2DNote = foldlSent

@@ -55,8 +55,8 @@ stateEvolRel :: ModelExpr
 stateEvolRel =
   (deriv (sy xPos) QP.time $= sy xVel)
   $&& (deriv (sy yPos) QP.time $= sy yVel)
-  $&& (deriv (sy xVel) QP.time $= sy chargeToMass $* (sy elecFieldX $+ sy yVel $* sy magField))
-  $&& (deriv (sy yVel) QP.time $= sy chargeToMass $* (sy elecFieldY $- sy xVel $* sy magField))
+  $&& (deriv (sy xVel) QP.time $= sy chargeToMass $* (sy elecFieldX $+ (sy yVel $* sy magField)))
+  $&& (deriv (sy yVel) QP.time $= sy chargeToMass $* (sy elecFieldY $- (sy xVel $* sy magField)))
 
 stateEvolNote :: Sentence
 stateEvolNote = foldlSent

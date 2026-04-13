@@ -8,8 +8,8 @@ import Drasil.Trajecto.Unitals (chargeToMass, elecFieldX, elecFieldY,
 
 -- | x-acceleration: ax = κ*(Ex + vy*B)
 xAccelExpr :: PExpr
-xAccelExpr = sy chargeToMass $* (sy elecFieldX $+ sy yVel $* sy magField)
+xAccelExpr = sy chargeToMass $* (sy elecFieldX $+ (sy yVel $* sy magField))
 
 -- | y-acceleration: ay = κ*(Ey - vx*B)
 yAccelExpr :: PExpr
-yAccelExpr = sy chargeToMass $* (sy elecFieldY $- sy xVel $* sy magField)
+yAccelExpr = sy chargeToMass $* (sy elecFieldY $- (sy xVel $* sy magField))

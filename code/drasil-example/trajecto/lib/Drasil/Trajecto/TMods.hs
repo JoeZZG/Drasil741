@@ -32,7 +32,7 @@ lorentzForceTM = tmNoRefs (equationalConstraints' lorentzForceCS)
 lorentzForceRels :: [ModelExpr]
 lorentzForceRels =
   [ -- Fx = q*(Ex + vy*B)  (representative component form)
-    sy force $= sy parCharge $* (sy elecFieldX $+ sy yVel $* sy magField)
+    sy force $= sy parCharge $* (sy elecFieldX $+ (sy yVel $* sy magField))
   ]
 
 lorentzForceCS :: ConstraintSet ModelExpr
@@ -65,9 +65,9 @@ eqnMotionTM = tmNoRefs (equationalConstraints' eqnMotionCS)
 eqnMotionRels :: [ModelExpr]
 eqnMotionRels =
   [ -- ax = (q/m)*(Ex + vy*B)
-    sy xAccel $= (sy parCharge $/ sy parMass) $* (sy elecFieldX $+ sy yVel $* sy magField)
+    sy xAccel $= (sy parCharge $/ sy parMass) $* (sy elecFieldX $+ (sy yVel $* sy magField))
   , -- ay = (q/m)*(Ey - vx*B)
-    sy yAccel $= (sy parCharge $/ sy parMass) $* (sy elecFieldY $- sy xVel $* sy magField)
+    sy yAccel $= (sy parCharge $/ sy parMass) $* (sy elecFieldY $- (sy xVel $* sy magField))
   ]
 
 eqnMotionCS :: ConstraintSet ModelExpr

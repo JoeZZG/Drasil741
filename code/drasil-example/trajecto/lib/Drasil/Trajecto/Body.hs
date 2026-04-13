@@ -81,7 +81,7 @@ mkSRS =
           , DDs [] ([Label, Symbol, Units] ++ stdFields) ShowDerivation
           , IMs [] ([Label, Input, Output, InConstraints, OutConstraints] ++ stdFields) ShowDerivation
           , Constraints EmptyS inConstraints
-          , CorrSolnPpties outConstraints []
+          , CorrSolnPpties outConstraints corrSolProps
           ]
       ]
   , ReqrmntSec $ ReqsProg
@@ -228,4 +228,34 @@ userCharacteristicsIntro :: CI -> Contents
 userCharacteristicsIntro prog = foldlSP
   [ S "The", phrase endUser `S.of_` short prog
   , S "should have an understanding of undergraduate-level" +:+ phrase highSchoolPhysics
+  ]
+
+---------------------------------------------------------
+-- Properties of a Correct Solution helpers
+---------------------------------------------------------
+
+corrSolProps :: [Contents]
+corrSolProps =
+  [ foldlSP
+      [ S "For a pure magnetic field (no electric field, i.e., Ex = Ey = 0),"
+      , S "the speed of the particle must remain constant over time,"
+      , S "since the magnetic force is always perpendicular to the velocity"
+      , S "and therefore does no work on the particle."
+      , S "A correct solution must satisfy"
+      , S "|v(t)| = |v(0)|"
+      , S "for all times t in the simulation."
+      ]
+  , foldlSP
+      [ S "When the electric field is non-zero, the work-energy theorem requires that"
+      , S "the change in kinetic energy equals the work done by the electric force:"
+      , S "delta_KE = q * Ex * delta_x + q * Ey * delta_y."
+      , S "A correct solution must respect this energy balance over each time step."
+      ]
+  , foldlSP
+      [ S "In the absence of all fields (Ex = Ey = 0 and B = 0),"
+      , S "Newton's first law requires that the particle travel in a straight line"
+      , S "at constant velocity."
+      , S "A correct solution must show no change in either velocity component"
+      , S "and linear growth in both position components."
+      ]
   ]

@@ -344,8 +344,12 @@ massCon = constrained' parMass
 
 chargeCon :: ConstrConcept
 chargeCon = constrained' parCharge
-  [physRange $ UpFrom (Exc, exactDbl 0),
-   sfwrRange $ UpTo (Inc, sy qMax)]
+  -- q ≠ 0: particle must be charged (q=0 gives no Lorentz force),
+  -- but negative charges (e.g. electrons) are physically valid.
+  -- Drasil's RealInterval cannot express a single '≠ 0' constraint,
+  -- so we drop the erroneous q > 0 physical range and instead show
+  -- the symmetric software bound −q_max ≤ q ≤ q_max.
+  [sfwrRange $ Bounded (Inc, neg (sy qMax)) (Inc, sy qMax)]
   (dbl 1.60e-19)
 
 xPos0Con :: ConstrConcept

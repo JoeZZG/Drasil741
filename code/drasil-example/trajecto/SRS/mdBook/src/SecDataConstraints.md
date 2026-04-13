@@ -10,7 +10,7 @@ The [Input Data Constraints Table](./SecDataConstraints.md#Table:InDataConstrain
 |\\({E\_{\text{x}}}\\)    |--                             |\\(-{E\_{\text{max}}}\leq{}{E\_{\text{x}}}\leq{}{E\_{\text{max}}}\\) |\\(0\\) \\(\frac{\text{N}}{\text{C}}\\)               |10.0\\(\\%\\)|
 |\\({E\_{\text{y}}}\\)    |--                             |\\(-{E\_{\text{max}}}\leq{}{E\_{\text{y}}}\leq{}{E\_{\text{max}}}\\) |\\(1.0\cdot{}10^{3}\\) \\(\frac{\text{N}}{\text{C}}\\)|10.0\\(\\%\\)|
 |\\(m\\)                  |\\(m\gt{}0\\)                  |\\({m\_{\text{min}}}\leq{}m\leq{}{m\_{\text{max}}}\\)                |\\(911.0\cdot{}10^{-33}\\) \\({\text{kg}}\\)          |10.0\\(\\%\\)|
-|\\(q\\)                  |\\(q\gt{}0\\)                  |\\(q\leq{}{q\_{\text{max}}}\\)                                       |\\(160.0\cdot{}10^{-21}\\) \\({\text{C}}\\)           |10.0\\(\\%\\)|
+|\\(q\\)                  |--                             |\\(-{q\_{\text{max}}}\leq{}q\leq{}{q\_{\text{max}}}\\)               |\\(160.0\cdot{}10^{-21}\\) \\({\text{C}}\\)           |10.0\\(\\%\\)|
 |\\({t\_{\text{final}}}\\)|\\({t\_{\text{final}}}\gt{}0\\)|\\({t\_{\text{final}}}\leq{}{t\_{\text{max}}}\\)                     |\\(1.0\cdot{}10^{-6}\\) \\({\text{s}}\\)              |0.0\\(\\%\\) |
 |\\({v\_{\text{x}0}}\\)   |--                             |\\(-{v\_{\text{max}}}\leq{}{v\_{\text{x}0}}\leq{}{v\_{\text{max}}}\\)|\\(1.0\cdot{}10^{6}\\) \\(\frac{\text{m}}{\text{s}}\\)|10.0\\(\\%\\)|
 |\\({v\_{\text{y}0}}\\)   |--                             |\\(-{v\_{\text{max}}}\leq{}{v\_{\text{y}0}}\leq{}{v\_{\text{max}}}\\)|\\(0\\) \\(\frac{\text{m}}{\text{s}}\\)               |10.0\\(\\%\\)|

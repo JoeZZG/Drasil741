@@ -140,12 +140,15 @@ public class InputParameters {
             System.out.print(" (m_max)");
             System.out.println(".");
         }
-        if (!(q <= Constants.q_max)) {
+        if (!(-Constants.q_max <= q && q <= Constants.q_max)) {
             System.out.print("Warning: ");
             System.out.print("q has value ");
             System.out.print(q);
             System.out.print(", but is suggested to be ");
-            System.out.print("below ");
+            System.out.print("between ");
+            System.out.print(-Constants.q_max);
+            System.out.print(" (-q_max)");
+            System.out.print(" and ");
             System.out.print(Constants.q_max);
             System.out.print(" (q_max)");
             System.out.println(".");
@@ -230,15 +233,6 @@ public class InputParameters {
             System.out.print("Warning: ");
             System.out.print("m has value ");
             System.out.print(m);
-            System.out.print(", but is suggested to be ");
-            System.out.print("above ");
-            System.out.print(0.0);
-            System.out.println(".");
-        }
-        if (!(q > 0.0)) {
-            System.out.print("Warning: ");
-            System.out.print("q has value ");
-            System.out.print(q);
             System.out.print(", but is suggested to be ");
             System.out.print("above ");
             System.out.print(0.0);

@@ -35,9 +35,9 @@ def func_s(κ, E_x, B, E_y, x_0, y_0, v_x0, v_y0, t_final):
     r = scipy.integrate.ode(f)
     r.set_integrator("dopri5", atol=1.0e-6, rtol=1.0e-6)
     r.set_initial_value([x_0, y_0, v_x0, v_y0], 0.0)
-    s = [[x_0, y_0, v_x0, v_y0][0]]
+    s = [[x_0, y_0, v_x0, v_y0]]
     while r.successful() and r.t < t_final:
         r.integrate(r.t + 1.0e-9)
-        s.append(r.y[0])
+        s.append(r.y.tolist())
     
     return s

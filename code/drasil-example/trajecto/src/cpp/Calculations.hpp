@@ -38,6 +38,6 @@ double func_E_vect_i(double E_vect);
     \param t_final final simulation time (s)
     \return dependent variables (m)
 */
-vector<double> func_s(double κ, double E_x, double B, double E_y, double x_0, double y_0, double v_x0, double v_y0, double t_final);
+vector<vector<double>> func_s(double κ, double E_x, double B, double E_y, double x_0, double y_0, double v_x0, double v_y0, double t_final);
 
 #endif

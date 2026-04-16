@@ -40,7 +40,7 @@ int main(int argc, const char *argv[]) {
     input_constraints(m, q, x_0, y_0, v_x0, v_y0, E_x, E_y, B, t_final);
     double t_hit = func_t_hit(t_final);
     double E_vect_i = func_E_vect_i(E_vect);
-    vector<double> s = func_s(κ, E_x, B, E_y, x_0, y_0, v_x0, v_y0, t_final);
+    vector<vector<double>> s = func_s(κ, E_x, B, E_y, x_0, y_0, v_x0, v_y0, t_final);
     write_output(s);
     
     return 0;

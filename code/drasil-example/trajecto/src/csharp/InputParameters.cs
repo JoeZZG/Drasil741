@@ -99,12 +99,15 @@ public class InputParameters {
             Console.Write(" (m_max)");
             Console.WriteLine(".");
         }
-        if (!(q <= Constants.q_max)) {
+        if (!(-Constants.q_max <= q && q <= Constants.q_max)) {
             Console.Write("Warning: ");
             Console.Write("q has value ");
             Console.Write(q);
             Console.Write(", but is suggested to be ");
-            Console.Write("below ");
+            Console.Write("between ");
+            Console.Write(-Constants.q_max);
+            Console.Write(" (-q_max)");
+            Console.Write(" and ");
             Console.Write(Constants.q_max);
             Console.Write(" (q_max)");
             Console.WriteLine(".");
@@ -189,15 +192,6 @@ public class InputParameters {
             Console.Write("Warning: ");
             Console.Write("m has value ");
             Console.Write(m);
-            Console.Write(", but is suggested to be ");
-            Console.Write("above ");
-            Console.Write(0.0);
-            Console.WriteLine(".");
-        }
-        if (!(q > 0.0)) {
-            Console.Write("Warning: ");
-            Console.Write("q has value ");
-            Console.Write(q);
             Console.Write(", but is suggested to be ");
             Console.Write("above ");
             Console.Write(0.0);

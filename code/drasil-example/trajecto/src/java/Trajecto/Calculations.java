@@ -40,8 +40,8 @@ public class Calculations {
         \param t_final final simulation time (s)
         \return dependent variables (m)
     */
-    public static ArrayList<Double> func_s(double κ, double E_x, double B, double E_y, double x_0, double y_0, double v_x0, double v_y0, double t_final) {
-        ArrayList<Double> s;
+    public static ArrayList<ArrayList<Double>> func_s(double κ, double E_x, double B, double E_y, double x_0, double y_0, double v_x0, double v_y0, double t_final) {
+        ArrayList<ArrayList<Double>> s;
         ODEStepHandler stepHandler = new ODEStepHandler();
         ODE ode = new ODE(κ, E_x, E_y, B);
         double[] curr_vals = {x_0, y_0, v_x0, v_y0};

@@ -71,12 +71,15 @@ void input_constraints(double m, double q, double x_0, double y_0, double v_x0, 
         std::cout << " (m_max)";
         std::cout << "." << std::endl;
     }
-    if (!(q <= Constants::q_max)) {
+    if (!(-Constants::q_max <= q && q <= Constants::q_max)) {
         std::cout << "Warning: ";
         std::cout << "q has value ";
         std::cout << q;
         std::cout << ", but is suggested to be ";
-        std::cout << "below ";
+        std::cout << "between ";
+        std::cout << -Constants::q_max;
+        std::cout << " (-q_max)";
+        std::cout << " and ";
         std::cout << Constants::q_max;
         std::cout << " (q_max)";
         std::cout << "." << std::endl;
@@ -161,15 +164,6 @@ void input_constraints(double m, double q, double x_0, double y_0, double v_x0, 
         std::cout << "Warning: ";
         std::cout << "m has value ";
         std::cout << m;
-        std::cout << ", but is suggested to be ";
-        std::cout << "above ";
-        std::cout << 0.0;
-        std::cout << "." << std::endl;
-    }
-    if (!(q > 0.0)) {
-        std::cout << "Warning: ";
-        std::cout << "q has value ";
-        std::cout << q;
         std::cout << ", but is suggested to be ";
         std::cout << "above ";
         std::cout << 0.0;

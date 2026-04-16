@@ -7,11 +7,6 @@
 --   ds[1]/dt = s[3]              (dy/dt  = vy)
 --   ds[2]/dt = kappa*(Ex + s[3]*B)   (dvx/dt = κ(Ex + vy·B))
 --   ds[3]/dt = kappa*(Ey - s[2]*B)   (dvy/dt = κ(Ey − vx·B))
---
--- NOTE (known limitation): Drasil's ODE pipeline records only s[0] (x-position)
--- per time step in the output list due to a hardcoded idx(…, 0) in
--- appendCurrSolFS.  The full 4-component integration is performed correctly
--- internally, but only the x-trajectory is stored in the returned list.
 module Drasil.Trajecto.ODEs (trajectODEOpts, trajectODEInfo) where
 
 import Language.Drasil (ExprC(..), LiteralC(int, exactDbl, dbl))

@@ -18,8 +18,8 @@ double func_E_vect_i(double E_vect) {
     return E_vect;
 }
 
-vector<double> func_s(double κ, double E_x, double B, double E_y, double x_0, double y_0, double v_x0, double v_y0, double t_final) {
-    vector<double> s;
+vector<vector<double>> func_s(double κ, double E_x, double B, double E_y, double x_0, double y_0, double v_x0, double v_y0, double t_final) {
+    vector<vector<double>> s;
     ODE ode = ODE(κ, E_x, E_y, B);
     vector<double> currVals{x_0, y_0, v_x0, v_y0};
     Populate pop = Populate(s);

@@ -13,8 +13,8 @@
 # x-component of the electric field (N/C)
 0.0
 # y-component of the electric field (N/C)
-1000.0
+0.0
 # out-of-plane magnetic flux density (T)
-1.0e-2
+1.0e-4
 # final simulation time (s)
-1.0e-6
+7.0e-7

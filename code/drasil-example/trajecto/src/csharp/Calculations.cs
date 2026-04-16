@@ -38,8 +38,8 @@ public class Calculations {
         \param t_final final simulation time (s)
         \return dependent variables (m)
     */
-    public static List<double> func_s(double κ, double E_x, double B, double E_y, double x_0, double y_0, double v_x0, double v_y0, double t_final) {
-        List<double> s;
+    public static List<List<double>> func_s(double κ, double E_x, double B, double E_y, double x_0, double y_0, double v_x0, double v_y0, double t_final) {
+        List<List<double>> s;
         Func<double, Vector, Vector> f = (t, s_vec) => {
             return new Vector(s_vec[2], s_vec[3], κ * (E_x + s_vec[3] * B), κ * (E_y - s_vec[2] * B));
         };
@@ -50,9 +50,13 @@ public class Calculations {
         Vector initv = new Vector(new double[] {x_0, y_0, v_x0, v_y0});
         IEnumerable<SolPoint> sol = Ode.RK547M(0.0, initv, f, opts);
         IEnumerable<SolPoint> points = sol.SolveFromToStep(0.0, t_final, 1.0e-9);
-        s = new List<double> {};
+        s = new List<List<double>> {};
         foreach (SolPoint sp in points) {
-            s.Add(sp.X[0]);
+            List<double> xTemp = new List<double>(0);
+            for (int i = 0; i < 4; i += 1) {
+                xTemp.Add(sp.X[i]);
+            }
+            s.Add(xTemp);
         }
         
         return s;

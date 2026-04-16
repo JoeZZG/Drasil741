@@ -32,7 +32,7 @@ public class Control {
         InputParameters.input_constraints(m, q, x_0, y_0, v_x0, v_y0, E_x, E_y, B, t_final);
         double t_hit = Calculations.func_t_hit(t_final);
         double E_vect_i = Calculations.func_E_vect_i(E_vect);
-        List<double> s = Calculations.func_s(κ, E_x, B, E_y, x_0, y_0, v_x0, v_y0, t_final);
+        List<List<double>> s = Calculations.func_s(κ, E_x, B, E_y, x_0, y_0, v_x0, v_y0, t_final);
         OutputFormat.write_output(s);
     }
 }

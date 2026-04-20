@@ -7,14 +7,14 @@ import Theory.Drasil (TheoryModel)
 import Drasil.SRSDocument
 import Drasil.Generator (withCommonKnowledge)
 import qualified Drasil.DocLang.SRS as SRS
-import Drasil.System (SystemKind(Specification), mkSystem)
+import Drasil.System (SmithEtAlSRS, mkSmithEtAlICO)
 import Language.Drasil.Chunk.Concept.NamedCombinators
 import qualified Language.Drasil.Sentence.Combinators as S
 import Drasil.Document.Contents (foldlSP, foldlSPCol)
 
 import Data.Drasil.Concepts.Documentation
-  ( endUser, softwareSys, sysCont, user )
-import Data.Drasil.Concepts.Education (highSchoolPhysics, calculus, undergraduate)
+  ( endUser, physics, softwareSys, sysCont, user )
+import Data.Drasil.Concepts.Education (calculus, undergraduate)
 import Data.Drasil.Concepts.Math (mathcon')
 import Data.Drasil.Concepts.Physics (physicCon')
 import Data.Drasil.Concepts.PhysicalProperties (physicalcon)
@@ -55,13 +55,13 @@ mkSRS =
   , RefSec $ RefProg intro
       [ TUnits
       , tsymb [TSPurpose, TypogConvention [Vector Bold], SymbOrder, VectorUnits]
-      , TAandA abbreviationsList
+      , TAandA
       ]
   , IntroSec $ IntroProg (justification progName) (phrase progName)
       [ IPurpose $ purpDoc progName Verbose
       , IScope scope
       , IChar [] charsOfReader []
-      , IOrgSec inModel (SRS.inModel [] []) EmptyS
+      , IOrgSec inModel (SRS.inModel [] []) Nothing
       ]
   , GSDSec $ GSDProg
       [ SysCntxt [sysCtxIntro progName, LlC sysCtxFig, sysCtxDesc]
@@ -99,8 +99,8 @@ mkSRS =
 -- System Information
 ---------------------------------------------------------
 
-si :: System
-si = mkSystem progName Specification [authorName]
+si :: SmithEtAlSRS
+si = mkSmithEtAlICO progName [authorName]
   [purp] [] [] []
   tMods genDefs dataDefs iMods
   inputs outputs inConstraints
@@ -202,7 +202,7 @@ justification prog = foldlSent
 
 charsOfReader :: [Sentence]
 charsOfReader =
-  [ phrase undergraduate +:+ S "level" +:+ phrase highSchoolPhysics
+  [ phrase undergraduate +:+ S "level" +:+ phrase physics
   , phrase undergraduate +:+ S "level" +:+ phrase calculus
   ]
 
@@ -227,7 +227,7 @@ sysCtxDesc = foldlSPCol
 userCharacteristicsIntro :: CI -> Contents
 userCharacteristicsIntro prog = foldlSP
   [ S "The", phrase endUser `S.of_` short prog
-  , S "should have an understanding of undergraduate-level" +:+ phrase highSchoolPhysics
+  , S "should have an understanding of undergraduate-level" +:+ phrase physics
   ]
 
 ---------------------------------------------------------

@@ -3,7 +3,7 @@
 module Drasil.Trajecto.IMods (iMods, stateEvolIM, detHitIM) where
 
 import Language.Drasil
-import Theory.Drasil (InstanceModel, imNoRefs, deModel', equationalModel, qwUC)
+import Theory.Drasil (InstanceModel, RelationConcept, makeRC, imNoRefs, deModel', equationalModel, qwUC)
 import qualified Language.Drasil.Sentence.Combinators as S
 
 import qualified Data.Drasil.Quantities.Physics as QP (time)

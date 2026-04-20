@@ -1,21 +1,17 @@
-digraph avsa {
-
-
-	instance:piecewiseUniform	[shape=box, color=black, style=filled, fillcolor=mistyrose, label="A:piecewiseUniform"];
-	instance:singleParticle	[shape=box, color=black, style=filled, fillcolor=mistyrose, label="A:singleParticle"];
-	instance:noInteractions	[shape=box, color=black, style=filled, fillcolor=mistyrose, label="A:noInteractions"];
-	instance:prescribedFields	[shape=box, color=black, style=filled, fillcolor=mistyrose, label="A:prescribedFields"];
-	instance:twoDMotion	[shape=box, color=black, style=filled, fillcolor=mistyrose, label="A:twoDMotion"];
-	instance:bPerpPlane	[shape=box, color=black, style=filled, fillcolor=mistyrose, label="A:bPerpPlane"];
-	instance:eAxisAligned	[shape=box, color=black, style=filled, fillcolor=mistyrose, label="A:eAxisAligned"];
-	instance:rectRegions	[shape=box, color=black, style=filled, fillcolor=mistyrose, label="A:rectRegions"];
-	instance:lineDetector	[shape=box, color=black, style=filled, fillcolor=mistyrose, label="A:lineDetector"];
-	instance:fullDetection	[shape=box, color=black, style=filled, fillcolor=mistyrose, label="A:fullDetection"];
-	instance:lorentzOnly	[shape=box, color=black, style=filled, fillcolor=mistyrose, label="A:lorentzOnly"];
-
-	subgraph A {
-	rank="same"
-	{instance:piecewiseUniform, instance:singleParticle, instance:noInteractions, instance:prescribedFields, instance:twoDMotion, instance:bPerpPlane, instance:eAxisAligned, instance:rectRegions, instance:lineDetector, instance:fullDetection, instance:lorentzOnly}
-	}
-
+digraph "avsa" {
+    "instance:piecewiseUniform" [shape=box, color=black, style=filled, fillcolor="mistyrose", label="A:piecewiseUniform"];
+    "instance:singleParticle" [shape=box, color=black, style=filled, fillcolor="mistyrose", label="A:singleParticle"];
+    "instance:noInteractions" [shape=box, color=black, style=filled, fillcolor="mistyrose", label="A:noInteractions"];
+    "instance:prescribedFields" [shape=box, color=black, style=filled, fillcolor="mistyrose", label="A:prescribedFields"];
+    "instance:twoDMotion" [shape=box, color=black, style=filled, fillcolor="mistyrose", label="A:twoDMotion"];
+    "instance:bPerpPlane" [shape=box, color=black, style=filled, fillcolor="mistyrose", label="A:bPerpPlane"];
+    "instance:eAxisAligned" [shape=box, color=black, style=filled, fillcolor="mistyrose", label="A:eAxisAligned"];
+    "instance:rectRegions" [shape=box, color=black, style=filled, fillcolor="mistyrose", label="A:rectRegions"];
+    "instance:lineDetector" [shape=box, color=black, style=filled, fillcolor="mistyrose", label="A:lineDetector"];
+    "instance:fullDetection" [shape=box, color=black, style=filled, fillcolor="mistyrose", label="A:fullDetection"];
+    "instance:lorentzOnly" [shape=box, color=black, style=filled, fillcolor="mistyrose", label="A:lorentzOnly"];
+    subgraph "A" {
+        rank="same";
+        "instance:piecewiseUniform" "instance:singleParticle" "instance:noInteractions" "instance:prescribedFields" "instance:twoDMotion" "instance:bPerpPlane" "instance:eAxisAligned" "instance:rectRegions" "instance:lineDetector" "instance:fullDetection" "instance:lorentzOnly";
+    }
 }

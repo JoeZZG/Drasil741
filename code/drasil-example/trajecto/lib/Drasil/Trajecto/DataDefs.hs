@@ -17,10 +17,11 @@ import Drasil.Trajecto.Unitals
   , elecFieldVec, elecFieldX, elecFieldY
   , magFieldVec, magField
   , fieldRegion, fieldRegionE, fieldRegionB
-  , detLine, xDet, yDetMin, yDetMax )
+  , detLine, xDet, yDet, yDetMin, yDetMax, xDetMin, xDetMax, detOrient
+  , nRegions, regionWidth, regionHeight, xGrid, yGrid )
 import Drasil.Trajecto.Assumptions
   ( prescribedFields, eAxisAligned, bPerpPlane
-  , rectRegions, piecewiseUniform, lineDetector )
+  , rectRegions, gridLayout, piecewiseUniform, lineDetector )
 
 dataDefs :: [DataDefinition]
 dataDefs =
@@ -42,7 +43,7 @@ qOvermNote = foldlSent
   [ ch parCharge +:+ S "is the particle charge and"
   , ch parMass +:+. S "is the particle mass"
   , S "The ratio" +:+ ch chargeToMass +:+
-    S "is used to simplify the equations of motion."
+    S "is used to simplify the equations of motion"
   ]
 
 ---------------------------------------------------------
@@ -59,7 +60,7 @@ initStateQD = mkQuantDef initStateVec
 initStateNote :: Sentence
 initStateNote = foldlSent
   [ ch xPos0 :+: S "," +:+ ch yPos0 +:+ S "are the initial position components (m) and"
-  , ch xVel0 :+: S "," +:+ ch yVel0 +:+. S "are the initial velocity components (m/s)"
+  , ch xVel0 :+: S "," +:+ ch yVel0 +:+ S "are the initial velocity components (m/s)"
   ]
 
 ---------------------------------------------------------
@@ -79,7 +80,7 @@ eFieldNote = foldlSent
   , ch elecFieldX +:+ S "and" +:+ ch elecFieldY +:+
     S "are the in-plane components (N/C)."
   , S "The out-of-plane component is zero by"
-  , refS eAxisAligned +:+. S "and the fields are user-specified per" +:+ refS prescribedFields
+  , refS eAxisAligned :+: S "," +:+ S "and the fields are user-specified per" +:+ refS prescribedFields
   ]
 
 ---------------------------------------------------------
@@ -97,12 +98,12 @@ bFieldNote :: Sentence
 bFieldNote = foldlSent
   [ ch magFieldVec +:+. S "is the magnetic flux density vector"
   , ch magField +:+. S "is the out-of-plane (z) component (T)"
-  , S "The in-plane components are zero by" +:+ refS bPerpPlane +:+. S "; fields are fixed by" +:+ refS prescribedFields
+  , S "The in-plane components are zero by" +:+ refS bPerpPlane :+: S ";" +:+ S "fields are fixed by" +:+ refS prescribedFields
   ]
 
 ---------------------------------------------------------
 -- DD5: Rectangular field region
--- R_i = [x_min^(i), x_max^(i)] × [y_min^(i), y_max^(i)]
+-- R_i = [x_grid + (i-1)*w, x_grid + i*w] × [y_grid, y_grid + h]  (row layout)
 ---------------------------------------------------------
 
 regionRectDD :: DataDefinition
@@ -110,41 +111,51 @@ regionRectDD = ddENoRefs regionRectQD Nothing "regionRect" [regionRectNote]
 
 regionRectQD :: SimpleQDef
 regionRectQD = mkQuantDef fieldRegion
-  (rowVec [sy xPos0, sy xDet, sy yDetMin, sy yDetMax])
+  (rowVec [sy xGrid, sy yGrid, sy regionWidth, sy regionHeight])
 
 regionRectNote :: Sentence
 regionRectNote = foldlSent
-  [ S "Each field region is defined as the Cartesian product of two intervals:"
-  , S "R_i = [x_min(i), x_max(i)] x [y_min(i), y_max(i)],"
-  , S "where x_min(i), x_max(i), y_min(i), y_max(i) are the"
-  , S "axis-aligned rectangular boundary coordinates (all in m), per" +:+. refS rectRegions
+  [ S "Each field region R_i (for i = 1 .." +:+ ch nRegions
+  , S ") is an axis-aligned rectangle of width" +:+ ch regionWidth
+  , S "and height" +:+. ch regionHeight
+  , S "The equation above lists the grid parameters that define each region."
+  , S "For a row layout (regions tiled left-to-right):"
+  , S "R_i = [x_grid + (i-1)*w, x_grid + i*w] x [y_grid, y_grid + h]."
+  , S "For a column layout (regions tiled bottom-to-top):"
+  , S "R_i = [x_grid, x_grid + w] x [y_grid + (i-1)*h, y_grid + i*h]."
+  , S "The grid origin" +:+ sParen (ch xGrid `sC` ch yGrid)
+  , S "anchors region 1, per" +:+ refS rectRegions +:+ S "and" +:+ refS gridLayout
   ]
 
 ---------------------------------------------------------
 -- DD6: Piecewise-constant fields by region
--- E(r) = E_i,  B(r) = B_i  ∀ r ∈ R_i
+-- E_i = (Ex_i, Ey_i, 0),  B_i = (0, 0, B_i)  per region
 ---------------------------------------------------------
 
 fieldsByRegionDD :: DataDefinition
 fieldsByRegionDD = ddENoRefs fieldsByRegionQD Nothing "fieldsByRegion" [fieldsByRegionNote]
 
 fieldsByRegionQD :: SimpleQDef
-fieldsByRegionQD = mkQuantDef fieldRegionE (sy elecFieldVec)
+fieldsByRegionQD = mkQuantDef fieldRegionE
+  (rowVec [sy elecFieldX, sy elecFieldY, sy magField])
 
 fieldsByRegionNote :: Sentence
 fieldsByRegionNote = foldlSent
-  [ S "The electric field" +:+ ch fieldRegionE
-  , S "and the magnetic flux density" +:+ ch fieldRegionB
-  , S "are constant within each region R_i:"
-  , S "E(r) = E_i and B(r) = B_i for all r in R_i, per" +:+. refS piecewiseUniform
-  , S "The fields may differ between regions."
-  , ch fieldRegionE +:+ S "depends on" +:+ refS eFieldDD +:+. S "and"
-  , ch fieldRegionB +:+ S "depends on" +:+. refS bFieldDD
+  [ S "Each region R_i has its own independently specified electric field"
+  , ch fieldRegionE +:+ S "= (Ex_i, Ey_i, 0) and magnetic flux density"
+  , ch fieldRegionB +:+. S "= (0, 0, B_i)"
+  , S "The fields are constant within each region per" +:+. refS piecewiseUniform
+  , S "The active fields at time t are determined by which region R_i"
+  , sParen (refS regionRectDD) +:+ S "contains the particle position (x(t), y(t))."
+  , S "If the particle is outside all defined regions,"
+  , S "the fields default to zero and the particle undergoes free (force-free) motion."
+  , S "The per-region values (Ex_i, Ey_i, B_i) are user-specified inputs per" +:+ refS prescribedFields
   ]
 
 ---------------------------------------------------------
--- DD7: Detector line
--- L_det = { (x,y) | x = x_det, y ∈ [y_min^det, y_max^det] }
+-- DD7: Detector line (vertical or horizontal)
+-- Vertical:   L_det = { (x,y) | x = x_det, y ∈ [y_min^det, y_max^det] }
+-- Horizontal: L_det = { (x,y) | y = y_det, x ∈ [x_min^det, x_max^det] }
 ---------------------------------------------------------
 
 detectorLineDD :: DataDefinition
@@ -152,14 +163,14 @@ detectorLineDD = ddENoRefs detectorLineQD Nothing "detectorLine" [detectorLineNo
 
 detectorLineQD :: SimpleQDef
 detectorLineQD = mkQuantDef detLine
-  (rowVec [sy xDet, sy yDetMin, sy yDetMax])
+  (rowVec [sy detOrient, sy xDet, sy yDet, sy yDetMin, sy yDetMax, sy xDetMin, sy xDetMax])
 
 detectorLineNote :: Sentence
 detectorLineNote = foldlSent
   [ ch detLine +:+. S "is the detector line segment"
-  , S "It is defined as the set of points"
-  , S "L_det = the set of (x,y) where x = x_det and y in [y_min(det), y_max(det)], per" +:+. refS lineDetector
-  , S "where" +:+ ch xDet +:+ S "is the x-coordinate of the detector,"
-  , S "and" +:+ ch yDetMin `sC` ch yDetMax
-  , S "are the lower and upper y-bounds of the detector (all in m)."
+  , S "When" +:+ ch detOrient +:+ S "= 0 (vertical), the detector is"
+  , S "L_det is the set of (x,y) such that x = x_det and y in [y_min(det), y_max(det)]."
+  , S "When" +:+ ch detOrient +:+ S "= 1 (horizontal), the detector is"
+  , S "L_det is the set of (x,y) such that y = y_det and x in [x_min(det), x_max(det)]."
+  , S "The detector orientation and bounds are user-specified, per" +:+ refS lineDetector
   ]

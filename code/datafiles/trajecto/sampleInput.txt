@@ -10,11 +10,35 @@
 1.0e6
 # Initial y-velocity (m/s)
 0.0
+# Number of field regions
+1
+# Region width (m)
+0.10
+# Region height (m)
+0.10
+# Grid origin x-coordinate (m)
+0.0
+# Grid origin y-coordinate (m)
+-0.05
 # Electric field x-component (N/C)
 0.0
 # Electric field y-component (N/C)
 0.0
 # Magnetic field strength (T)
 1.0e-4
+# Detector orientation (0=vertical, 1=horizontal)
+0
+# Detector x-position (m)
+0.05
+# Detector y-position (m)
+0.0
+# Detector minimum y-coordinate (m)
+-0.05
+# Detector maximum y-coordinate (m)
+0.05
+# Detector minimum x-coordinate (m)
+0.0
+# Detector maximum x-coordinate (m)
+0.10
 # Simulation end time (s)
 7.0e-7

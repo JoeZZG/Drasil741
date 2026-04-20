@@ -10,4 +10,4 @@
 
 </div>
 
-The user provides the particle and field parameters; the software system computes and reports the particle trajectory:
+The user provides the particle properties, field region grid, per-region electromagnetic fields, detector specification, and simulation time; the software system computes and reports the particle trajectory and detector hit outcome:

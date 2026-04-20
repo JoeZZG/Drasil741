@@ -18,7 +18,7 @@ import qualified Data.Drasil.Quantities.Physics as QP (velocity, acceleration,
 import Data.Drasil.SI_Units (metre, kilogram, second, newton, coulomb, tesla)
 import Data.Drasil.Units.Physics (velU, accelU)
 
-import Language.Drasil (newUnit, (/:))
+import Language.Drasil (cucNoUnit', newUnit, (/:))
 
 ---------------------------------------------------------
 -- Derived units specific to EM quantities
@@ -47,7 +47,11 @@ symbols = map dqdWr
   , fieldRegionE, fieldRegionB
   , chargeToMass
   , tFinal, tHit, xDet, xHit, yHit
-  , yDetMin, yDetMax
+  , yDetMin, yDetMax ]
+  ++ [dqdWr nRegions]
+  ++ map dqdWr [ regionWidth, regionHeight, xGrid, yGrid ]
+  ++ [dqdWr detOrient]
+  ++ map dqdWr [ yDet, xDetMin, xDetMax
   , mMin, mMax, qMax, vMax0, eMax, bMax, tMax ]
   ++ [ initStateVec, fieldRegion, detLine, vCrossBVec ]
   ++ map dqdWr [QP.velocity, QP.acceleration, QP.force, QP.time, QP.position]
@@ -62,8 +66,12 @@ acronyms = [assumption, dataDefn, genDefn, goalStmt,
 inputs :: [DefinedQuantityDict]
 inputs = map dqdWr
   [ parMass, parCharge
-  , xPos0, yPos0, xVel0, yVel0
-  , elecFieldX, elecFieldY, magField
+  , xPos0, yPos0, xVel0, yVel0 ]
+  ++ [dqdWr nRegions]
+  ++ map dqdWr [ regionWidth, regionHeight, xGrid, yGrid
+  , elecFieldX, elecFieldY, magField ]
+  ++ [dqdWr detOrient]
+  ++ map dqdWr [ xDet, yDet, yDetMin, yDetMax, xDetMin, xDetMax
   , tFinal ]
 
 -- | Output variables (ODE state vector: [x, y, vx, vy])
@@ -262,6 +270,61 @@ yDetMax = uc' "y_det_max" (nounPhraseSP "maximum y-coordinate of detector")
   (sup (sub lY (label "max")) (label "det")) Real metre
 
 ---------------------------------------------------------
+-- Region grid quantities
+---------------------------------------------------------
+
+nRegions :: ConstrConcept
+nRegions = cucNoUnit' "nRegions" (nounPhraseSP "number of field regions")
+  "the total number of rectangular field regions in the grid"
+  cN Real [gtZeroConstr] (exactDbl 1)
+
+regionWidth :: UnitalChunk
+regionWidth = uc' "w" (nounPhraseSP "region width")
+  (S "the common width of each field region")
+  lW Real metre
+
+regionHeight :: UnitalChunk
+regionHeight = uc' "h_reg" (nounPhraseSP "region height")
+  (S "the common height of each field region")
+  lH Real metre
+
+xGrid :: UnitalChunk
+xGrid = uc' "x_grid" (nounPhraseSP "grid origin x-coordinate")
+  (S "the x-coordinate of the bottom-left corner of the region grid")
+  (sub lX (label "grid")) Real metre
+
+yGrid :: UnitalChunk
+yGrid = uc' "y_grid" (nounPhraseSP "grid origin y-coordinate")
+  (S "the y-coordinate of the bottom-left corner of the region grid")
+  (sub lY (label "grid")) Real metre
+
+---------------------------------------------------------
+-- Detector orientation and additional detector quantities
+---------------------------------------------------------
+
+detOrient :: ConstrConcept
+detOrient = cucNoUnit' "d_orient" (nounPhraseSP "detector orientation")
+  "flag indicating detector orientation: 0 for vertical, 1 for horizontal"
+  (sub lD (label "orient")) Real
+  [sfwrRange $ Bounded (Inc, exactDbl 0) (Inc, exactDbl 1)]
+  (exactDbl 0)
+
+yDet :: UnitalChunk
+yDet = uc' "y_det" (nounPhraseSP "detector line y-position")
+  (S "the y-coordinate of a horizontal detector line")
+  (sub lY (label "det")) Real metre
+
+xDetMin :: UnitalChunk
+xDetMin = uc' "x_det_min" (nounPhraseSP "minimum x-coordinate of detector")
+  (S "the lower x-bound of a horizontal detector line segment")
+  (sup (sub lX (label "min")) (label "det")) Real metre
+
+xDetMax :: UnitalChunk
+xDetMax = uc' "x_det_max" (nounPhraseSP "maximum x-coordinate of detector")
+  (S "the upper x-bound of a horizontal detector line segment")
+  (sup (sub lX (label "max")) (label "det")) Real metre
+
+---------------------------------------------------------
 -- State vector and cross-product result (DD2, GD2)
 ---------------------------------------------------------
 
@@ -393,6 +456,40 @@ tFinalCon = constrained' tFinal
    sfwrRange $ UpTo (Inc, sy tMax)]
   (dbl 1.0e-6)
 
+regionWidthCon :: ConstrConcept
+regionWidthCon = constrained' regionWidth
+  [gtZeroConstr]
+  (dbl 0.1)
+
+regionHeightCon :: ConstrConcept
+regionHeightCon = constrained' regionHeight
+  [gtZeroConstr]
+  (dbl 0.1)
+
+xGridCon :: ConstrConcept
+xGridCon = constrained' xGrid [] (exactDbl 0)
+
+yGridCon :: ConstrConcept
+yGridCon = constrained' yGrid [] (exactDbl 0)
+
+xDetCon :: ConstrConcept
+xDetCon = constrained' xDet [] (dbl 0.1)
+
+yDetCon :: ConstrConcept
+yDetCon = constrained' yDet [] (exactDbl 0)
+
+yDetMinCon :: ConstrConcept
+yDetMinCon = constrained' yDetMin [] (dbl (-0.05))
+
+yDetMaxCon :: ConstrConcept
+yDetMaxCon = constrained' yDetMax [] (dbl 0.05)
+
+xDetMinCon :: ConstrConcept
+xDetMinCon = constrained' xDetMin [] (exactDbl 0)
+
+xDetMaxCon :: ConstrConcept
+xDetMaxCon = constrained' xDetMax [] (dbl 0.1)
+
 -- | Input constraints with uncertainty
 inConstraints :: [UncertQ]
 inConstraints =
@@ -402,15 +499,40 @@ inConstraints =
   , uq yPos0Con    exact
   , uq xVel0Con    (uncty 0.10 Nothing)
   , uq yVel0Con    (uncty 0.10 Nothing)
+  , uq nRegions exact
+  , uq regionWidthCon exact
+  , uq regionHeightCon exact
+  , uq xGridCon    exact
+  , uq yGridCon    exact
   , uq elecFieldXCon (uncty 0.10 Nothing)
   , uq elecFieldYCon (uncty 0.10 Nothing)
   , uq magFieldCon   (uncty 0.10 Nothing)
+  , uq detOrient exact
+  , uq xDetCon     exact
+  , uq yDetCon     exact
+  , uq yDetMinCon  exact
+  , uq yDetMaxCon  exact
+  , uq xDetMinCon  exact
+  , uq xDetMaxCon  exact
   , uq tFinalCon   exact
   ]
 
 -- | Output constraints
 outConstraints :: [UncertQ]
-outConstraints = [particleState `uq` defaultUncrt]
+outConstraints =
+  [ particleState `uq` defaultUncrt
+  , tHitOut `uq` defaultUncrt
+  , yHitOut `uq` defaultUncrt
+  , xHitOut `uq` defaultUncrt ]
+
+tHitOut :: ConstrConcept
+tHitOut = constrained' tHit [] (exactDbl 0)
+
+yHitOut :: ConstrConcept
+yHitOut = constrained' yHit [] (exactDbl 0)
+
+xHitOut :: ConstrConcept
+xHitOut = constrained' xHit [] (exactDbl 0)
 
 ---------------------------------------------------------
 -- ODE state vector: dependent variable [x, y, vx, vy]

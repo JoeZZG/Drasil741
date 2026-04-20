@@ -13,7 +13,8 @@ import Data.Drasil.Theories.Physics (accelerationTM, velocityTM)
 import Data.Drasil.Quantities.Physics (force)
 
 import Drasil.Trajecto.Unitals (parMass, parCharge, xVel, yVel,
-  elecFieldX, elecFieldY, magField, xAccel, yAccel)
+  elecFieldX, elecFieldY, magField, xAccel, yAccel,
+  elecFieldVec, vCrossBVec)
 import Drasil.Trajecto.Assumptions (singleParticle, prescribedFields, lorentzOnly)
 
 -- | All theoretical models (order matches the SRS)
@@ -31,8 +32,8 @@ lorentzForceTM = tmNoRefs (equationalConstraints' lorentzForceCS)
 
 lorentzForceRels :: [ModelExpr]
 lorentzForceRels =
-  [ -- Fx = q*(Ex + vy*B)  (representative component form)
-    sy force $= sy parCharge $* (sy elecFieldX $+ (sy yVel $* sy magField))
+  [ -- F = q*(E + v×B)  (full vector form of the Lorentz force law)
+    sy force $= sy parCharge $* (sy elecFieldVec $+ sy vCrossBVec)
   ]
 
 lorentzForceCS :: ConstraintSet ModelExpr
@@ -44,12 +45,13 @@ lorentzForceCS = mkConstraintSet
 
 lorentzForceNote :: Sentence
 lorentzForceNote = foldlSent
-  [ S "The electromagnetic force on a charged particle is the sum of" +:+
-    S "the electric force" +:+ sParen (S "q*E") +:+
-    S "and the magnetic force" +:+ (sParen (S "q*(v x B)") !.)
-  , S "For 2D planar motion with an out-of-plane magnetic field B," +:+
-    S "the x-component of the Lorentz force is" +:+
-    S "Fx = q*(Ex + vy*B)."
+  [ S "The electromagnetic force on a charged particle is" +:+
+    S "F = q*(E + v×B), where" +:+ ch force +:+ S "is the total force vector,"
+  , ch parCharge +:+ S "is the particle charge,"
+  , ch elecFieldVec +:+ S "is the electric field vector,"
+  , S "and" +:+ ch vCrossBVec +:+. S "is the cross product of velocity and magnetic flux density."
+  , S "For 2D planar motion with an out-of-plane magnetic field, this reduces to the"
+  , S "component equations derived in the general definitions."
   , S "Assumes" +:+ refS singleParticle `sC` refS prescribedFields ]
 
 ---------------------------------------------------------

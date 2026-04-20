@@ -4,7 +4,7 @@ module Drasil.Trajecto.Assumptions
   ( assumptions
   , piecewiseUniform, singleParticle, noInteractions, prescribedFields
   , twoDMotion, bPerpPlane, eAxisAligned, rectRegions
-  , lineDetector, fullDetection, lorentzOnly
+  , lineDetector, fullDetection, lorentzOnly, gridLayout
   ) where
 
 import Language.Drasil
@@ -15,11 +15,11 @@ import Data.Drasil.Concepts.Documentation (assumpDom)
 assumptions :: [ConceptInstance]
 assumptions =
   [ piecewiseUniform, singleParticle, noInteractions, prescribedFields
-  , twoDMotion, bPerpPlane, eAxisAligned, rectRegions
+  , twoDMotion, bPerpPlane, eAxisAligned, rectRegions, gridLayout
   , lineDetector, fullDetection, lorentzOnly ]
 
 piecewiseUniform, singleParticle, noInteractions, prescribedFields,
-  twoDMotion, bPerpPlane, eAxisAligned, rectRegions,
+  twoDMotion, bPerpPlane, eAxisAligned, rectRegions, gridLayout,
   lineDetector, fullDetection, lorentzOnly :: ConceptInstance
 
 piecewiseUniform = cic "piecewiseUniform"
@@ -33,7 +33,7 @@ singleParticle = cic "singleParticle"
 
 noInteractions = cic "noInteractions"
   (S "Collisions and particle-particle interactions (including space-charge effects)" +:+
-   S "are neglected" !.)
+   S "are neglected; this follows from" +:+ refS singleParticle !.)
   "noInteractions" assumpDom
 
 prescribedFields = cic "prescribedFields"
@@ -46,19 +46,31 @@ twoDMotion = cic "twoDMotion"
   "twoDMotion" assumpDom
 
 bPerpPlane = cic "bPerpPlane"
-  (S "The magnetic field is perpendicular to the x-y plane" !.)
+  (S "The magnetic field is perpendicular to the x-y plane," +:+
+   S "consistent with" +:+ refS twoDMotion !.)
   "bPerpPlane" assumpDom
 
 eAxisAligned = cic "eAxisAligned"
-  (S "The electric field lies in the x-y plane and is aligned with a coordinate axis" !.)
+  (S "The electric field lies in the x-y plane and is aligned with a coordinate axis," +:+
+   S "consistent with" +:+ refS twoDMotion !.)
   "eAxisAligned" assumpDom
 
 rectRegions = cic "rectRegions"
-  (S "Field-region boundaries are rectangular and parallel to the x and y axes" !.)
+  (S "All field regions are axis-aligned rectangles of identical width w and height h." +:+
+   S "The N regions are tiled adjacently (sharing edges with no gaps or overlaps)" +:+
+   S "so that their union forms a single axis-aligned rectangle" !.)
   "rectRegions" assumpDom
 
+gridLayout = cic "gridLayout"
+  (S "The field regions are numbered 1 through N and arranged in a single row" +:+
+   S "(left-to-right) or single column (bottom-to-top) within the grid rectangle." +:+
+   S "The arrangement direction is determined by the region grid specification," +:+
+   S "and region geometry is constrained by" +:+ refS rectRegions !.)
+  "gridLayout" assumpDom
+
 lineDetector = cic "lineDetector"
-  (S "The detector is modeled as a line located within the field region" !.)
+  (S "The detector is modelled as a line segment that is either horizontal" +:+
+   S "or vertical, located at the boundary of or within the region grid" !.)
   "lineDetector" assumpDom
 
 fullDetection = cic "fullDetection"

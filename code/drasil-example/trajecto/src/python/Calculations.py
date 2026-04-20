@@ -5,18 +5,6 @@
 
 import scipy.integrate
 
-## \brief Calculates time of detector hit (s)
-# \param t_final final simulation time (s)
-# \return time of detector hit (s)
-def func_t_hit(t_final):
-    return t_final
-
-## \brief Calculates electric field in region i (N/C)
-# \param E_vect electric field vector (N/C)
-# \return electric field in region i (N/C)
-def func_E_vect_i(E_vect):
-    return E_vect
-
 ## \brief Calculates dependent variables (m)
 # \param κ charge-to-mass ratio (C/kg)
 # \param E_x x-component of the electric field (N/C)

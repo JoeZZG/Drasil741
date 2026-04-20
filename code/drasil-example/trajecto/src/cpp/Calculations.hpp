@@ -14,18 +14,6 @@
 
 using std::vector;
 
-/** \brief Calculates time of detector hit (s)
-    \param t_final final simulation time (s)
-    \return time of detector hit (s)
-*/
-double func_t_hit(double t_final);
-
-/** \brief Calculates electric field in region i (N/C)
-    \param E_vect electric field vector (N/C)
-    \return electric field in region i (N/C)
-*/
-double func_E_vect_i(double E_vect);
-
 /** \brief Calculates dependent variables (m)
     \param κ charge-to-mass ratio (C/kg)
     \param E_x x-component of the electric field (N/C)

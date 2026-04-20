@@ -10,10 +10,8 @@ import InputParameters
 import OutputFormat
 
 filename = sys.argv[1]
-m, q, x_0, y_0, v_x0, v_y0, E_x, E_y, B, t_final = InputParameters.get_input(filename)
-κ, s_0, E_vect, B_vect = InputParameters.derived_values(q, m, x_0, y_0, v_x0, v_y0, E_x, E_y, B)
-InputParameters.input_constraints(m, q, x_0, y_0, v_x0, v_y0, E_x, E_y, B, t_final)
-t_hit = Calculations.func_t_hit(t_final)
-E_vect_i = Calculations.func_E_vect_i(E_vect)
+m, q, x_0, y_0, v_x0, v_y0, N, w, h, x_grid, y_grid, E_x, E_y, B, d_orient, x_det, y_det, y_min^det, y_max^det, x_min^det, x_max^det, t_final = InputParameters.get_input(filename)
+κ, s_0, E_vect, B_vect, R_i, E_vect_i, L_det = InputParameters.derived_values(q, m, x_0, y_0, v_x0, v_y0, E_x, E_y, B, x_grid, y_grid, w, h, d_orient, x_det, y_det, y_min^det, y_max^det, x_min^det, x_max^det)
+InputParameters.input_constraints(m, q, x_0, y_0, v_x0, v_y0, N, w, h, x_grid, y_grid, E_x, E_y, B, d_orient, x_det, y_det, y_min^det, y_max^det, x_min^det, x_max^det, t_final)
 s = Calculations.func_s(κ, E_x, B, E_y, x_0, y_0, v_x0, v_y0, t_final)
 OutputFormat.write_output(s)

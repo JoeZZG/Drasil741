@@ -3,7 +3,7 @@
 module Drasil.Trajecto.IMods (iMods, stateEvolIM, detHitIM) where
 
 import Language.Drasil
-import Theory.Drasil (InstanceModel, RelationConcept, makeRC, imNoRefs, deModel', equationalModel, qwUC)
+import Theory.Drasil (InstanceModel, RelationConcept, makeRC, imNoRefs, deModel', qwUC)
 import qualified Language.Drasil.Sentence.Combinators as S
 
 import qualified Data.Drasil.Quantities.Physics as QP (time)
@@ -14,7 +14,8 @@ import Drasil.Trajecto.Unitals
   , xPos0, yPos0, xVel0, yVel0
   , elecFieldX, elecFieldY, magField
   , chargeToMass, tFinal
-  , tHit, xDet, xHit, yHit, yDetMin, yDetMax )
+  , tHit, xDet, xHit, yHit, yDet, yDetMin, yDetMax, xDetMin, xDetMax, detOrient
+  , nRegions, regionWidth, regionHeight, xGrid, yGrid )
 import Drasil.Trajecto.DataDefs
   ( qOvermDD, initStateDD, fieldsByRegionDD, detectorLineDD )
 import Drasil.Trajecto.GenDefs (kin2DGD, dyn2DGD)
@@ -70,43 +71,61 @@ stateEvolNote = foldlSent
   , S "and the particle undergoes free (force-free) motion."
   , S "The model is derived by combining" +:+ refS kin2DGD +:+ S "and" +:+. refS dyn2DGD
   , S "Applicable assumptions:" +:+ refS singleParticle `sC` refS noInteractions
-    `sC` refS twoDMotion +:+. S "and" +:+ refS lorentzOnly
+    `sC` refS twoDMotion +:+ S "and" +:+ refS lorentzOnly
   ]
 
 ---------------------------------------------------------
 -- IM2: First detector intersection (hit time and hit location)
--- t_hit = min { t ∈ [0, t_final] | x(t) = x_det ∧ y(t) ∈ [y_min^det, y_max^det] }
--- x_hit = x_det,  y_hit = y(t_hit)
+-- Defining condition: x(t_hit) = x_det  ∧  y_min^det ≤ y_hit ≤ y_max^det  ∧  t_hit ≤ t_final
+-- t_hit is the minimum t in [0, t_final] satisfying the above; −1 if no such t exists.
+-- y_hit = y(t_hit) is the y-coordinate of the impact point.
 ---------------------------------------------------------
 
 detHitIM :: InstanceModel
 detHitIM = imNoRefs
-  (equationalModel "detHitIM"
-    (nounPhraseSP "First detector intersection (hit time and hit location)")
-    detHitQD)
-  [ qwUC xDet, qwUC yDetMin, qwUC yDetMax, qwUC tFinal, qwUC xPos, qwUC yPos ]
+  (deModel' detHitRC)
+  [ qwUC detOrient, qwUC xDet, qwUC yDet
+  , qwUC yDetMin, qwUC yDetMax, qwUC xDetMin, qwUC xDetMax
+  , qwUC tFinal, qwUC xPos, qwUC yPos ]
   (dqdWr tHit)
   []
   Nothing
   "detHit"
   [detHitNote]
-  where
-    detHitQD :: SimpleQDef
-    detHitQD = mkQuantDef tHit detHitExpr
 
-detHitExpr :: Expr
-detHitExpr = sy tFinal
+detHitRC :: RelationConcept
+detHitRC = makeRC "detHitRC"
+  (nounPhraseSP "First detector intersection (hit time and hit location)")
+  EmptyS detHitRel
+
+-- The relation shows both detector orientations joined by logical OR.
+detHitRel :: ModelExpr
+detHitRel =
+  (  (sy xPos $= sy xDet)
+     $&& (sy yHit $>= sy yDetMin)
+     $&& (sy yHit $<= sy yDetMax)
+  )
+  $||
+  (  (sy yPos $= sy yDet)
+     $&& (sy xHit $>= sy xDetMin)
+     $&& (sy xHit $<= sy xDetMax)
+  )
 
 detHitNote :: Sentence
 detHitNote = foldlSent
-  [ S "The detector is modelled as a vertical line segment at"
-  , ch xDet +:+ S "with y-bounds" +:+ ch yDetMin +:+ S "and"
-  , ch yDetMax +:+. sParen (refS detectorLineDD)
-  , S "The hit time is defined as:"
-  , S "t_hit = min t in [0, t_final] such that x(t) = x_det and y(t) in [y_min(det), y_max(det)]."
-  , S "The hit location is:"
-  , S "x_hit = x_det, and y_hit = y(t_hit)," +:+. ch yHit
-  , S "If no such t exists within [0, t_final], then no detector hit occurs."
+  [ S "The detector is modelled as a line segment that may be vertical or horizontal,"
+  , S "selected by the orientation flag" +:+ ch detOrient +:+ sParen (refS detectorLineDD) :+: S "."
+  , S "Vertical case (D = 0): the detector is at x =" +:+ ch xDet
+  , S "with y-bounds [" <> ch yDetMin <> S "," +:+ ch yDetMax <> S "]."
+  , S "The hit condition is x(t) = x_det and y(t) in [y_min, y_max]."
+  , S "Horizontal case (D = 1): the detector is at y =" +:+ ch yDet
+  , S "with x-bounds [" <> ch xDetMin <> S "," +:+ ch xDetMax <> S "]."
+  , S "The hit condition is y(t) = y_det and x(t) in [x_min, x_max]."
+  , S "In both cases," +:+ ch tHit
+  , S "is the minimum t in [0," +:+ ch tFinal <> S "] satisfying the condition."
+  , S "If no such t exists,"
+  , ch tHit +:+ S "is set to -1 as a sentinel value indicating no hit,"
+  , S "and the hit coordinates are undefined."
   , S "The trajectory (x(t), y(t)) is provided by" +:+. refS stateEvolIM
-  , S "Applicable assumptions:" +:+ refS fullDetection +:+. S "and" +:+ refS lineDetector
+  , S "Applicable assumptions:" +:+ refS fullDetection +:+ S "and" +:+ refS lineDetector
   ]

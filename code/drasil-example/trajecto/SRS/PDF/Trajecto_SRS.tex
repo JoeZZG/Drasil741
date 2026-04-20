@@ -83,6 +83,8 @@ $\symbf{B}$ & Magnetic flux density vector & ${\text{T}}$
 \\
 ${\symbf{B}_{i}}$ & Magnetic flux density in region i & ${\text{T}}$
 \\
+${d_{\text{orient}}}$ & Detector orientation & --
+\\
 ${E_{\text{max}}}$ & Maximum electric field magnitude & $\frac{\text{N}}{\text{C}}$
 \\
 ${E_{\text{x}}}$ & X-component of the electric field & $\frac{\text{N}}{\text{C}}$
@@ -95,6 +97,8 @@ ${\symbf{E}_{i}}$ & Electric field in region i & $\frac{\text{N}}{\text{C}}$
 \\
 $\symbf{F}$ & Force & ${\text{N}}$
 \\
+$h$ & Region height & ${\text{m}}$
+\\
 ${L_{\text{det}}}$ & Detector line & --
 \\
 $m$ & Particle mass & ${\text{kg}}$
@@ -102,6 +106,8 @@ $m$ & Particle mass & ${\text{kg}}$
 ${m_{\text{max}}}$ & Maximum particle mass & ${\text{kg}}$
 \\
 ${m_{\text{min}}}$ & Minimum particle mass & ${\text{kg}}$
+\\
+$N$ & Number of field regions & --
 \\
 $\symbf{p}\text{(}t\text{)}$ & Position & ${\text{m}}$
 \\
@@ -137,15 +143,29 @@ $\symbf{v}\text{(}t\text{)}$ & Velocity & $\frac{\text{m}}{\text{s}}$
 \\
 $\symbf{v}\text{×}\symbf{B}$ & Cross product of velocity and magnetic field & --
 \\
+$w$ & Region width & ${\text{m}}$
+\\
 $x$ & X-position of the particle & ${\text{m}}$
 \\
 ${x_{0}}$ & Initial x-position & ${\text{m}}$
 \\
 ${x_{\text{det}}}$ & Detector line x-position & ${\text{m}}$
 \\
+${x_{\text{grid}}}$ & Grid origin x-coordinate & ${\text{m}}$
+\\
+${x_{\text{hit}}}$ & X-coordinate of impact point & ${\text{m}}$
+\\
+${{x_{\text{max}}}^{\text{det}}}$ & Maximum x-coordinate of detector & ${\text{m}}$
+\\
+${{x_{\text{min}}}^{\text{det}}}$ & Minimum x-coordinate of detector & ${\text{m}}$
+\\
 $y$ & Y-position of the particle & ${\text{m}}$
 \\
 ${y_{0}}$ & Initial y-position & ${\text{m}}$
+\\
+${y_{\text{det}}}$ & Detector line y-position & ${\text{m}}$
+\\
+${y_{\text{grid}}}$ & Grid origin y-coordinate & ${\text{m}}$
 \\
 ${y_{\text{hit}}}$ & Y-coordinate of impact point & ${\text{m}}$
 \\
@@ -194,7 +214,7 @@ Uncert. & Typical Uncertainty
 \end{longtblr}
 \section{Introduction}
 \label{Sec:Intro}
-The motion of a charged particle through electromagnetic fields is a fundamental phenomenon arising in particle accelerators, mass spectrometers, and plasma confinement devices. It is therefore useful to have a program to simulate Charged Particle Trajectory Simulator trajectories in piecewise-uniform fields.
+The motion of a charged particle through electromagnetic fields is a fundamental phenomenon arising in particle accelerators, mass spectrometers, and plasma confinement devices. It is therefore useful to have a program to simulate charged particle trajectories in piecewise-uniform fields.
 
 The following section provides an overview of the software requirements specification (SRS) for Charged Particle Trajectory Simulator. This section explains the purpose of this document, the scope of the requirements, the characteristics of the intended reader, and the organization of the document.
 
@@ -233,7 +253,7 @@ This section provides general information about the system. It identifies the in
 \label{Figure:sysCtxDiag}
 \end{center}
 \end{figure}
-The user provides the particle and field parameters; the software system computes and reports the particle trajectory:
+The user provides the particle properties, field region grid, per-region electromagnetic fields, detector specification, and simulation time; the software system computes and reports the particle trajectory and detector hit outcome:
 
 \subsection{User Characteristics}
 \label{Sec:UserChars}
@@ -262,7 +282,8 @@ This subsection provides a list of terms that are used in the subsequent section
 \item{Lorentz force: The force on a charged particle due to electric and magnetic fields.}
 \item{Trajectory: The path traced by a particle over time.}
 \item{Field region: A spatial region in which the electric field and magnetic field are specified, typically treated as uniform within the region.}
-\item{Detector line: A line at a specified location where the particle impact position is recorded.}
+\item{Region grid: A rectangular arrangement of N equal-sized rectangular field regions tiled side-by-side with no gaps or overlaps, whose union forms a single axis-aligned rectangle.}
+\item{Detector line: A line segment (either horizontal or vertical) at a specified location where the particle impact position is recorded.}
 \item{Velocity selector: A configuration of crossed electric and magnetic fields that allows only particles with a particular velocity to pass through without deflection.}
 \item{Cartesian coordinate system: A coordinate system that specifies each point uniquely in a plane by a set of numerical coordinates, which are the signed distances to the point from two fixed perpendicular oriented lines, measured in the same unit of length.}
 \end{itemize}
@@ -272,9 +293,10 @@ The physical system of Trajecto, as shown in \hyperref[Figure:trajectoPhysSys]{F
 
 \begin{description}[font=\normalfont]
 \item[PS1:]{A charged particle (the simulated particle)}
-\item[PS2:]{The electric field in the particle's current region}
-\item[PS3:]{The magnetic field perpendicular to the x-y plane}
-\item[PS4:]{The detector line at a specified x-coordinate}
+\item[PS2:]{The electric field in each field region (may differ between regions)}
+\item[PS3:]{The magnetic field perpendicular to the x-y plane in each field region}
+\item[PS4:]{The region grid of N equal-sized rectangular field regions}
+\item[PS5:]{The detector line (horizontal or vertical) at a specified location}
 \end{description}
 \begin{figure}[H]
 \begin{center}
@@ -285,7 +307,7 @@ The physical system of Trajecto, as shown in \hyperref[Figure:trajectoPhysSys]{F
 \end{figure}
 \subsubsection{Goal Statements}
 \label{Sec:GoalStmt}
-Given the particle properties ($q$ and $m$), initial conditions (${x_{0}}$, ${y_{0}}$, ${v_{\text{x}0}}$, ${v_{\text{y}0}}$), the specification of electric and magnetic fields (${E_{\text{x}}}$, ${E_{\text{y}}}$, $B$), and detector geometry including ${t_{\text{final}}}$, the goal statements are:
+Given the particle properties ($q$ and $m$), initial conditions (${x_{0}}$, ${y_{0}}$, ${v_{\text{x}0}}$, ${v_{\text{y}0}}$), the number of field regions $N$, the per-region fields (${E_{\text{x}}}$, ${E_{\text{y}}}$, $B$ for each region), the region grid specification (${x_{\text{grid}}}$, ${y_{\text{grid}}}$, $w$, $h$), the detector specification (${d_{\text{orient}}}$, ${x_{\text{det}}}$, ${y_{\text{det}}}$ and extent), and the simulation time ${t_{\text{final}}}$, the goal statements are:
 
 \begin{description}[font=\normalfont]
 \item[predictTrajectory:\phantomsection\label{predictTrajectory}]{Predict the trajectory of a charged particle under prescribed electric and magnetic fields, computed using \hyperref[IM:stateEvol]{IM:stateEvol}.}
@@ -301,14 +323,15 @@ This section simplifies the original problem and helps in developing the theoret
 
 \begin{description}[font=\normalfont]
 \item[piecewiseUniform:\phantomsection\label{piecewiseUniform}]{The electric and magnetic fields are uniform within each field region and may change only at region boundaries. (RefBy: \hyperref[DD:fieldsByRegion]{DD:fieldsByRegion}.)}
-\item[singleParticle:\phantomsection\label{singleParticle}]{The particle is treated as a point mass and point charge. (RefBy: \hyperref[IM:stateEvol]{IM:stateEvol}, \hyperref[TM:lorentzForce]{TM:lorentzForce}, and \hyperref[TM:eqnMotion]{TM:eqnMotion}.)}
-\item[noInteractions:\phantomsection\label{noInteractions}]{Collisions and particle-particle interactions (including space-charge effects) are neglected. (RefBy: \hyperref[IM:stateEvol]{IM:stateEvol}.)}
-\item[prescribedFields:\phantomsection\label{prescribedFields}]{The electric and magnetic fields are user-specified and remain fixed during the simulation. (RefBy: \hyperref[TM:lorentzForce]{TM:lorentzForce}, \hyperref[TM:eqnMotion]{TM:eqnMotion}, \hyperref[GD:dyn2D]{GD:dyn2D}, \hyperref[DD:eField]{DD:eField}, and \hyperref[DD:bField]{DD:bField}.)}
-\item[twoDMotion:\phantomsection\label{twoDMotion}]{The particle motion is confined to the x-y plane. (RefBy: \hyperref[GD:vCrossB2D]{GD:vCrossB2D}, \hyperref[IM:stateEvol]{IM:stateEvol}, \hyperref[GD:kin2D]{GD:kin2D}, \hyperref[GD:dyn2D]{GD:dyn2D}, and \hyperref[lcExtendTo3D]{LC:lcExtendTo3D}.)}
-\item[bPerpPlane:\phantomsection\label{bPerpPlane}]{The magnetic field is perpendicular to the x-y plane. (RefBy: \hyperref[GD:vCrossB2D]{GD:vCrossB2D}, \hyperref[GD:dyn2D]{GD:dyn2D}, and \hyperref[DD:bField]{DD:bField}.)}
-\item[eAxisAligned:\phantomsection\label{eAxisAligned}]{The electric field lies in the x-y plane and is aligned with a coordinate axis. (RefBy: \hyperref[GD:dyn2D]{GD:dyn2D} and \hyperref[DD:eField]{DD:eField}.)}
-\item[rectRegions:\phantomsection\label{rectRegions}]{Field-region boundaries are rectangular and parallel to the x and y axes. (RefBy: \hyperref[DD:regionRect]{DD:regionRect}.)}
-\item[lineDetector:\phantomsection\label{lineDetector}]{The detector is modeled as a line located within the field region. (RefBy: \hyperref[IM:detHit]{IM:detHit} and \hyperref[DD:detectorLine]{DD:detectorLine}.)}
+\item[singleParticle:\phantomsection\label{singleParticle}]{The particle is treated as a point mass and point charge. (RefBy: \hyperref[IM:stateEvol]{IM:stateEvol}, \hyperref[TM:lorentzForce]{TM:lorentzForce}, \hyperref[TM:eqnMotion]{TM:eqnMotion}, and \hyperref[noInteractions]{A:noInteractions}.)}
+\item[noInteractions:\phantomsection\label{noInteractions}]{Collisions and particle-particle interactions (including space-charge effects) are neglected; this follows from \hyperref[singleParticle]{A:singleParticle}. (RefBy: \hyperref[IM:stateEvol]{IM:stateEvol}.)}
+\item[prescribedFields:\phantomsection\label{prescribedFields}]{The electric and magnetic fields are user-specified and remain fixed during the simulation. (RefBy: \hyperref[TM:lorentzForce]{TM:lorentzForce}, \hyperref[TM:eqnMotion]{TM:eqnMotion}, \hyperref[GD:dyn2D]{GD:dyn2D}, \hyperref[DD:eField]{DD:eField}, \hyperref[DD:fieldsByRegion]{DD:fieldsByRegion}, and \hyperref[DD:bField]{DD:bField}.)}
+\item[twoDMotion:\phantomsection\label{twoDMotion}]{The particle motion is confined to the x-y plane. (RefBy: \hyperref[GD:vCrossB2D]{GD:vCrossB2D}, \hyperref[IM:stateEvol]{IM:stateEvol}, \hyperref[GD:kin2D]{GD:kin2D}, \hyperref[GD:dyn2D]{GD:dyn2D}, \hyperref[lcExtendTo3D]{LC:lcExtendTo3D}, \hyperref[eAxisAligned]{A:eAxisAligned}, and \hyperref[bPerpPlane]{A:bPerpPlane}.)}
+\item[bPerpPlane:\phantomsection\label{bPerpPlane}]{The magnetic field is perpendicular to the x-y plane, consistent with \hyperref[twoDMotion]{A:twoDMotion}. (RefBy: \hyperref[GD:vCrossB2D]{GD:vCrossB2D}, \hyperref[GD:dyn2D]{GD:dyn2D}, and \hyperref[DD:bField]{DD:bField}.)}
+\item[eAxisAligned:\phantomsection\label{eAxisAligned}]{The electric field lies in the x-y plane and is aligned with a coordinate axis, consistent with \hyperref[twoDMotion]{A:twoDMotion}. (RefBy: \hyperref[GD:dyn2D]{GD:dyn2D} and \hyperref[DD:eField]{DD:eField}.)}
+\item[rectRegions:\phantomsection\label{rectRegions}]{All field regions are axis-aligned rectangles of identical width w and height h. The N regions are tiled adjacently (sharing edges with no gaps or overlaps) so that their union forms a single axis-aligned rectangle. (RefBy: \hyperref[gridLayout]{A:gridLayout} and \hyperref[DD:regionRect]{DD:regionRect}.)}
+\item[gridLayout:\phantomsection\label{gridLayout}]{The field regions are numbered 1 through N and arranged in a single row (left-to-right) or single column (bottom-to-top) within the grid rectangle. The arrangement direction is determined by the region grid specification, and region geometry is constrained by \hyperref[rectRegions]{A:rectRegions}. (RefBy: \hyperref[DD:regionRect]{DD:regionRect}.)}
+\item[lineDetector:\phantomsection\label{lineDetector}]{The detector is modelled as a line segment that is either horizontal or vertical, located at the boundary of or within the region grid. (RefBy: \hyperref[IM:detHit]{IM:detHit} and \hyperref[DD:detectorLine]{DD:detectorLine}.)}
 \item[fullDetection:\phantomsection\label{fullDetection}]{The detector line is sufficiently long to record the impact point for any trajectory within the scope of the simulation. (RefBy: \hyperref[IM:detHit]{IM:detHit}.)}
 \item[lorentzOnly:\phantomsection\label{lorentzOnly}]{The particle dynamics are governed only by the Lorentz force; all other forces are neglected. (RefBy: \hyperref[IM:stateEvol]{IM:stateEvol}, \hyperref[TM:eqnMotion]{TM:eqnMotion}, and \hyperref[ucLorentzForce]{UC:ucLorentzForce}.)}
 \end{description}
@@ -387,18 +410,17 @@ Label & Lorentz force law
         
 \\ \midrule
 Equation & \begin{displaymath}
-           \resizeExpression{\symbf{F}=q\,\left({E_{\text{x}}}+{v_{\text{y}}}\,B\right)}
+           \resizeExpression{\symbf{F}=q\,\left(\symbf{E}+\symbf{v}\text{×}\symbf{B}\right)}
            \end{displaymath}
 \\ \midrule
 Description & \begin{symbDescription}
               \item{$\symbf{F}$ is the force (${\text{N}}$)}
               \item{$q$ is the particle charge (${\text{C}}$)}
-              \item{${E_{\text{x}}}$ is the x-component of the electric field ($\frac{\text{N}}{\text{C}}$)}
-              \item{${v_{\text{y}}}$ is the y-velocity of the particle ($\frac{\text{m}}{\text{s}}$)}
-              \item{$B$ is the out-of-plane magnetic flux density (${\text{T}}$)}
+              \item{$\symbf{E}$ is the electric field vector ($\frac{\text{N}}{\text{C}}$)}
+              \item{$\symbf{v}\text{×}\symbf{B}$ is the cross product of velocity and magnetic field (Unitless)}
               \end{symbDescription}
 \\ \midrule
-Notes & The electromagnetic force on a charged particle is the sum of the electric force (q*E) and the magnetic force (q*(v x B)). For 2D planar motion with an out-of-plane magnetic field B, the x-component of the Lorentz force is Fx = q*(Ex + vy*B). Assumes \hyperref[singleParticle]{A:singleParticle}, \hyperref[prescribedFields]{A:prescribedFields}.
+Notes & The electromagnetic force on a charged particle is F = q*(E + v×B), where $\symbf{F}$ is the total force vector, $q$ is the particle charge, $\symbf{E}$ is the electric field vector, and $\symbf{v}\text{×}\symbf{B}$ is the cross product of velocity and magnetic flux density.. For 2D planar motion with an out-of-plane magnetic field, this reduces to the component equations derived in the general definitions. Assumes \hyperref[singleParticle]{A:singleParticle}, \hyperref[prescribedFields]{A:prescribedFields}.
         
 \\ \midrule
 Source & --
@@ -510,6 +532,9 @@ RefBy & \hyperref[IM:stateEvol]{IM:stateEvol}
 Label & Cross product v x B for out-of-plane magnetic field
         
 \\ \midrule
+Units & $\frac{\text{N}}{\text{C}}$
+        
+\\ \midrule
 Equation & \begin{displaymath}
            \resizeExpression{\symbf{v}\text{×}\symbf{B}=\begin{bmatrix}
                                                         {v_{\text{y}}}\,B & -{v_{\text{x}}}\,B & 0
@@ -563,7 +588,7 @@ Description & \begin{symbDescription}
               \item{${E_{\text{y}}}$ is the y-component of the electric field ($\frac{\text{N}}{\text{C}}$)}
               \end{symbDescription}
 \\ \midrule
-Notes & Assuming planar motion (\hyperref[twoDMotion]{A:twoDMotion}), prescribed fields (\hyperref[prescribedFields]{A:prescribedFields}), out-of-plane magnetic field (\hyperref[bPerpPlane]{A:bPerpPlane}), and axis-aligned electric field (\hyperref[eAxisAligned]{A:eAxisAligned}). Here $κ$ = q/m is the charge-to-mass ratio defined in \hyperref[DD:qOverm]{DD:qOverm} .. The equations are obtained from \hyperref[TM:lorentzForce]{TM:lorentzForce} and \hyperref[TM:eqnMotion]{TM:eqnMotion} by applying \hyperref[GD:vCrossB2D]{GD:vCrossB2D}..
+Notes & Assuming planar motion (\hyperref[twoDMotion]{A:twoDMotion}), prescribed fields (\hyperref[prescribedFields]{A:prescribedFields}), out-of-plane magnetic field (\hyperref[bPerpPlane]{A:bPerpPlane}), and axis-aligned electric field (\hyperref[eAxisAligned]{A:eAxisAligned}). Here $κ$ = q/m is the charge-to-mass ratio defined in \hyperref[DD:qOverm]{DD:qOverm}. The equations are obtained from \hyperref[TM:lorentzForce]{TM:lorentzForce} and \hyperref[TM:eqnMotion]{TM:eqnMotion} by applying \hyperref[GD:vCrossB2D]{GD:vCrossB2D}.
         
 \\ \midrule
 Source & --
@@ -606,7 +631,7 @@ Description & \begin{symbDescription}
               \item{$m$ is the particle mass (${\text{kg}}$)}
               \end{symbDescription}
 \\ \midrule
-Notes & $q$ is the particle charge and $m$ is the particle mass. The ratio $κ$ is used to simplify the equations of motion..
+Notes & $q$ is the particle charge and $m$ is the particle mass. The ratio $κ$ is used to simplify the equations of motion.
         
 \\ \midrule
 Source & --
@@ -649,7 +674,7 @@ Description & \begin{symbDescription}
               \item{${v_{\text{y}0}}$ is the initial y-velocity ($\frac{\text{m}}{\text{s}}$)}
               \end{symbDescription}
 \\ \midrule
-Notes & ${x_{0}}$, ${y_{0}}$ are the initial position components (m) and ${v_{\text{x}0}}$, ${v_{\text{y}0}}$ are the initial velocity components (m/s)..
+Notes & ${x_{0}}$, ${y_{0}}$ are the initial position components (m) and ${v_{\text{x}0}}$, ${v_{\text{y}0}}$ are the initial velocity components (m/s).
         
 \\ \midrule
 Source & --
@@ -690,14 +715,13 @@ Description & \begin{symbDescription}
               \item{${E_{\text{y}}}$ is the y-component of the electric field ($\frac{\text{N}}{\text{C}}$)}
               \end{symbDescription}
 \\ \midrule
-Notes & $\symbf{E}$ is the electric field vector. ${E_{\text{x}}}$ and ${E_{\text{y}}}$ are the in-plane components (N/C). The out-of-plane component is zero by \hyperref[eAxisAligned]{A:eAxisAligned} and the fields are user-specified per. \hyperref[prescribedFields]{A:prescribedFields}.
+Notes & $\symbf{E}$ is the electric field vector. ${E_{\text{x}}}$ and ${E_{\text{y}}}$ are the in-plane components (N/C). The out-of-plane component is zero by \hyperref[eAxisAligned]{A:eAxisAligned}, and the fields are user-specified per \hyperref[prescribedFields]{A:prescribedFields}.
         
 \\ \midrule
 Source & --
          
 \\ \midrule
-RefBy & \hyperref[DD:fieldsByRegion]{DD:fieldsByRegion}
-        
+RefBy & 
 \\ \bottomrule
 \end{tabular}
 \end{minipage}
@@ -730,14 +754,13 @@ Description & \begin{symbDescription}
               \item{$B$ is the out-of-plane magnetic flux density (${\text{T}}$)}
               \end{symbDescription}
 \\ \midrule
-Notes & $\symbf{B}$ is the magnetic flux density vector. $B$ is the out-of-plane (z) component (T). The in-plane components are zero by \hyperref[bPerpPlane]{A:bPerpPlane} ; fields are fixed by. \hyperref[prescribedFields]{A:prescribedFields}.
+Notes & $\symbf{B}$ is the magnetic flux density vector. $B$ is the out-of-plane (z) component (T). The in-plane components are zero by \hyperref[bPerpPlane]{A:bPerpPlane}; fields are fixed by \hyperref[prescribedFields]{A:prescribedFields}.
         
 \\ \midrule
 Source & --
          
 \\ \midrule
-RefBy & \hyperref[DD:fieldsByRegion]{DD:fieldsByRegion}
-        
+RefBy & 
 \\ \bottomrule
 \end{tabular}
 \end{minipage}
@@ -761,25 +784,26 @@ Units & Unitless
 \\ \midrule
 Equation & \begin{displaymath}
            \resizeExpression{{R_{i}}=\begin{bmatrix}
-                                     {x_{0}} & {x_{\text{det}}} & {{y_{\text{min}}}^{\text{det}}} & {{y_{\text{max}}}^{\text{det}}}
+                                     {x_{\text{grid}}} & {y_{\text{grid}}} & w & h
                                      \end{bmatrix}}
            \end{displaymath}
 \\ \midrule
 Description & \begin{symbDescription}
               \item{${R_{i}}$ is the rectangular field region (Unitless)}
-              \item{${x_{0}}$ is the initial x-position (${\text{m}}$)}
-              \item{${x_{\text{det}}}$ is the detector line x-position (${\text{m}}$)}
-              \item{${{y_{\text{min}}}^{\text{det}}}$ is the minimum y-coordinate of detector (${\text{m}}$)}
-              \item{${{y_{\text{max}}}^{\text{det}}}$ is the maximum y-coordinate of detector (${\text{m}}$)}
+              \item{${x_{\text{grid}}}$ is the grid origin x-coordinate (${\text{m}}$)}
+              \item{${y_{\text{grid}}}$ is the grid origin y-coordinate (${\text{m}}$)}
+              \item{$w$ is the region width (${\text{m}}$)}
+              \item{$h$ is the region height (${\text{m}}$)}
               \end{symbDescription}
 \\ \midrule
-Notes & Each field region is defined as the Cartesian product of two intervals: R\_i = [x\_min(i), x\_max(i)] x [y\_min(i), y\_max(i)], where x\_min(i), x\_max(i), y\_min(i), y\_max(i) are the axis-aligned rectangular boundary coordinates (all in m), per \hyperref[rectRegions]{A:rectRegions}..
+Notes & Each field region R\_i (for i = 1 .. $N$ ) is an axis-aligned rectangle of width $w$ and height $h$. The equation above lists the grid parameters that define each region. For a row layout (regions tiled left-to-right): R\_i = [x\_grid + (i-1)*w, x\_grid + i*w] x [y\_grid, y\_grid + h]. For a column layout (regions tiled bottom-to-top): R\_i = [x\_grid, x\_grid + w] x [y\_grid + (i-1)*h, y\_grid + i*h]. The grid origin (${x_{\text{grid}}}$, ${y_{\text{grid}}}$) anchors region 1, per \hyperref[rectRegions]{A:rectRegions} and \hyperref[gridLayout]{A:gridLayout}.
         
 \\ \midrule
 Source & --
          
 \\ \midrule
-RefBy & 
+RefBy & \hyperref[buildRegionGrid]{FR:Build-Region-Grid} and \hyperref[DD:fieldsByRegion]{DD:fieldsByRegion}
+        
 \\ \bottomrule
 \end{tabular}
 \end{minipage}
@@ -802,21 +826,25 @@ Units & $\frac{\text{N}}{\text{C}}$
         
 \\ \midrule
 Equation & \begin{displaymath}
-           \resizeExpression{{\symbf{E}_{i}}=\symbf{E}}
+           \resizeExpression{{\symbf{E}_{i}}=\begin{bmatrix}
+                                             {E_{\text{x}}} & {E_{\text{y}}} & B
+                                             \end{bmatrix}}
            \end{displaymath}
 \\ \midrule
 Description & \begin{symbDescription}
               \item{${\symbf{E}_{i}}$ is the electric field in region i ($\frac{\text{N}}{\text{C}}$)}
-              \item{$\symbf{E}$ is the electric field vector ($\frac{\text{N}}{\text{C}}$)}
+              \item{${E_{\text{x}}}$ is the x-component of the electric field ($\frac{\text{N}}{\text{C}}$)}
+              \item{${E_{\text{y}}}$ is the y-component of the electric field ($\frac{\text{N}}{\text{C}}$)}
+              \item{$B$ is the out-of-plane magnetic flux density (${\text{T}}$)}
               \end{symbDescription}
 \\ \midrule
-Notes & The electric field ${\symbf{E}_{i}}$ and the magnetic flux density ${\symbf{B}_{i}}$ are constant within each region R\_i: E(r) = E\_i and B(r) = B\_i for all r in R\_i, per \hyperref[piecewiseUniform]{A:piecewiseUniform}. The fields may differ between regions. ${\symbf{E}_{i}}$ depends on \hyperref[DD:eField]{DD:eField} and. ${\symbf{B}_{i}}$ depends on \hyperref[DD:bField]{DD:bField}..
+Notes & Each region R\_i has its own independently specified electric field ${\symbf{E}_{i}}$ = (Ex\_i, Ey\_i, 0) and magnetic flux density ${\symbf{B}_{i}}$ = (0, 0, B\_i). The fields are constant within each region per \hyperref[piecewiseUniform]{A:piecewiseUniform}. The active fields at time t are determined by which region R\_i (\hyperref[DD:regionRect]{DD:regionRect}) contains the particle position (x(t), y(t)). If the particle is outside all defined regions, the fields default to zero and the particle undergoes free (force-free) motion. The per-region values (Ex\_i, Ey\_i, B\_i) are user-specified inputs per \hyperref[prescribedFields]{A:prescribedFields}.
         
 \\ \midrule
 Source & --
          
 \\ \midrule
-RefBy & \hyperref[IM:stateEvol]{IM:stateEvol}
+RefBy & \hyperref[IM:stateEvol]{IM:stateEvol} and \hyperref[lookupActiveRegion]{FR:Lookup-Active-Region}
         
 \\ \bottomrule
 \end{tabular}
@@ -841,18 +869,22 @@ Units & Unitless
 \\ \midrule
 Equation & \begin{displaymath}
            \resizeExpression{{L_{\text{det}}}=\begin{bmatrix}
-                                              {x_{\text{det}}} & {{y_{\text{min}}}^{\text{det}}} & {{y_{\text{max}}}^{\text{det}}}
+                                              {d_{\text{orient}}} & {x_{\text{det}}} & {y_{\text{det}}} & {{y_{\text{min}}}^{\text{det}}} & {{y_{\text{max}}}^{\text{det}}} & {{x_{\text{min}}}^{\text{det}}} & {{x_{\text{max}}}^{\text{det}}}
                                               \end{bmatrix}}
            \end{displaymath}
 \\ \midrule
 Description & \begin{symbDescription}
               \item{${L_{\text{det}}}$ is the detector line (Unitless)}
+              \item{${d_{\text{orient}}}$ is the detector orientation (Unitless)}
               \item{${x_{\text{det}}}$ is the detector line x-position (${\text{m}}$)}
+              \item{${y_{\text{det}}}$ is the detector line y-position (${\text{m}}$)}
               \item{${{y_{\text{min}}}^{\text{det}}}$ is the minimum y-coordinate of detector (${\text{m}}$)}
               \item{${{y_{\text{max}}}^{\text{det}}}$ is the maximum y-coordinate of detector (${\text{m}}$)}
+              \item{${{x_{\text{min}}}^{\text{det}}}$ is the minimum x-coordinate of detector (${\text{m}}$)}
+              \item{${{x_{\text{max}}}^{\text{det}}}$ is the maximum x-coordinate of detector (${\text{m}}$)}
               \end{symbDescription}
 \\ \midrule
-Notes & ${L_{\text{det}}}$ is the detector line segment. It is defined as the set of points L\_det = the set of (x,y) where x = x\_det and y in [y\_min(det), y\_max(det)], per \hyperref[lineDetector]{A:lineDetector}. where ${x_{\text{det}}}$ is the x-coordinate of the detector, and ${{y_{\text{min}}}^{\text{det}}}$, ${{y_{\text{max}}}^{\text{det}}}$ are the lower and upper y-bounds of the detector (all in m)..
+Notes & ${L_{\text{det}}}$ is the detector line segment. When ${d_{\text{orient}}}$ = 0 (vertical), the detector is L\_det is the set of (x,y) such that x = x\_det and y in [y\_min(det), y\_max(det)]. When ${d_{\text{orient}}}$ = 1 (horizontal), the detector is L\_det is the set of (x,y) such that y = y\_det and x in [x\_min(det), x\_max(det)]. The detector orientation and bounds are user-specified, per \hyperref[lineDetector]{A:lineDetector}.
         
 \\ \midrule
 Source & --
@@ -905,7 +937,7 @@ Description & \begin{symbDescription}
               \item{${E_{\text{y}}}$ is the y-component of the electric field ($\frac{\text{N}}{\text{C}}$)}
               \end{symbDescription}
 \\ \midrule
-Notes & Bold symbols denote vectors; the state vector s(t) = (x(t), y(t), vx(t), vy(t)) collects position and velocity components. $κ$ = q/m is the charge-to-mass ratio (\hyperref[DD:qOverm]{DD:qOverm}). The initial condition is s(0) = (x0, y0, v0x, v0y) (\hyperref[DD:initState]{DD:initState}). The fields (Ex(t), Ey(t)) and B(t) are determined by which region R\_i contains (x(t), y(t)) at time t (\hyperref[DD:fieldsByRegion]{DD:fieldsByRegion}). If (x(t), y(t)) lies outside all defined regions, the fields default to zero and the particle undergoes free (force-free) motion. The model is derived by combining \hyperref[GD:kin2D]{GD:kin2D} and \hyperref[GD:dyn2D]{GD:dyn2D}. Applicable assumptions: \hyperref[singleParticle]{A:singleParticle}, \hyperref[noInteractions]{A:noInteractions}, \hyperref[twoDMotion]{A:twoDMotion} and. \hyperref[lorentzOnly]{A:lorentzOnly}.
+Notes & Bold symbols denote vectors; the state vector s(t) = (x(t), y(t), vx(t), vy(t)) collects position and velocity components. $κ$ = q/m is the charge-to-mass ratio (\hyperref[DD:qOverm]{DD:qOverm}). The initial condition is s(0) = (x0, y0, v0x, v0y) (\hyperref[DD:initState]{DD:initState}). The fields (Ex(t), Ey(t)) and B(t) are determined by which region R\_i contains (x(t), y(t)) at time t (\hyperref[DD:fieldsByRegion]{DD:fieldsByRegion}). If (x(t), y(t)) lies outside all defined regions, the fields default to zero and the particle undergoes free (force-free) motion. The model is derived by combining \hyperref[GD:kin2D]{GD:kin2D} and \hyperref[GD:dyn2D]{GD:dyn2D}. Applicable assumptions: \hyperref[singleParticle]{A:singleParticle}, \hyperref[noInteractions]{A:noInteractions}, \hyperref[twoDMotion]{A:twoDMotion} and \hyperref[lorentzOnly]{A:lorentzOnly}.
         
 \\ \midrule
 Source & --
@@ -928,7 +960,7 @@ RefBy & \hyperref[IM:detHit]{IM:detHit}, \hyperref[reportOutputs]{FR:Report-Outp
 Label & First detector intersection (hit time and hit location)
         
 \\ \midrule
-Input & ${x_{\text{det}}}$, ${{y_{\text{min}}}^{\text{det}}}$, ${{y_{\text{max}}}^{\text{det}}}$, ${t_{\text{final}}}$, $x$, $y$
+Input & ${d_{\text{orient}}}$, ${x_{\text{det}}}$, ${y_{\text{det}}}$, ${{y_{\text{min}}}^{\text{det}}}$, ${{y_{\text{max}}}^{\text{det}}}$, ${{x_{\text{min}}}^{\text{det}}}$, ${{x_{\text{max}}}^{\text{det}}}$, ${t_{\text{final}}}$, $x$, $y$
         
 \\ \midrule
 Output & ${t_{\text{hit}}}$
@@ -939,15 +971,23 @@ Input Constraints &
 Output Constraints & 
 \\ \midrule
 Equation & \begin{displaymath}
-           \resizeExpression{{t_{\text{hit}}}={t_{\text{final}}}}
+           \resizeExpression{x={x_{\text{det}}}\land{}{y_{\text{hit}}}\geq{}{{y_{\text{min}}}^{\text{det}}}\land{}{y_{\text{hit}}}\leq{}{{y_{\text{max}}}^{\text{det}}}\lor{}y={y_{\text{det}}}\land{}{x_{\text{hit}}}\geq{}{{x_{\text{min}}}^{\text{det}}}\land{}{x_{\text{hit}}}\leq{}{{x_{\text{max}}}^{\text{det}}}}
            \end{displaymath}
 \\ \midrule
 Description & \begin{symbDescription}
-              \item{${t_{\text{hit}}}$ is the time of detector hit (${\text{s}}$)}
-              \item{${t_{\text{final}}}$ is the final simulation time (${\text{s}}$)}
+              \item{$x$ is the x-position of the particle (${\text{m}}$)}
+              \item{${x_{\text{det}}}$ is the detector line x-position (${\text{m}}$)}
+              \item{${y_{\text{hit}}}$ is the y-coordinate of impact point (${\text{m}}$)}
+              \item{${{y_{\text{min}}}^{\text{det}}}$ is the minimum y-coordinate of detector (${\text{m}}$)}
+              \item{${{y_{\text{max}}}^{\text{det}}}$ is the maximum y-coordinate of detector (${\text{m}}$)}
+              \item{$y$ is the y-position of the particle (${\text{m}}$)}
+              \item{${y_{\text{det}}}$ is the detector line y-position (${\text{m}}$)}
+              \item{${x_{\text{hit}}}$ is the x-coordinate of impact point (${\text{m}}$)}
+              \item{${{x_{\text{min}}}^{\text{det}}}$ is the minimum x-coordinate of detector (${\text{m}}$)}
+              \item{${{x_{\text{max}}}^{\text{det}}}$ is the maximum x-coordinate of detector (${\text{m}}$)}
               \end{symbDescription}
 \\ \midrule
-Notes & The detector is modelled as a vertical line segment at ${x_{\text{det}}}$ with y-bounds ${{y_{\text{min}}}^{\text{det}}}$ and ${{y_{\text{max}}}^{\text{det}}}$ (\hyperref[DD:detectorLine]{DD:detectorLine}). The hit time is defined as: t\_hit = min t in [0, t\_final] such that x(t) = x\_det and y(t) in [y\_min(det), y\_max(det)]. The hit location is: x\_hit = x\_det, and y\_hit = y(t\_hit), ${y_{\text{hit}}}$. If no such t exists within [0, t\_final], then no detector hit occurs. The trajectory (x(t), y(t)) is provided by \hyperref[IM:stateEvol]{IM:stateEvol}. Applicable assumptions: \hyperref[fullDetection]{A:fullDetection} and. \hyperref[lineDetector]{A:lineDetector}.
+Notes & The detector is modelled as a line segment that may be vertical or horizontal, selected by the orientation flag ${d_{\text{orient}}}$ (\hyperref[DD:detectorLine]{DD:detectorLine}). Vertical case (D = 0): the detector is at x = ${x_{\text{det}}}$ with y-bounds [${{y_{\text{min}}}^{\text{det}}}$, ${{y_{\text{max}}}^{\text{det}}}$]. The hit condition is x(t) = x\_det and y(t) in [y\_min, y\_max]. Horizontal case (D = 1): the detector is at y = ${y_{\text{det}}}$ with x-bounds [${{x_{\text{min}}}^{\text{det}}}$, ${{x_{\text{max}}}^{\text{det}}}$]. The hit condition is y(t) = y\_det and x(t) in [x\_min, x\_max]. In both cases, ${t_{\text{hit}}}$ is the minimum t in [0, ${t_{\text{final}}}$] satisfying the condition. If no such t exists, ${t_{\text{hit}}}$ is set to -1 as a sentinel value indicating no hit, and the hit coordinates are undefined. The trajectory (x(t), y(t)) is provided by \hyperref[IM:stateEvol]{IM:stateEvol}. Applicable assumptions: \hyperref[fullDetection]{A:fullDetection} and \hyperref[lineDetector]{A:lineDetector}.
         
 \\ \midrule
 Source & --
@@ -970,11 +1010,17 @@ The \hyperref[Table:InDataConstraints]{Input Data Constraints Table} shows the d
 \\
 $B$ & -- & $-{B_{\text{max}}}\leq{}B\leq{}{B_{\text{max}}}$ & $0.01$ ${\text{T}}$ & 10.0$\%$
 \\
+${d_{\text{orient}}}$ & -- & $0\leq{}{d_{\text{orient}}}\leq{}1$ & $0$ & 0.0$\%$
+\\
 ${E_{\text{x}}}$ & -- & $-{E_{\text{max}}}\leq{}{E_{\text{x}}}\leq{}{E_{\text{max}}}$ & $0$ $\frac{\text{N}}{\text{C}}$ & 10.0$\%$
 \\
 ${E_{\text{y}}}$ & -- & $-{E_{\text{max}}}\leq{}{E_{\text{y}}}\leq{}{E_{\text{max}}}$ & $1.0\cdot{}10^{3}$ $\frac{\text{N}}{\text{C}}$ & 10.0$\%$
 \\
+$h$ & $h\gt{}0$ & -- & $0.1$ ${\text{m}}$ & 0.0$\%$
+\\
 $m$ & $m\gt{}0$ & ${m_{\text{min}}}\leq{}m\leq{}{m_{\text{max}}}$ & $911.0\cdot{}10^{-33}$ ${\text{kg}}$ & 10.0$\%$
+\\
+$N$ & $N\gt{}0$ & -- & $1$ & 0.0$\%$
 \\
 $q$ & -- & $-{q_{\text{max}}}\leq{}q\leq{}{q_{\text{max}}}$ & $160.0\cdot{}10^{-21}$ ${\text{C}}$ & 10.0$\%$
 \\
@@ -984,9 +1030,27 @@ ${v_{\text{x}0}}$ & -- & $-{v_{\text{max}}}\leq{}{v_{\text{x}0}}\leq{}{v_{\text{
 \\
 ${v_{\text{y}0}}$ & -- & $-{v_{\text{max}}}\leq{}{v_{\text{y}0}}\leq{}{v_{\text{max}}}$ & $0$ $\frac{\text{m}}{\text{s}}$ & 10.0$\%$
 \\
+$w$ & $w\gt{}0$ & -- & $0.1$ ${\text{m}}$ & 0.0$\%$
+\\
 ${x_{0}}$ & -- & -- & $0$ ${\text{m}}$ & 0.0$\%$
 \\
+${x_{\text{det}}}$ & -- & -- & $0.1$ ${\text{m}}$ & 0.0$\%$
+\\
+${x_{\text{grid}}}$ & -- & -- & $0$ ${\text{m}}$ & 0.0$\%$
+\\
+${{x_{\text{max}}}^{\text{det}}}$ & -- & -- & $0.1$ ${\text{m}}$ & 0.0$\%$
+\\
+${{x_{\text{min}}}^{\text{det}}}$ & -- & -- & $0$ ${\text{m}}$ & 0.0$\%$
+\\
 ${y_{0}}$ & -- & -- & $0$ ${\text{m}}$ & 0.0$\%$
+\\
+${y_{\text{det}}}$ & -- & -- & $0$ ${\text{m}}$ & 0.0$\%$
+\\
+${y_{\text{grid}}}$ & -- & -- & $0$ ${\text{m}}$ & 0.0$\%$
+\\
+${{y_{\text{max}}}^{\text{det}}}$ & -- & -- & $0.05$ ${\text{m}}$ & 0.0$\%$
+\\
+${{y_{\text{min}}}^{\text{det}}}$ & -- & -- & $0.0-5$ ${\text{m}}$ & 0.0$\%$
 \label{Table:InDataConstraints}
 \end{longtblr}
 \subsubsection{Properties of a Correct Solution}
@@ -999,13 +1063,21 @@ The \hyperref[Table:OutDataConstraints]{Output Data Constraints Table} shows the
 \textbf{Var}
 \\
 $s$
+\\
+${t_{\text{hit}}}$
+\\
+${y_{\text{hit}}}$
+\\
+${x_{\text{hit}}}$
 \label{Table:OutDataConstraints}
 \end{longtblr}
-For a pure magnetic field (no electric field, i.e., Ex = Ey = 0), the speed of the particle must remain constant over time, since the magnetic force is always perpendicular to the velocity and therefore does no work on the particle. A correct solution must satisfy |v(t)| = |v(0)| for all times t in the simulation..
+For a pure magnetic field (no electric field, i.e., Ex = Ey = 0), the speed of the particle must remain constant over time, since the magnetic force is always perpendicular to the velocity and therefore does no work on the particle. A correct solution must satisfy |v(t)| = |v(0)| for all times t in the simulation.
 
-When the electric field is non-zero, the work-energy theorem requires that the change in kinetic energy equals the work done by the electric force: delta\_KE = q * Ex * delta\_x + q * Ey * delta\_y. A correct solution must respect this energy balance over each time step..
+When the electric field is non-zero, the work-energy theorem requires that the change in kinetic energy equals the work done by the electric force: delta\_KE = q * Ex * delta\_x + q * Ey * delta\_y. A correct solution must respect this energy balance over each time step.
 
-In the absence of all fields (Ex = Ey = 0 and B = 0), Newton's first law requires that the particle travel in a straight line at constant velocity. A correct solution must show no change in either velocity component and linear growth in both position components..
+In the absence of all fields (Ex = Ey = 0 and B = 0), Newton's first law requires that the particle travel in a straight line at constant velocity. A correct solution must show no change in either velocity component and linear growth in both position components.
+
+When the particle crosses from region R\_i to region R\_j, the position and velocity must be continuous at the boundary. Only the acceleration changes (due to the different fields in the new region). A correct solution must preserve continuity of the state vector at every region boundary crossing..
 
 \section{Requirements}
 \label{Sec:Requirements}
@@ -1018,8 +1090,10 @@ This section provides the functional requirements, the tasks and behaviours that
 \begin{description}[font=\normalfont]
 \item[Input-Values:\phantomsection\label{inputValues}]{Input the values from \hyperref[Table:ReqInputs]{Tab:ReqInputs}.}
 \item[Echo-Inputs:\phantomsection\label{echoInputs}]{Echo the given inputs.}
+\item[Build-Region-Grid:\phantomsection\label{buildRegionGrid}]{Construct the N field regions from the grid origin, region dimensions (w, h), and region count N, and assign each region its specified (Ex\_i, Ey\_i, B\_i) (\hyperref[DD:regionRect]{DD:regionRect}).}
+\item[Lookup-Active-Region:\phantomsection\label{lookupActiveRegion}]{At each simulation time-step, determine which region R\_i contains the particle position (x(t), y(t)) and apply the corresponding fields. If the particle is outside all regions, apply zero fields (\hyperref[DD:fieldsByRegion]{DD:fieldsByRegion}).}
 \item[Compute-Trajectory:\phantomsection\label{computeTraj}]{Compute the trajectory of the charged particle using the equations of motion derived from the Lorentz force (\hyperref[IM:stateEvol]{IM:stateEvol}).}
-\item[Report-Outputs:\phantomsection\label{reportOutputs}]{Report the final position, velocity, and whether the particle reaches the detector line, based on \hyperref[IM:stateEvol]{IM:stateEvol} and \hyperref[IM:detHit]{IM:detHit}..}
+\item[Report-Outputs:\phantomsection\label{reportOutputs}]{Report the final position, velocity, and whether the particle reaches the detector line, based on \hyperref[IM:stateEvol]{IM:stateEvol} and \hyperref[IM:detHit]{IM:detHit}.}
 \end{description}
 \begin{longtblr}
 [caption={Required Inputs}]
@@ -1028,11 +1102,17 @@ This section provides the functional requirements, the tasks and behaviours that
 \\
 $B$ & Out-of-plane magnetic flux density & ${\text{T}}$
 \\
+${d_{\text{orient}}}$ & Detector orientation & --
+\\
 ${E_{\text{x}}}$ & X-component of the electric field & $\frac{\text{N}}{\text{C}}$
 \\
 ${E_{\text{y}}}$ & Y-component of the electric field & $\frac{\text{N}}{\text{C}}$
 \\
+$h$ & Region height & ${\text{m}}$
+\\
 $m$ & Particle mass & ${\text{kg}}$
+\\
+$N$ & Number of field regions & --
 \\
 $q$ & Particle charge & ${\text{C}}$
 \\
@@ -1042,9 +1122,27 @@ ${v_{\text{x}0}}$ & Initial x-velocity & $\frac{\text{m}}{\text{s}}$
 \\
 ${v_{\text{y}0}}$ & Initial y-velocity & $\frac{\text{m}}{\text{s}}$
 \\
+$w$ & Region width & ${\text{m}}$
+\\
 ${x_{0}}$ & Initial x-position & ${\text{m}}$
 \\
+${x_{\text{det}}}$ & Detector line x-position & ${\text{m}}$
+\\
+${x_{\text{grid}}}$ & Grid origin x-coordinate & ${\text{m}}$
+\\
+${{x_{\text{max}}}^{\text{det}}}$ & Maximum x-coordinate of detector & ${\text{m}}$
+\\
+${{x_{\text{min}}}^{\text{det}}}$ & Minimum x-coordinate of detector & ${\text{m}}$
+\\
 ${y_{0}}$ & Initial y-position & ${\text{m}}$
+\\
+${y_{\text{det}}}$ & Detector line y-position & ${\text{m}}$
+\\
+${y_{\text{grid}}}$ & Grid origin y-coordinate & ${\text{m}}$
+\\
+${{y_{\text{max}}}^{\text{det}}}$ & Maximum y-coordinate of detector & ${\text{m}}$
+\\
+${{y_{\text{min}}}^{\text{det}}}$ & Minimum y-coordinate of detector & ${\text{m}}$
 \label{Table:ReqInputs}
 \end{longtblr}
 \subsection{Non-Functional Requirements}
@@ -1076,86 +1174,92 @@ The purpose of the traceability matrices is to provide easy references on what h
 
 \begin{longtblr}
 [caption={Traceability Matrix Showing the Connections Between Assumptions and Other Assumptions}]
-{colspec={l l l l l l l l l l l l}, rowhead=1, hline{1,Z}=\heavyrulewidth, hline{2}=\lightrulewidth}
-\textbf{} & \textbf{\hyperref[piecewiseUniform]{A:piecewiseUniform}} & \textbf{\hyperref[singleParticle]{A:singleParticle}} & \textbf{\hyperref[noInteractions]{A:noInteractions}} & \textbf{\hyperref[prescribedFields]{A:prescribedFields}} & \textbf{\hyperref[twoDMotion]{A:twoDMotion}} & \textbf{\hyperref[bPerpPlane]{A:bPerpPlane}} & \textbf{\hyperref[eAxisAligned]{A:eAxisAligned}} & \textbf{\hyperref[rectRegions]{A:rectRegions}} & \textbf{\hyperref[lineDetector]{A:lineDetector}} & \textbf{\hyperref[fullDetection]{A:fullDetection}} & \textbf{\hyperref[lorentzOnly]{A:lorentzOnly}}
+{colspec={l l l l l l l l l l l l l}, rowhead=1, hline{1,Z}=\heavyrulewidth, hline{2}=\lightrulewidth}
+\textbf{} & \textbf{\hyperref[piecewiseUniform]{A:piecewiseUniform}} & \textbf{\hyperref[singleParticle]{A:singleParticle}} & \textbf{\hyperref[noInteractions]{A:noInteractions}} & \textbf{\hyperref[prescribedFields]{A:prescribedFields}} & \textbf{\hyperref[twoDMotion]{A:twoDMotion}} & \textbf{\hyperref[bPerpPlane]{A:bPerpPlane}} & \textbf{\hyperref[eAxisAligned]{A:eAxisAligned}} & \textbf{\hyperref[rectRegions]{A:rectRegions}} & \textbf{\hyperref[gridLayout]{A:gridLayout}} & \textbf{\hyperref[lineDetector]{A:lineDetector}} & \textbf{\hyperref[fullDetection]{A:fullDetection}} & \textbf{\hyperref[lorentzOnly]{A:lorentzOnly}}
 \\
-\hyperref[piecewiseUniform]{A:piecewiseUniform} &  &  &  &  &  &  &  &  &  &  & 
+\hyperref[piecewiseUniform]{A:piecewiseUniform} &  &  &  &  &  &  &  &  &  &  &  & 
 \\
-\hyperref[singleParticle]{A:singleParticle} &  &  &  &  &  &  &  &  &  &  & 
+\hyperref[singleParticle]{A:singleParticle} &  &  &  &  &  &  &  &  &  &  &  & 
 \\
-\hyperref[noInteractions]{A:noInteractions} &  &  &  &  &  &  &  &  &  &  & 
+\hyperref[noInteractions]{A:noInteractions} &  & X &  &  &  &  &  &  &  &  &  & 
 \\
-\hyperref[prescribedFields]{A:prescribedFields} &  &  &  &  &  &  &  &  &  &  & 
+\hyperref[prescribedFields]{A:prescribedFields} &  &  &  &  &  &  &  &  &  &  &  & 
 \\
-\hyperref[twoDMotion]{A:twoDMotion} &  &  &  &  &  &  &  &  &  &  & 
+\hyperref[twoDMotion]{A:twoDMotion} &  &  &  &  &  &  &  &  &  &  &  & 
 \\
-\hyperref[bPerpPlane]{A:bPerpPlane} &  &  &  &  &  &  &  &  &  &  & 
+\hyperref[bPerpPlane]{A:bPerpPlane} &  &  &  &  & X &  &  &  &  &  &  & 
 \\
-\hyperref[eAxisAligned]{A:eAxisAligned} &  &  &  &  &  &  &  &  &  &  & 
+\hyperref[eAxisAligned]{A:eAxisAligned} &  &  &  &  & X &  &  &  &  &  &  & 
 \\
-\hyperref[rectRegions]{A:rectRegions} &  &  &  &  &  &  &  &  &  &  & 
+\hyperref[rectRegions]{A:rectRegions} &  &  &  &  &  &  &  &  &  &  &  & 
 \\
-\hyperref[lineDetector]{A:lineDetector} &  &  &  &  &  &  &  &  &  &  & 
+\hyperref[gridLayout]{A:gridLayout} &  &  &  &  &  &  &  & X &  &  &  & 
 \\
-\hyperref[fullDetection]{A:fullDetection} &  &  &  &  &  &  &  &  &  &  & 
+\hyperref[lineDetector]{A:lineDetector} &  &  &  &  &  &  &  &  &  &  &  & 
 \\
-\hyperref[lorentzOnly]{A:lorentzOnly} &  &  &  &  &  &  &  &  &  &  & 
+\hyperref[fullDetection]{A:fullDetection} &  &  &  &  &  &  &  &  &  &  &  & 
+\\
+\hyperref[lorentzOnly]{A:lorentzOnly} &  &  &  &  &  &  &  &  &  &  &  & 
 \label{Table:TraceMatAvsA}
 \end{longtblr}
 \begin{longtblr}
 [caption={Traceability Matrix Showing the Connections Between Assumptions and Other Items}]
-{colspec={l l l l l l l l l l l l}, rowhead=1, hline{1,Z}=\heavyrulewidth, hline{2}=\lightrulewidth}
-\textbf{} & \textbf{\hyperref[piecewiseUniform]{A:piecewiseUniform}} & \textbf{\hyperref[singleParticle]{A:singleParticle}} & \textbf{\hyperref[noInteractions]{A:noInteractions}} & \textbf{\hyperref[prescribedFields]{A:prescribedFields}} & \textbf{\hyperref[twoDMotion]{A:twoDMotion}} & \textbf{\hyperref[bPerpPlane]{A:bPerpPlane}} & \textbf{\hyperref[eAxisAligned]{A:eAxisAligned}} & \textbf{\hyperref[rectRegions]{A:rectRegions}} & \textbf{\hyperref[lineDetector]{A:lineDetector}} & \textbf{\hyperref[fullDetection]{A:fullDetection}} & \textbf{\hyperref[lorentzOnly]{A:lorentzOnly}}
+{colspec={l l l l l l l l l l l l l}, rowhead=1, hline{1,Z}=\heavyrulewidth, hline{2}=\lightrulewidth}
+\textbf{} & \textbf{\hyperref[piecewiseUniform]{A:piecewiseUniform}} & \textbf{\hyperref[singleParticle]{A:singleParticle}} & \textbf{\hyperref[noInteractions]{A:noInteractions}} & \textbf{\hyperref[prescribedFields]{A:prescribedFields}} & \textbf{\hyperref[twoDMotion]{A:twoDMotion}} & \textbf{\hyperref[bPerpPlane]{A:bPerpPlane}} & \textbf{\hyperref[eAxisAligned]{A:eAxisAligned}} & \textbf{\hyperref[rectRegions]{A:rectRegions}} & \textbf{\hyperref[gridLayout]{A:gridLayout}} & \textbf{\hyperref[lineDetector]{A:lineDetector}} & \textbf{\hyperref[fullDetection]{A:fullDetection}} & \textbf{\hyperref[lorentzOnly]{A:lorentzOnly}}
 \\
-\hyperref[DD:qOverm]{DD:qOverm} &  &  &  &  &  &  &  &  &  &  & 
+\hyperref[DD:qOverm]{DD:qOverm} &  &  &  &  &  &  &  &  &  &  &  & 
 \\
-\hyperref[DD:initState]{DD:initState} &  &  &  &  &  &  &  &  &  &  & 
+\hyperref[DD:initState]{DD:initState} &  &  &  &  &  &  &  &  &  &  &  & 
 \\
-\hyperref[DD:eField]{DD:eField} &  &  &  & X &  &  & X &  &  &  & 
+\hyperref[DD:eField]{DD:eField} &  &  &  & X &  &  & X &  &  &  &  & 
 \\
-\hyperref[DD:bField]{DD:bField} &  &  &  & X &  & X &  &  &  &  & 
+\hyperref[DD:bField]{DD:bField} &  &  &  & X &  & X &  &  &  &  &  & 
 \\
-\hyperref[DD:regionRect]{DD:regionRect} &  &  &  &  &  &  &  & X &  &  & 
+\hyperref[DD:regionRect]{DD:regionRect} &  &  &  &  &  &  &  & X & X &  &  & 
 \\
-\hyperref[DD:fieldsByRegion]{DD:fieldsByRegion} & X &  &  &  &  &  &  &  &  &  & 
+\hyperref[DD:fieldsByRegion]{DD:fieldsByRegion} & X &  &  & X &  &  &  &  &  &  &  & 
 \\
-\hyperref[DD:detectorLine]{DD:detectorLine} &  &  &  &  &  &  &  &  & X &  & 
+\hyperref[DD:detectorLine]{DD:detectorLine} &  &  &  &  &  &  &  &  &  & X &  & 
 \\
-\hyperref[TM:velocity]{TM:velocity} &  &  &  &  &  &  &  &  &  &  & 
+\hyperref[TM:velocity]{TM:velocity} &  &  &  &  &  &  &  &  &  &  &  & 
 \\
-\hyperref[TM:acceleration]{TM:acceleration} &  &  &  &  &  &  &  &  &  &  & 
+\hyperref[TM:acceleration]{TM:acceleration} &  &  &  &  &  &  &  &  &  &  &  & 
 \\
-\hyperref[TM:lorentzForce]{TM:lorentzForce} &  & X &  & X &  &  &  &  &  &  & 
+\hyperref[TM:lorentzForce]{TM:lorentzForce} &  & X &  & X &  &  &  &  &  &  &  & 
 \\
-\hyperref[TM:eqnMotion]{TM:eqnMotion} &  & X &  & X &  &  &  &  &  &  & X
+\hyperref[TM:eqnMotion]{TM:eqnMotion} &  & X &  & X &  &  &  &  &  &  &  & X
 \\
-\hyperref[GD:kin2D]{GD:kin2D} &  &  &  &  & X &  &  &  &  &  & 
+\hyperref[GD:kin2D]{GD:kin2D} &  &  &  &  & X &  &  &  &  &  &  & 
 \\
-\hyperref[GD:vCrossB2D]{GD:vCrossB2D} &  &  &  &  & X & X &  &  &  &  & 
+\hyperref[GD:vCrossB2D]{GD:vCrossB2D} &  &  &  &  & X & X &  &  &  &  &  & 
 \\
-\hyperref[GD:dyn2D]{GD:dyn2D} &  &  &  & X & X & X & X &  &  &  & 
+\hyperref[GD:dyn2D]{GD:dyn2D} &  &  &  & X & X & X & X &  &  &  &  & 
 \\
-\hyperref[IM:stateEvol]{IM:stateEvol} &  & X & X &  & X &  &  &  &  &  & X
+\hyperref[IM:stateEvol]{IM:stateEvol} &  & X & X &  & X &  &  &  &  &  &  & X
 \\
-\hyperref[IM:detHit]{IM:detHit} &  &  &  &  &  &  &  &  & X & X & 
+\hyperref[IM:detHit]{IM:detHit} &  &  &  &  &  &  &  &  &  & X & X & 
 \\
-\hyperref[inputValues]{FR:Input-Values} &  &  &  &  &  &  &  &  &  &  & 
+\hyperref[inputValues]{FR:Input-Values} &  &  &  &  &  &  &  &  &  &  &  & 
 \\
-\hyperref[echoInputs]{FR:Echo-Inputs} &  &  &  &  &  &  &  &  &  &  & 
+\hyperref[echoInputs]{FR:Echo-Inputs} &  &  &  &  &  &  &  &  &  &  &  & 
 \\
-\hyperref[computeTraj]{FR:Compute-Trajectory} &  &  &  &  &  &  &  &  &  &  & 
+\hyperref[buildRegionGrid]{FR:Build-Region-Grid} &  &  &  &  &  &  &  &  &  &  &  & 
 \\
-\hyperref[reportOutputs]{FR:Report-Outputs} &  &  &  &  &  &  &  &  &  &  & 
+\hyperref[lookupActiveRegion]{FR:Lookup-Active-Region} &  &  &  &  &  &  &  &  &  &  &  & 
 \\
-\hyperref[correct]{NFR:Correctness} &  &  &  &  &  &  &  &  &  &  & 
+\hyperref[computeTraj]{FR:Compute-Trajectory} &  &  &  &  &  &  &  &  &  &  &  & 
 \\
-\hyperref[maintainable]{NFR:Maintainability} &  &  &  &  &  &  &  &  &  &  & 
+\hyperref[reportOutputs]{FR:Report-Outputs} &  &  &  &  &  &  &  &  &  &  &  & 
 \\
-\hyperref[portable]{NFR:Portability} &  &  &  &  &  &  &  &  &  &  & 
+\hyperref[correct]{NFR:Correctness} &  &  &  &  &  &  &  &  &  &  &  & 
 \\
-\hyperref[lcExtendTo3D]{LC:lcExtendTo3D} &  &  &  &  & X &  &  &  &  &  & 
+\hyperref[maintainable]{NFR:Maintainability} &  &  &  &  &  &  &  &  &  &  &  & 
 \\
-\hyperref[ucLorentzForce]{UC:ucLorentzForce} &  &  &  &  &  &  &  &  &  &  & X
+\hyperref[portable]{NFR:Portability} &  &  &  &  &  &  &  &  &  &  &  & 
+\\
+\hyperref[lcExtendTo3D]{LC:lcExtendTo3D} &  &  &  &  & X &  &  &  &  &  &  & 
+\\
+\hyperref[ucLorentzForce]{UC:ucLorentzForce} &  &  &  &  &  &  &  &  &  &  &  & X
 \label{Table:TraceMatAvsAll}
 \end{longtblr}
 \begin{longtblr}
@@ -1173,7 +1277,7 @@ The purpose of the traceability matrices is to provide easy references on what h
 \\
 \hyperref[DD:regionRect]{DD:regionRect} &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  & 
 \\
-\hyperref[DD:fieldsByRegion]{DD:fieldsByRegion} &  &  & X & X &  &  &  &  &  &  &  &  &  &  &  & 
+\hyperref[DD:fieldsByRegion]{DD:fieldsByRegion} &  &  &  &  & X &  &  &  &  &  &  &  &  &  &  & 
 \\
 \hyperref[DD:detectorLine]{DD:detectorLine} &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  & 
 \\
@@ -1198,26 +1302,30 @@ The purpose of the traceability matrices is to provide easy references on what h
 \end{longtblr}
 \begin{longtblr}
 [caption={Traceability Matrix Showing the Connections Between Requirements, Goal Statements and Other Items}]
-{colspec={l l l l l l l l l l l l l l l l l l l l l l l l}, rowhead=1, hline{1,Z}=\heavyrulewidth, hline{2}=\lightrulewidth}
-\textbf{} & \textbf{\hyperref[DD:qOverm]{DD:qOverm}} & \textbf{\hyperref[DD:initState]{DD:initState}} & \textbf{\hyperref[DD:eField]{DD:eField}} & \textbf{\hyperref[DD:bField]{DD:bField}} & \textbf{\hyperref[DD:regionRect]{DD:regionRect}} & \textbf{\hyperref[DD:fieldsByRegion]{DD:fieldsByRegion}} & \textbf{\hyperref[DD:detectorLine]{DD:detectorLine}} & \textbf{\hyperref[TM:velocity]{TM:velocity}} & \textbf{\hyperref[TM:acceleration]{TM:acceleration}} & \textbf{\hyperref[TM:lorentzForce]{TM:lorentzForce}} & \textbf{\hyperref[TM:eqnMotion]{TM:eqnMotion}} & \textbf{\hyperref[GD:kin2D]{GD:kin2D}} & \textbf{\hyperref[GD:vCrossB2D]{GD:vCrossB2D}} & \textbf{\hyperref[GD:dyn2D]{GD:dyn2D}} & \textbf{\hyperref[IM:stateEvol]{IM:stateEvol}} & \textbf{\hyperref[IM:detHit]{IM:detHit}} & \textbf{\hyperref[inputValues]{FR:Input-Values}} & \textbf{\hyperref[echoInputs]{FR:Echo-Inputs}} & \textbf{\hyperref[computeTraj]{FR:Compute-Trajectory}} & \textbf{\hyperref[reportOutputs]{FR:Report-Outputs}} & \textbf{\hyperref[correct]{NFR:Correctness}} & \textbf{\hyperref[maintainable]{NFR:Maintainability}} & \textbf{\hyperref[portable]{NFR:Portability}}
+{colspec={l l l l l l l l l l l l l l l l l l l l l l l l l l}, rowhead=1, hline{1,Z}=\heavyrulewidth, hline{2}=\lightrulewidth}
+\textbf{} & \textbf{\hyperref[DD:qOverm]{DD:qOverm}} & \textbf{\hyperref[DD:initState]{DD:initState}} & \textbf{\hyperref[DD:eField]{DD:eField}} & \textbf{\hyperref[DD:bField]{DD:bField}} & \textbf{\hyperref[DD:regionRect]{DD:regionRect}} & \textbf{\hyperref[DD:fieldsByRegion]{DD:fieldsByRegion}} & \textbf{\hyperref[DD:detectorLine]{DD:detectorLine}} & \textbf{\hyperref[TM:velocity]{TM:velocity}} & \textbf{\hyperref[TM:acceleration]{TM:acceleration}} & \textbf{\hyperref[TM:lorentzForce]{TM:lorentzForce}} & \textbf{\hyperref[TM:eqnMotion]{TM:eqnMotion}} & \textbf{\hyperref[GD:kin2D]{GD:kin2D}} & \textbf{\hyperref[GD:vCrossB2D]{GD:vCrossB2D}} & \textbf{\hyperref[GD:dyn2D]{GD:dyn2D}} & \textbf{\hyperref[IM:stateEvol]{IM:stateEvol}} & \textbf{\hyperref[IM:detHit]{IM:detHit}} & \textbf{\hyperref[inputValues]{FR:Input-Values}} & \textbf{\hyperref[echoInputs]{FR:Echo-Inputs}} & \textbf{\hyperref[buildRegionGrid]{FR:Build-Region-Grid}} & \textbf{\hyperref[lookupActiveRegion]{FR:Lookup-Active-Region}} & \textbf{\hyperref[computeTraj]{FR:Compute-Trajectory}} & \textbf{\hyperref[reportOutputs]{FR:Report-Outputs}} & \textbf{\hyperref[correct]{NFR:Correctness}} & \textbf{\hyperref[maintainable]{NFR:Maintainability}} & \textbf{\hyperref[portable]{NFR:Portability}}
 \\
-\hyperref[predictTrajectory]{GS:predictTrajectory} &  &  &  &  &  &  &  &  &  &  &  &  &  &  & X &  &  &  &  &  &  &  & 
+\hyperref[predictTrajectory]{GS:predictTrajectory} &  &  &  &  &  &  &  &  &  &  &  &  &  &  & X &  &  &  &  &  &  &  &  &  & 
 \\
-\hyperref[determineDetectorOutcome]{GS:determineDetectorOutcome} &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  & X &  &  &  &  &  &  & 
+\hyperref[determineDetectorOutcome]{GS:determineDetectorOutcome} &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  & X &  &  &  &  &  &  &  &  & 
 \\
-\hyperref[inputValues]{FR:Input-Values} &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  & 
+\hyperref[inputValues]{FR:Input-Values} &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  & 
 \\
-\hyperref[echoInputs]{FR:Echo-Inputs} &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  & 
+\hyperref[echoInputs]{FR:Echo-Inputs} &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  & 
 \\
-\hyperref[computeTraj]{FR:Compute-Trajectory} &  &  &  &  &  &  &  &  &  &  &  &  &  &  & X &  &  &  &  &  &  &  & 
+\hyperref[buildRegionGrid]{FR:Build-Region-Grid} &  &  &  &  & X &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  & 
 \\
-\hyperref[reportOutputs]{FR:Report-Outputs} &  &  &  &  &  &  &  &  &  &  &  &  &  &  & X & X &  &  &  &  &  &  & 
+\hyperref[lookupActiveRegion]{FR:Lookup-Active-Region} &  &  &  &  &  & X &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  & 
 \\
-\hyperref[correct]{NFR:Correctness} &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  & 
+\hyperref[computeTraj]{FR:Compute-Trajectory} &  &  &  &  &  &  &  &  &  &  &  &  &  &  & X &  &  &  &  &  &  &  &  &  & 
 \\
-\hyperref[maintainable]{NFR:Maintainability} &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  & 
+\hyperref[reportOutputs]{FR:Report-Outputs} &  &  &  &  &  &  &  &  &  &  &  &  &  &  & X & X &  &  &  &  &  &  &  &  & 
 \\
-\hyperref[portable]{NFR:Portability} &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  & 
+\hyperref[correct]{NFR:Correctness} &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  & 
+\\
+\hyperref[maintainable]{NFR:Maintainability} &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  & 
+\\
+\hyperref[portable]{NFR:Portability} &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  & 
 \label{Table:TraceMatAllvsR}
 \end{longtblr}
 The purpose of the traceability graphs is also to provide easy references on what has to be additionally modified if a certain component is changed. The arrows in the graphs represent dependencies. The component at the tail of an arrow is depended on by the component at the head of that arrow. Therefore, if a component is changed, the components that it points to should also be changed. \hyperref[Figure:TraceGraphAvsA]{Fig:TraceGraphAvsA} shows the dependencies of assumptions on each other. \hyperref[Figure:TraceGraphAvsAll]{Fig:TraceGraphAvsAll} shows the dependencies of data definitions, theoretical models, general definitions, instance models, requirements, likely changes, and unlikely changes on the assumptions. \hyperref[Figure:TraceGraphRefvsRef]{Fig:TraceGraphRefvsRef} shows the dependencies of data definitions, theoretical models, general definitions, and instance models on each other. \hyperref[Figure:TraceGraphAllvsR]{Fig:TraceGraphAllvsR} shows the dependencies of requirements and goal statements on the data definitions, theoretical models, general definitions, and instance models. \hyperref[Figure:TraceGraphAllvsAll]{Fig:TraceGraphAllvsAll} shows the dependencies of dependencies of assumptions, models, definitions, requirements, goals, and changes with each other.

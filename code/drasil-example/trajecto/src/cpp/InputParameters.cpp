@@ -11,7 +11,7 @@
 using std::ifstream;
 using std::string;
 
-void get_input(string filename, double &m, double &q, double &x_0, double &y_0, double &v_x0, double &v_y0, double &E_x, double &E_y, double &B, double &t_final) {
+void get_input(string filename, double &m, double &q, double &x_0, double &y_0, double &v_x0, double &v_y0, double &N, double &w, double &h, double &x_grid, double &y_grid, double &E_x, double &E_y, double &B, double &d_orient, double &x_det, double &y_det, double &y_min^det, double &y_max^det, double &x_min^det, double &x_max^det, double &t_final) {
     ifstream infile;
     infile.open(filename, std::fstream::in);
     infile.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
@@ -33,6 +33,21 @@ void get_input(string filename, double &m, double &q, double &x_0, double &y_0, 
     infile >> v_y0;
     infile.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
     infile.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+    infile >> N;
+    infile.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+    infile.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+    infile >> w;
+    infile.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+    infile.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+    infile >> h;
+    infile.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+    infile.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+    infile >> x_grid;
+    infile.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+    infile.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+    infile >> y_grid;
+    infile.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+    infile.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
     infile >> E_x;
     infile.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
     infile.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
@@ -42,12 +57,33 @@ void get_input(string filename, double &m, double &q, double &x_0, double &y_0, 
     infile >> B;
     infile.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
     infile.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+    infile >> d_orient;
+    infile.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+    infile.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+    infile >> x_det;
+    infile.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+    infile.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+    infile >> y_det;
+    infile.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+    infile.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+    infile >> y_min^det;
+    infile.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+    infile.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+    infile >> y_max^det;
+    infile.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+    infile.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+    infile >> x_min^det;
+    infile.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+    infile.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+    infile >> x_max^det;
+    infile.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+    infile.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
     infile >> t_final;
     infile.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
     infile.close();
 }
 
-void derived_values(double q, double m, double x_0, double y_0, double v_x0, double v_y0, double E_x, double E_y, double B, double &κ, double &s_0, double &E_vect, double &B_vect) {
+void derived_values(double q, double m, double x_0, double y_0, double v_x0, double v_y0, double E_x, double E_y, double B, double x_grid, double y_grid, double w, double h, double d_orient, double x_det, double y_det, double y_min^det, double y_max^det, double x_min^det, double x_max^det, double &κ, double &s_0, double &E_vect, double &B_vect, double &R_i, double &E_vect_i, double &L_det) {
     κ = q / m;
     
     s_0 = {x_0, y_0, v_x0, v_y0};
@@ -55,9 +91,15 @@ void derived_values(double q, double m, double x_0, double y_0, double v_x0, dou
     E_vect = {E_x, E_y, 0.0};
     
     B_vect = {0.0, 0.0, B};
+    
+    R_i = {x_grid, y_grid, w, h};
+    
+    E_vect_i = {E_x, E_y, B};
+    
+    L_det = {d_orient, x_det, y_det, y_min^det, y_max^det, x_min^det, x_max^det};
 }
 
-void input_constraints(double m, double q, double x_0, double y_0, double v_x0, double v_y0, double E_x, double E_y, double B, double t_final) {
+void input_constraints(double m, double q, double x_0, double y_0, double v_x0, double v_y0, double N, double w, double h, double x_grid, double y_grid, double E_x, double E_y, double B, double d_orient, double x_det, double y_det, double y_min^det, double y_max^det, double x_min^det, double x_max^det, double t_final) {
     if (!(Constants::m_min <= m && m <= Constants::m_max)) {
         std::cout << "Warning: ";
         std::cout << "m has value ";
@@ -149,6 +191,17 @@ void input_constraints(double m, double q, double x_0, double y_0, double v_x0, 
         std::cout << " (B_max)";
         std::cout << "." << std::endl;
     }
+    if (!(0.0 <= d_orient && d_orient <= 1.0)) {
+        std::cout << "Warning: ";
+        std::cout << "d_orient has value ";
+        std::cout << d_orient;
+        std::cout << ", but is suggested to be ";
+        std::cout << "between ";
+        std::cout << 0.0;
+        std::cout << " and ";
+        std::cout << 1.0;
+        std::cout << "." << std::endl;
+    }
     if (!(t_final <= Constants::t_max)) {
         std::cout << "Warning: ";
         std::cout << "t_final has value ";
@@ -164,6 +217,33 @@ void input_constraints(double m, double q, double x_0, double y_0, double v_x0, 
         std::cout << "Warning: ";
         std::cout << "m has value ";
         std::cout << m;
+        std::cout << ", but is suggested to be ";
+        std::cout << "above ";
+        std::cout << 0.0;
+        std::cout << "." << std::endl;
+    }
+    if (!(N > 0.0)) {
+        std::cout << "Warning: ";
+        std::cout << "N has value ";
+        std::cout << N;
+        std::cout << ", but is suggested to be ";
+        std::cout << "above ";
+        std::cout << 0.0;
+        std::cout << "." << std::endl;
+    }
+    if (!(w > 0.0)) {
+        std::cout << "Warning: ";
+        std::cout << "w has value ";
+        std::cout << w;
+        std::cout << ", but is suggested to be ";
+        std::cout << "above ";
+        std::cout << 0.0;
+        std::cout << "." << std::endl;
+    }
+    if (!(h > 0.0)) {
+        std::cout << "Warning: ";
+        std::cout << "h has value ";
+        std::cout << h;
         std::cout << ", but is suggested to be ";
         std::cout << "above ";
         std::cout << 0.0;

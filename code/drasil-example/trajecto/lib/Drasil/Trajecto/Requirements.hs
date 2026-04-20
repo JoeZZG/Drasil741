@@ -10,13 +10,14 @@ import Data.Drasil.Concepts.Computation (inValue)
 
 import Drasil.Trajecto.Unitals (inputs, outputs)
 import Drasil.Trajecto.IMods (stateEvolIM, detHitIM)
+import Drasil.Trajecto.DataDefs (regionRectDD, fieldsByRegionDD)
 
 ---------------------------------------------------------
 -- Functional Requirements
 ---------------------------------------------------------
 
 funcReqs :: [ConceptInstance]
-funcReqs = [inputValues, echoInputs, computeTraj, reportOutputs]
+funcReqs = [inputValues, echoInputs, buildRegionGrid, lookupActiveRegion, computeTraj, reportOutputs]
 
 inputValues :: ConceptInstance
 inputValuesTable :: LabelledContent
@@ -25,11 +26,28 @@ inputValuesTable :: LabelledContent
 funcReqsTables :: [LabelledContent]
 funcReqsTables = [inputValuesTable]
 
-echoInputs, computeTraj, reportOutputs :: ConceptInstance
+echoInputs, buildRegionGrid, lookupActiveRegion, computeTraj, reportOutputs :: ConceptInstance
 
 echoInputs = cic "echoInputs"
   (foldlSent [ S "Echo the given inputs" ])
   "Echo-Inputs" funcReqDom
+
+buildRegionGrid = cic "buildRegionGrid"
+  (foldlSent
+    [ S "Construct the N field regions from the grid origin,"
+    , S "region dimensions (w, h), and region count N, and assign"
+    , S "each region its specified (Ex_i, Ey_i, B_i)"
+    , sParen (refS regionRectDD) ])
+  "Build-Region-Grid" funcReqDom
+
+lookupActiveRegion = cic "lookupActiveRegion"
+  (foldlSent
+    [ S "At each simulation time-step, determine which region R_i"
+    , S "contains the particle position (x(t), y(t)) and apply the"
+    , S "corresponding fields. If the particle is outside all regions,"
+    , S "apply zero fields"
+    , sParen (refS fieldsByRegionDD) ])
+  "Lookup-Active-Region" funcReqDom
 
 computeTraj = cic "computeTraj"
   (foldlSent
@@ -43,7 +61,7 @@ reportOutputs = cic "reportOutputs"
   (foldlSent
     [ S "Report the final position, velocity, and whether the"
     , S "particle reaches the detector line, based on"
-    , refS stateEvolIM +:+ S "and" +:+. refS detHitIM
+    , refS stateEvolIM +:+ S "and" +:+ refS detHitIM
     ])
   "Report-Outputs" funcReqDom
 

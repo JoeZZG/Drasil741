@@ -24,7 +24,7 @@ import Data.Drasil.Concepts.Theory (inModel)
 import Drasil.Trajecto.Assumptions (assumptions)
 import Drasil.Trajecto.Changes (likelyChgs, unlikelyChgs)
 import Drasil.Trajecto.Concepts
-  ( defs, chargedParticle, electricField, magneticField, detectorLine )
+  ( defs, chargedParticle, electricField, magneticField, detectorLine, regionGrid )
 import Drasil.Trajecto.DataDefs (dataDefs)
 import Drasil.Trajecto.GenDefs (genDefs)
 import Drasil.Trajecto.Goals (goals, goalsInputs)
@@ -142,9 +142,10 @@ terms = defs
 physSystParts :: [Sentence]
 physSystParts =
   [ D.toSent (atStartNP (a_ chargedParticle)) +:+ S "(the simulated particle)"
-  , D.toSent (atStartNP (the electricField)) +:+ S "in the particle's current region"
-  , D.toSent (atStartNP (the magneticField)) +:+ S "perpendicular to the x-y plane"
-  , D.toSent (atStartNP (the detectorLine)) +:+ S "at a specified x-coordinate"
+  , D.toSent (atStartNP (the electricField)) +:+ S "in each field region (may differ between regions)"
+  , D.toSent (atStartNP (the magneticField)) +:+ S "perpendicular to the x-y plane in each field region"
+  , D.toSent (atStartNP (the regionGrid)) +:+ S "of N equal-sized rectangular field regions"
+  , D.toSent (atStartNP (the detectorLine)) +:+ S "(horizontal or vertical) at a specified location"
   ]
 
 ---------------------------------------------------------
@@ -196,7 +197,7 @@ justification prog = foldlSent
   [ S "The motion of a charged particle through electromagnetic fields is a"
   , S "fundamental phenomenon arising in particle accelerators, mass spectrometers,"
   , S "and plasma confinement devices. It is therefore useful to have a"
-  , phrase program, S "to simulate", phrase prog +:+ S "trajectories"
+  , phrase program, S "to simulate charged particle trajectories"
   , S "in piecewise-uniform fields"
   ]
 
@@ -220,8 +221,10 @@ sysCtxIntro prog = foldlSP
 
 sysCtxDesc :: Contents
 sysCtxDesc = foldlSPCol
-  [ S "The", phrase user, S "provides the particle and field parameters;"
+  [ S "The", phrase user, S "provides the particle properties, field region grid,"
+  , S "per-region electromagnetic fields, detector specification, and simulation time;"
   , S "the", phrase softwareSys, S "computes and reports the particle trajectory"
+  , S "and detector hit outcome"
   ]
 
 userCharacteristicsIntro :: CI -> Contents
@@ -243,19 +246,26 @@ corrSolProps =
       , S "and therefore does no work on the particle."
       , S "A correct solution must satisfy"
       , S "|v(t)| = |v(0)|"
-      , S "for all times t in the simulation."
+      , S "for all times t in the simulation"
       ]
   , foldlSP
       [ S "When the electric field is non-zero, the work-energy theorem requires that"
       , S "the change in kinetic energy equals the work done by the electric force:"
       , S "delta_KE = q * Ex * delta_x + q * Ey * delta_y."
-      , S "A correct solution must respect this energy balance over each time step."
+      , S "A correct solution must respect this energy balance over each time step"
       ]
   , foldlSP
       [ S "In the absence of all fields (Ex = Ey = 0 and B = 0),"
       , S "Newton's first law requires that the particle travel in a straight line"
       , S "at constant velocity."
       , S "A correct solution must show no change in either velocity component"
-      , S "and linear growth in both position components."
+      , S "and linear growth in both position components"
+      ]
+  , foldlSP
+      [ S "When the particle crosses from region R_i to region R_j,"
+      , S "the position and velocity must be continuous at the boundary."
+      , S "Only the acceleration changes (due to the different fields in the new region)."
+      , S "A correct solution must preserve continuity of the state vector"
+      , S "at every region boundary crossing."
       ]
   ]

@@ -22,12 +22,24 @@ using std::string;
     \param y_0 initial y-position (m)
     \param v_x0 initial x-velocity (m/s)
     \param v_y0 initial y-velocity (m/s)
+    \param N number of field regions
+    \param w region width (m)
+    \param h region height (m)
+    \param x_grid grid origin x-coordinate (m)
+    \param y_grid grid origin y-coordinate (m)
     \param E_x x-component of the electric field (N/C)
     \param E_y y-component of the electric field (N/C)
     \param B out-of-plane magnetic flux density (T)
+    \param d_orient detector orientation
+    \param x_det detector line x-position (m)
+    \param y_det detector line y-position (m)
+    \param y_min^det minimum y-coordinate of detector (m)
+    \param y_max^det maximum y-coordinate of detector (m)
+    \param x_min^det minimum x-coordinate of detector (m)
+    \param x_max^det maximum x-coordinate of detector (m)
     \param t_final final simulation time (s)
 */
-void get_input(string filename, double &m, double &q, double &x_0, double &y_0, double &v_x0, double &v_y0, double &E_x, double &E_y, double &B, double &t_final);
+void get_input(string filename, double &m, double &q, double &x_0, double &y_0, double &v_x0, double &v_y0, double &N, double &w, double &h, double &x_grid, double &y_grid, double &E_x, double &E_y, double &B, double &d_orient, double &x_det, double &y_det, double &y_min^det, double &y_max^det, double &x_min^det, double &x_max^det, double &t_final);
 
 /** \brief Calculates values that can be immediately derived from the inputs
     \param q particle charge (C)
@@ -39,12 +51,26 @@ void get_input(string filename, double &m, double &q, double &x_0, double &y_0, 
     \param E_x x-component of the electric field (N/C)
     \param E_y y-component of the electric field (N/C)
     \param B out-of-plane magnetic flux density (T)
+    \param x_grid grid origin x-coordinate (m)
+    \param y_grid grid origin y-coordinate (m)
+    \param w region width (m)
+    \param h region height (m)
+    \param d_orient detector orientation
+    \param x_det detector line x-position (m)
+    \param y_det detector line y-position (m)
+    \param y_min^det minimum y-coordinate of detector (m)
+    \param y_max^det maximum y-coordinate of detector (m)
+    \param x_min^det minimum x-coordinate of detector (m)
+    \param x_max^det maximum x-coordinate of detector (m)
     \param κ charge-to-mass ratio (C/kg)
     \param s_0 initial state vector
     \param E_vect electric field vector (N/C)
     \param B_vect magnetic flux density vector (T)
+    \param R_i rectangular field region
+    \param E_vect_i electric field in region i (N/C)
+    \param L_det detector line
 */
-void derived_values(double q, double m, double x_0, double y_0, double v_x0, double v_y0, double E_x, double E_y, double B, double &κ, double &s_0, double &E_vect, double &B_vect);
+void derived_values(double q, double m, double x_0, double y_0, double v_x0, double v_y0, double E_x, double E_y, double B, double x_grid, double y_grid, double w, double h, double d_orient, double x_det, double y_det, double y_min^det, double y_max^det, double x_min^det, double x_max^det, double &κ, double &s_0, double &E_vect, double &B_vect, double &R_i, double &E_vect_i, double &L_det);
 
 /** \brief Verifies that input values satisfy the physical constraints and software constraints
     \param m particle mass (kg)
@@ -53,11 +79,23 @@ void derived_values(double q, double m, double x_0, double y_0, double v_x0, dou
     \param y_0 initial y-position (m)
     \param v_x0 initial x-velocity (m/s)
     \param v_y0 initial y-velocity (m/s)
+    \param N number of field regions
+    \param w region width (m)
+    \param h region height (m)
+    \param x_grid grid origin x-coordinate (m)
+    \param y_grid grid origin y-coordinate (m)
     \param E_x x-component of the electric field (N/C)
     \param E_y y-component of the electric field (N/C)
     \param B out-of-plane magnetic flux density (T)
+    \param d_orient detector orientation
+    \param x_det detector line x-position (m)
+    \param y_det detector line y-position (m)
+    \param y_min^det minimum y-coordinate of detector (m)
+    \param y_max^det maximum y-coordinate of detector (m)
+    \param x_min^det minimum x-coordinate of detector (m)
+    \param x_max^det maximum x-coordinate of detector (m)
     \param t_final final simulation time (s)
 */
-void input_constraints(double m, double q, double x_0, double y_0, double v_x0, double v_y0, double E_x, double E_y, double B, double t_final);
+void input_constraints(double m, double q, double x_0, double y_0, double v_x0, double v_y0, double N, double w, double h, double x_grid, double y_grid, double E_x, double E_y, double B, double d_orient, double x_det, double y_det, double y_min^det, double y_max^det, double x_min^det, double x_max^det, double t_final);
 
 #endif

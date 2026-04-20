@@ -13,9 +13,21 @@ import Constants
 # \return initial y-position (m)
 # \return initial x-velocity (m/s)
 # \return initial y-velocity (m/s)
+# \return number of field regions
+# \return region width (m)
+# \return region height (m)
+# \return grid origin x-coordinate (m)
+# \return grid origin y-coordinate (m)
 # \return x-component of the electric field (N/C)
 # \return y-component of the electric field (N/C)
 # \return out-of-plane magnetic flux density (T)
+# \return detector orientation
+# \return detector line x-position (m)
+# \return detector line y-position (m)
+# \return minimum y-coordinate of detector (m)
+# \return maximum y-coordinate of detector (m)
+# \return minimum x-coordinate of detector (m)
+# \return maximum x-coordinate of detector (m)
 # \return final simulation time (s)
 def get_input(filename):
     infile = open(filename, "r")
@@ -32,16 +44,40 @@ def get_input(filename):
     infile.readline()
     v_y0 = float(infile.readline())
     infile.readline()
+    N = float(infile.readline())
+    infile.readline()
+    w = float(infile.readline())
+    infile.readline()
+    h = float(infile.readline())
+    infile.readline()
+    x_grid = float(infile.readline())
+    infile.readline()
+    y_grid = float(infile.readline())
+    infile.readline()
     E_x = float(infile.readline())
     infile.readline()
     E_y = float(infile.readline())
     infile.readline()
     B = float(infile.readline())
     infile.readline()
+    d_orient = float(infile.readline())
+    infile.readline()
+    x_det = float(infile.readline())
+    infile.readline()
+    y_det = float(infile.readline())
+    infile.readline()
+    y_min^det = float(infile.readline())
+    infile.readline()
+    y_max^det = float(infile.readline())
+    infile.readline()
+    x_min^det = float(infile.readline())
+    infile.readline()
+    x_max^det = float(infile.readline())
+    infile.readline()
     t_final = float(infile.readline())
     infile.close()
     
-    return m, q, x_0, y_0, v_x0, v_y0, E_x, E_y, B, t_final
+    return m, q, x_0, y_0, v_x0, v_y0, N, w, h, x_grid, y_grid, E_x, E_y, B, d_orient, x_det, y_det, y_min^det, y_max^det, x_min^det, x_max^det, t_final
 
 ## \brief Calculates values that can be immediately derived from the inputs
 # \param q particle charge (C)
@@ -53,11 +89,25 @@ def get_input(filename):
 # \param E_x x-component of the electric field (N/C)
 # \param E_y y-component of the electric field (N/C)
 # \param B out-of-plane magnetic flux density (T)
+# \param x_grid grid origin x-coordinate (m)
+# \param y_grid grid origin y-coordinate (m)
+# \param w region width (m)
+# \param h region height (m)
+# \param d_orient detector orientation
+# \param x_det detector line x-position (m)
+# \param y_det detector line y-position (m)
+# \param y_min^det minimum y-coordinate of detector (m)
+# \param y_max^det maximum y-coordinate of detector (m)
+# \param x_min^det minimum x-coordinate of detector (m)
+# \param x_max^det maximum x-coordinate of detector (m)
 # \return charge-to-mass ratio (C/kg)
 # \return initial state vector
 # \return electric field vector (N/C)
 # \return magnetic flux density vector (T)
-def derived_values(q, m, x_0, y_0, v_x0, v_y0, E_x, E_y, B):
+# \return rectangular field region
+# \return electric field in region i (N/C)
+# \return detector line
+def derived_values(q, m, x_0, y_0, v_x0, v_y0, E_x, E_y, B, x_grid, y_grid, w, h, d_orient, x_det, y_det, y_min^det, y_max^det, x_min^det, x_max^det):
     κ = q / m
     
     s_0 = [x_0, y_0, v_x0, v_y0]
@@ -66,7 +116,13 @@ def derived_values(q, m, x_0, y_0, v_x0, v_y0, E_x, E_y, B):
     
     B_vect = [0.0, 0.0, B]
     
-    return κ, s_0, E_vect, B_vect
+    R_i = [x_grid, y_grid, w, h]
+    
+    E_vect_i = [E_x, E_y, B]
+    
+    L_det = [d_orient, x_det, y_det, y_min^det, y_max^det, x_min^det, x_max^det]
+    
+    return κ, s_0, E_vect, B_vect, R_i, E_vect_i, L_det
 
 ## \brief Verifies that input values satisfy the physical constraints and software constraints
 # \param m particle mass (kg)
@@ -75,11 +131,23 @@ def derived_values(q, m, x_0, y_0, v_x0, v_y0, E_x, E_y, B):
 # \param y_0 initial y-position (m)
 # \param v_x0 initial x-velocity (m/s)
 # \param v_y0 initial y-velocity (m/s)
+# \param N number of field regions
+# \param w region width (m)
+# \param h region height (m)
+# \param x_grid grid origin x-coordinate (m)
+# \param y_grid grid origin y-coordinate (m)
 # \param E_x x-component of the electric field (N/C)
 # \param E_y y-component of the electric field (N/C)
 # \param B out-of-plane magnetic flux density (T)
+# \param d_orient detector orientation
+# \param x_det detector line x-position (m)
+# \param y_det detector line y-position (m)
+# \param y_min^det minimum y-coordinate of detector (m)
+# \param y_max^det maximum y-coordinate of detector (m)
+# \param x_min^det minimum x-coordinate of detector (m)
+# \param x_max^det maximum x-coordinate of detector (m)
 # \param t_final final simulation time (s)
-def input_constraints(m, q, x_0, y_0, v_x0, v_y0, E_x, E_y, B, t_final):
+def input_constraints(m, q, x_0, y_0, v_x0, v_y0, N, w, h, x_grid, y_grid, E_x, E_y, B, d_orient, x_det, y_det, y_min^det, y_max^det, x_min^det, x_max^det, t_final):
     if not(Constants.Constants.M_MIN <= m and m <= Constants.Constants.M_MAX):
         print("Warning: ", end="")
         print("m has value ", end="")
@@ -164,6 +232,16 @@ def input_constraints(m, q, x_0, y_0, v_x0, v_y0, E_x, E_y, B, t_final):
         print(Constants.Constants.B_MAX, end="")
         print(" (B_max)", end="")
         print(".")
+    if not(0.0 <= d_orient and d_orient <= 1.0):
+        print("Warning: ", end="")
+        print("d_orient has value ", end="")
+        print(d_orient, end="")
+        print(", but is suggested to be ", end="")
+        print("between ", end="")
+        print(0.0, end="")
+        print(" and ", end="")
+        print(1.0, end="")
+        print(".")
     if not(t_final <= Constants.Constants.T_MAX):
         print("Warning: ", end="")
         print("t_final has value ", end="")
@@ -178,6 +256,30 @@ def input_constraints(m, q, x_0, y_0, v_x0, v_y0, E_x, E_y, B, t_final):
         print("Warning: ", end="")
         print("m has value ", end="")
         print(m, end="")
+        print(", but is suggested to be ", end="")
+        print("above ", end="")
+        print(0.0, end="")
+        print(".")
+    if not(N > 0.0):
+        print("Warning: ", end="")
+        print("N has value ", end="")
+        print(N, end="")
+        print(", but is suggested to be ", end="")
+        print("above ", end="")
+        print(0.0, end="")
+        print(".")
+    if not(w > 0.0):
+        print("Warning: ", end="")
+        print("w has value ", end="")
+        print(w, end="")
+        print(", but is suggested to be ", end="")
+        print("above ", end="")
+        print(0.0, end="")
+        print(".")
+    if not(h > 0.0):
+        print("Warning: ", end="")
+        print("h has value ", end="")
+        print(h, end="")
         print(", but is suggested to be ", end="")
         print("above ", end="")
         print(0.0, end="")

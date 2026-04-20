@@ -8,6 +8,7 @@ This subsection provides a list of terms that are used in the subsequent section
 - Lorentz force: The force on a charged particle due to electric and magnetic fields.
 - Trajectory: The path traced by a particle over time.
 - Field region: A spatial region in which the electric field and magnetic field are specified, typically treated as uniform within the region.
-- Detector line: A line at a specified location where the particle impact position is recorded.
+- Region grid: A rectangular arrangement of N equal-sized rectangular field regions tiled side-by-side with no gaps or overlaps, whose union forms a single axis-aligned rectangle.
+- Detector line: A line segment (either horizontal or vertical) at a specified location where the particle impact position is recorded.
 - Velocity selector: A configuration of crossed electric and magnetic fields that allows only particles with a particular velocity to pass through without deflection.
 - Cartesian coordinate system: A coordinate system that specifies each point uniquely in a plane by a set of numerical coordinates, which are the signed distances to the point from two fixed perpendicular oriented lines, measured in the same unit of length.

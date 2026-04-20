@@ -21,9 +21,21 @@ public class InputParameters {
         \return initial y-position (m)
         \return initial x-velocity (m/s)
         \return initial y-velocity (m/s)
+        \return number of field regions
+        \return region width (m)
+        \return region height (m)
+        \return grid origin x-coordinate (m)
+        \return grid origin y-coordinate (m)
         \return x-component of the electric field (N/C)
         \return y-component of the electric field (N/C)
         \return out-of-plane magnetic flux density (T)
+        \return detector orientation
+        \return detector line x-position (m)
+        \return detector line y-position (m)
+        \return minimum y-coordinate of detector (m)
+        \return maximum y-coordinate of detector (m)
+        \return minimum x-coordinate of detector (m)
+        \return maximum x-coordinate of detector (m)
         \return final simulation time (s)
     */
     public static Object[] get_input(String filename) throws FileNotFoundException {
@@ -33,9 +45,21 @@ public class InputParameters {
         double y_0;
         double v_x0;
         double v_y0;
+        double N;
+        double w;
+        double h;
+        double x_grid;
+        double y_grid;
         double E_x;
         double E_y;
         double B;
+        double d_orient;
+        double x_det;
+        double y_det;
+        double y_min^det;
+        double y_max^det;
+        double x_min^det;
+        double x_max^det;
         double t_final;
         
         Scanner infile;
@@ -53,26 +77,62 @@ public class InputParameters {
         infile.nextLine();
         v_y0 = Double.parseDouble(infile.nextLine());
         infile.nextLine();
+        N = Double.parseDouble(infile.nextLine());
+        infile.nextLine();
+        w = Double.parseDouble(infile.nextLine());
+        infile.nextLine();
+        h = Double.parseDouble(infile.nextLine());
+        infile.nextLine();
+        x_grid = Double.parseDouble(infile.nextLine());
+        infile.nextLine();
+        y_grid = Double.parseDouble(infile.nextLine());
+        infile.nextLine();
         E_x = Double.parseDouble(infile.nextLine());
         infile.nextLine();
         E_y = Double.parseDouble(infile.nextLine());
         infile.nextLine();
         B = Double.parseDouble(infile.nextLine());
         infile.nextLine();
+        d_orient = Double.parseDouble(infile.nextLine());
+        infile.nextLine();
+        x_det = Double.parseDouble(infile.nextLine());
+        infile.nextLine();
+        y_det = Double.parseDouble(infile.nextLine());
+        infile.nextLine();
+        y_min^det = Double.parseDouble(infile.nextLine());
+        infile.nextLine();
+        y_max^det = Double.parseDouble(infile.nextLine());
+        infile.nextLine();
+        x_min^det = Double.parseDouble(infile.nextLine());
+        infile.nextLine();
+        x_max^det = Double.parseDouble(infile.nextLine());
+        infile.nextLine();
         t_final = Double.parseDouble(infile.nextLine());
         infile.close();
         
-        Object[] outputs = new Object[10];
+        Object[] outputs = new Object[22];
         outputs[0] = m;
         outputs[1] = q;
         outputs[2] = x_0;
         outputs[3] = y_0;
         outputs[4] = v_x0;
         outputs[5] = v_y0;
-        outputs[6] = E_x;
-        outputs[7] = E_y;
-        outputs[8] = B;
-        outputs[9] = t_final;
+        outputs[6] = N;
+        outputs[7] = w;
+        outputs[8] = h;
+        outputs[9] = x_grid;
+        outputs[10] = y_grid;
+        outputs[11] = E_x;
+        outputs[12] = E_y;
+        outputs[13] = B;
+        outputs[14] = d_orient;
+        outputs[15] = x_det;
+        outputs[16] = y_det;
+        outputs[17] = y_min^det;
+        outputs[18] = y_max^det;
+        outputs[19] = x_min^det;
+        outputs[20] = x_max^det;
+        outputs[21] = t_final;
         return outputs;
     }
     
@@ -86,17 +146,34 @@ public class InputParameters {
         \param E_x x-component of the electric field (N/C)
         \param E_y y-component of the electric field (N/C)
         \param B out-of-plane magnetic flux density (T)
+        \param x_grid grid origin x-coordinate (m)
+        \param y_grid grid origin y-coordinate (m)
+        \param w region width (m)
+        \param h region height (m)
+        \param d_orient detector orientation
+        \param x_det detector line x-position (m)
+        \param y_det detector line y-position (m)
+        \param y_min^det minimum y-coordinate of detector (m)
+        \param y_max^det maximum y-coordinate of detector (m)
+        \param x_min^det minimum x-coordinate of detector (m)
+        \param x_max^det maximum x-coordinate of detector (m)
         \return array containing the following values:
         \return charge-to-mass ratio (C/kg)
         \return initial state vector
         \return electric field vector (N/C)
         \return magnetic flux density vector (T)
+        \return rectangular field region
+        \return electric field in region i (N/C)
+        \return detector line
     */
-    public static Object[] derived_values(double q, double m, double x_0, double y_0, double v_x0, double v_y0, double E_x, double E_y, double B) {
+    public static Object[] derived_values(double q, double m, double x_0, double y_0, double v_x0, double v_y0, double E_x, double E_y, double B, double x_grid, double y_grid, double w, double h, double d_orient, double x_det, double y_det, double y_min^det, double y_max^det, double x_min^det, double x_max^det) {
         double κ;
         double s_0;
         double E_vect;
         double B_vect;
+        double R_i;
+        double E_vect_i;
+        double L_det;
         
         κ = q / m;
         
@@ -106,11 +183,20 @@ public class InputParameters {
         
         B_vect = {0.0, 0.0, B};
         
-        Object[] outputs = new Object[4];
+        R_i = {x_grid, y_grid, w, h};
+        
+        E_vect_i = {E_x, E_y, B};
+        
+        L_det = {d_orient, x_det, y_det, y_min^det, y_max^det, x_min^det, x_max^det};
+        
+        Object[] outputs = new Object[7];
         outputs[0] = κ;
         outputs[1] = s_0;
         outputs[2] = E_vect;
         outputs[3] = B_vect;
+        outputs[4] = R_i;
+        outputs[5] = E_vect_i;
+        outputs[6] = L_det;
         return outputs;
     }
     
@@ -121,12 +207,24 @@ public class InputParameters {
         \param y_0 initial y-position (m)
         \param v_x0 initial x-velocity (m/s)
         \param v_y0 initial y-velocity (m/s)
+        \param N number of field regions
+        \param w region width (m)
+        \param h region height (m)
+        \param x_grid grid origin x-coordinate (m)
+        \param y_grid grid origin y-coordinate (m)
         \param E_x x-component of the electric field (N/C)
         \param E_y y-component of the electric field (N/C)
         \param B out-of-plane magnetic flux density (T)
+        \param d_orient detector orientation
+        \param x_det detector line x-position (m)
+        \param y_det detector line y-position (m)
+        \param y_min^det minimum y-coordinate of detector (m)
+        \param y_max^det maximum y-coordinate of detector (m)
+        \param x_min^det minimum x-coordinate of detector (m)
+        \param x_max^det maximum x-coordinate of detector (m)
         \param t_final final simulation time (s)
     */
-    public static void input_constraints(double m, double q, double x_0, double y_0, double v_x0, double v_y0, double E_x, double E_y, double B, double t_final) {
+    public static void input_constraints(double m, double q, double x_0, double y_0, double v_x0, double v_y0, double N, double w, double h, double x_grid, double y_grid, double E_x, double E_y, double B, double d_orient, double x_det, double y_det, double y_min^det, double y_max^det, double x_min^det, double x_max^det, double t_final) {
         if (!(Constants.m_min <= m && m <= Constants.m_max)) {
             System.out.print("Warning: ");
             System.out.print("m has value ");
@@ -218,6 +316,17 @@ public class InputParameters {
             System.out.print(" (B_max)");
             System.out.println(".");
         }
+        if (!(0.0 <= d_orient && d_orient <= 1.0)) {
+            System.out.print("Warning: ");
+            System.out.print("d_orient has value ");
+            System.out.print(d_orient);
+            System.out.print(", but is suggested to be ");
+            System.out.print("between ");
+            System.out.print(0.0);
+            System.out.print(" and ");
+            System.out.print(1.0);
+            System.out.println(".");
+        }
         if (!(t_final <= Constants.t_max)) {
             System.out.print("Warning: ");
             System.out.print("t_final has value ");
@@ -233,6 +342,33 @@ public class InputParameters {
             System.out.print("Warning: ");
             System.out.print("m has value ");
             System.out.print(m);
+            System.out.print(", but is suggested to be ");
+            System.out.print("above ");
+            System.out.print(0.0);
+            System.out.println(".");
+        }
+        if (!(N > 0.0)) {
+            System.out.print("Warning: ");
+            System.out.print("N has value ");
+            System.out.print(N);
+            System.out.print(", but is suggested to be ");
+            System.out.print("above ");
+            System.out.print(0.0);
+            System.out.println(".");
+        }
+        if (!(w > 0.0)) {
+            System.out.print("Warning: ");
+            System.out.print("w has value ");
+            System.out.print(w);
+            System.out.print(", but is suggested to be ");
+            System.out.print("above ");
+            System.out.print(0.0);
+            System.out.println(".");
+        }
+        if (!(h > 0.0)) {
+            System.out.print("Warning: ");
+            System.out.print("h has value ");
+            System.out.print(h);
             System.out.print(", but is suggested to be ");
             System.out.print("above ");
             System.out.print(0.0);

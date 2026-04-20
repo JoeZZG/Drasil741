@@ -4,7 +4,9 @@ digraph "avsall" {
     "dataDefn:Bvec" -> "instance:prescribedFields";
     "dataDefn:Bvec" -> "instance:bPerpPlane";
     "dataDefn:Ri" -> "instance:rectRegions";
+    "dataDefn:Ri" -> "instance:gridLayout";
     "dataDefn:Ei" -> "instance:piecewiseUniform";
+    "dataDefn:Ei" -> "instance:prescribedFields";
     "dataDefn:Ldet" -> "instance:lineDetector";
     "theory:lorentzForceCS" -> "instance:singleParticle";
     "theory:lorentzForceCS" -> "instance:prescribedFields";
@@ -22,8 +24,8 @@ digraph "avsall" {
     "theory:stateEvolRC" -> "instance:noInteractions";
     "theory:stateEvolRC" -> "instance:twoDMotion";
     "theory:stateEvolRC" -> "instance:lorentzOnly";
-    "theory:detHitIM" -> "instance:lineDetector";
-    "theory:detHitIM" -> "instance:fullDetection";
+    "theory:detHitRC" -> "instance:lineDetector";
+    "theory:detHitRC" -> "instance:fullDetection";
     "instance:lcExtendTo3D" -> "instance:twoDMotion";
     "instance:ucLorentzForce" -> "instance:lorentzOnly";
     "instance:piecewiseUniform" [shape=box, color=black, style=filled, fillcolor="mistyrose", label="A:piecewiseUniform"];
@@ -34,12 +36,13 @@ digraph "avsall" {
     "instance:bPerpPlane" [shape=box, color=black, style=filled, fillcolor="mistyrose", label="A:bPerpPlane"];
     "instance:eAxisAligned" [shape=box, color=black, style=filled, fillcolor="mistyrose", label="A:eAxisAligned"];
     "instance:rectRegions" [shape=box, color=black, style=filled, fillcolor="mistyrose", label="A:rectRegions"];
+    "instance:gridLayout" [shape=box, color=black, style=filled, fillcolor="mistyrose", label="A:gridLayout"];
     "instance:lineDetector" [shape=box, color=black, style=filled, fillcolor="mistyrose", label="A:lineDetector"];
     "instance:fullDetection" [shape=box, color=black, style=filled, fillcolor="mistyrose", label="A:fullDetection"];
     "instance:lorentzOnly" [shape=box, color=black, style=filled, fillcolor="mistyrose", label="A:lorentzOnly"];
     subgraph "A" {
         rank="same";
-        "instance:piecewiseUniform" "instance:singleParticle" "instance:noInteractions" "instance:prescribedFields" "instance:twoDMotion" "instance:bPerpPlane" "instance:eAxisAligned" "instance:rectRegions" "instance:lineDetector" "instance:fullDetection" "instance:lorentzOnly";
+        "instance:piecewiseUniform" "instance:singleParticle" "instance:noInteractions" "instance:prescribedFields" "instance:twoDMotion" "instance:bPerpPlane" "instance:eAxisAligned" "instance:rectRegions" "instance:gridLayout" "instance:lineDetector" "instance:fullDetection" "instance:lorentzOnly";
     }
     "dataDefn:kappa" [shape=box, color=black, style=filled, fillcolor="paleturquoise1", label="DD:qOverm"];
     "dataDefn:s0" [shape=box, color=black, style=filled, fillcolor="paleturquoise1", label="DD:initState"];
@@ -68,13 +71,15 @@ digraph "avsall" {
         "theory:kin2DRC" "theory:vCrossB" "theory:dyn2DRC";
     }
     "theory:stateEvolRC" [shape=box, color=black, style=filled, fillcolor="khaki1", label="IM:stateEvol"];
-    "theory:detHitIM" [shape=box, color=black, style=filled, fillcolor="khaki1", label="IM:detHit"];
+    "theory:detHitRC" [shape=box, color=black, style=filled, fillcolor="khaki1", label="IM:detHit"];
     subgraph "IM" {
         rank="same";
-        "theory:stateEvolRC" "theory:detHitIM";
+        "theory:stateEvolRC" "theory:detHitRC";
     }
     "instance:inputValues" [shape=box, color=black, style=filled, fillcolor="ivory", label="FR:inputValues"];
     "instance:echoInputs" [shape=box, color=black, style=filled, fillcolor="ivory", label="FR:echoInputs"];
+    "instance:buildRegionGrid" [shape=box, color=black, style=filled, fillcolor="ivory", label="FR:buildRegionGrid"];
+    "instance:lookupActiveRegion" [shape=box, color=black, style=filled, fillcolor="ivory", label="FR:lookupActiveRegion"];
     "instance:computeTraj" [shape=box, color=black, style=filled, fillcolor="ivory", label="FR:computeTraj"];
     "instance:reportOutputs" [shape=box, color=black, style=filled, fillcolor="ivory", label="FR:reportOutputs"];
     "instance:correct" [shape=box, color=black, style=filled, fillcolor="ivory", label="NFR:correct"];
@@ -82,7 +87,7 @@ digraph "avsall" {
     "instance:portable" [shape=box, color=black, style=filled, fillcolor="ivory", label="NFR:portable"];
     subgraph "FR" {
         rank="same";
-        "instance:inputValues" "instance:echoInputs" "instance:computeTraj" "instance:reportOutputs" "instance:correct" "instance:maintainable" "instance:portable";
+        "instance:inputValues" "instance:echoInputs" "instance:buildRegionGrid" "instance:lookupActiveRegion" "instance:computeTraj" "instance:reportOutputs" "instance:correct" "instance:maintainable" "instance:portable";
     }
     "instance:lcExtendTo3D" [shape=box, color=black, style=filled, fillcolor="lavender", label="LC:lcExtendTo3D"];
     "instance:ucLorentzForce" [shape=box, color=black, style=filled, fillcolor="lavender", label="UC:ucLorentzForce"];

@@ -13,7 +13,7 @@ import Data.Drasil.Units.Physics (velU, accelU)
 import Drasil.Trajecto.Unitals
   ( chargeToMass, elecFieldX, elecFieldY, magField
   , xPos, yPos, xVel, yVel
-  , vCrossBVec )
+  , vCrossBVec, elecFieldU )
 import Drasil.Trajecto.Assumptions
   ( twoDMotion, bPerpPlane, eAxisAligned, prescribedFields )
 import Drasil.Trajecto.DataDefs (qOvermDD)
@@ -58,7 +58,7 @@ kin2DNote = foldlSent
 ---------------------------------------------------------
 
 vCrossB2DGD :: GenDefn
-vCrossB2DGD = gdNoRefs (equationalModel' vCrossB2DQD) (Nothing :: Maybe UnitDefn) Nothing "vCrossB2D" [vCrossB2DNote]
+vCrossB2DGD = gdNoRefs (equationalModel' vCrossB2DQD) (Just elecFieldU) Nothing "vCrossB2D" [vCrossB2DNote]
 
 vCrossB2DQD :: ModelQDef
 vCrossB2DQD = mkQuantDef' vCrossBVec
@@ -102,7 +102,7 @@ dyn2DNote = foldlSent
     S "out-of-plane magnetic field" +:+ sParen (refS bPerpPlane) `sC`
     S "and axis-aligned electric field" +:+. sParen (refS eAxisAligned)
   , S "Here" +:+ ch chargeToMass +:+ S "= q/m is the charge-to-mass ratio defined in"
-  , refS qOvermDD +:+. S "."
+  , refS qOvermDD :+: S "."
   , S "The equations are obtained from" +:+ refS lorentzForceTM +:+ S "and"
-  , refS eqnMotionTM +:+ S "by applying" +:+. refS vCrossB2DGD
+  , refS eqnMotionTM +:+ S "by applying" +:+ refS vCrossB2DGD
   ]

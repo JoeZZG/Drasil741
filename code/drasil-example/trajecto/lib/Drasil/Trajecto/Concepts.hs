@@ -10,7 +10,7 @@ import Language.Drasil
 
 defs :: [ConceptChunk]
 defs = [ chargedParticle, electricField, magneticField, lorentzForce
-       , trajectory, fieldRegion, detectorLine, velocitySelector
+       , trajectory, fieldRegion, regionGrid, detectorLine, velocitySelector
        , cartesianCoordSys ]
 
 chargedParticle :: ConceptChunk
@@ -37,9 +37,13 @@ fieldRegion :: ConceptChunk
 fieldRegion = dcc "fieldRegion" (cn' "field region")
   "a spatial region in which the electric field and magnetic field are specified, typically treated as uniform within the region"
 
+regionGrid :: ConceptChunk
+regionGrid = dcc "regionGrid" (cn' "region grid")
+  "a rectangular arrangement of N equal-sized rectangular field regions tiled side-by-side with no gaps or overlaps, whose union forms a single axis-aligned rectangle"
+
 detectorLine :: ConceptChunk
 detectorLine = dcc "detectorLine" (cn' "detector line")
-  "a line at a specified location where the particle impact position is recorded"
+  "a line segment (either horizontal or vertical) at a specified location where the particle impact position is recorded"
 
 velocitySelector :: ConceptChunk
 velocitySelector = dcc "velocitySelector" (cn' "velocity selector")

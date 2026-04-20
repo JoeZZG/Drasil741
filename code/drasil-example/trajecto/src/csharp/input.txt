@@ -10,11 +10,35 @@
 1000000.0
 # initial y-velocity (m/s)
 0.0
+# number of field regions
+1.0
+# region width (m)
+0.1
+# region height (m)
+0.1
+# grid origin x-coordinate (m)
+0.0
+# grid origin y-coordinate (m)
+-5.0e-2
 # x-component of the electric field (N/C)
 0.0
 # y-component of the electric field (N/C)
 0.0
 # out-of-plane magnetic flux density (T)
 1.0e-4
+# detector orientation
+0.0
+# detector line x-position (m)
+5.0e-2
+# detector line y-position (m)
+0.0
+# minimum y-coordinate of detector (m)
+-5.0e-2
+# maximum y-coordinate of detector (m)
+5.0e-2
+# minimum x-coordinate of detector (m)
+0.0
+# maximum x-coordinate of detector (m)
+0.1
 # final simulation time (s)
 7.0e-7

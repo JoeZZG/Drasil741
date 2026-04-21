@@ -10,7 +10,8 @@ module Language.Drasil.Code.ExternalLibrary (ExternalLibrary, Step(..),
   functionArg, customObjArg, recordArg, lockedParam, unnamedParam, customClass,
   implementation, constructorInfo, isConstructor, methodInfo, methodInfoNoReturn,
   appendCurrSol, populateSolList, assignArrayIndex, assignSolFromObj,
-  initSolListFromArray, initSolListWithVal, solveAndPopulateWhile,
+  initSolListFromArray, initSolListWithVal, initSolListWithValVec,
+  solveAndPopulateWhile, solveAndPopulateWhileVec,
   returnExprList, fixedReturn, fixedReturn', initSolWithVal
 ) where
 
@@ -288,8 +289,16 @@ initSolListFromArray a = statementStep (\cdchs es -> case (cdchs, es) of
 -- | Specifies a statement where a solution list is initialized with the given value.
 initSolListWithVal :: Step
 initSolListWithVal = statementStep (\cdchs es -> case (cdchs, es) of
-  ([s],[v]) -> FDecDef s (matrix [[v]])
+  ([s],[v]) -> FDecDef s (matrix [[idx v (int 0)]])
   (_,_) -> error "Fill for initSolListWithVal should provide one CodeChunk and one Expr")
+
+-- | Like 'initSolListWithVal', but stores the whole vector rather than just
+--   index 0.  Use this when the dependent variable is itself a vector
+--   (multi-dimensional ODE state).
+initSolListWithValVec :: Step
+initSolListWithValVec = statementStep (\cdchs es -> case (cdchs, es) of
+  ([s],[v]) -> FDecDef s (matrix [[v]])
+  (_,_) -> error "Fill for initSolListWithValVec should provide one CodeChunk and one Expr")
 
 -- | A solve and populate loop. 'FunctionInterface' for loop condition, 'CodeChunk' for solution object,
 --   'CodeChunk' for independent var, 'FunctionInterface' for solving,
@@ -301,6 +310,15 @@ solveAndPopulateWhile lc ob iv slv popArr = loopStep [lc] (\case
   _ -> error "Fill for solveAndPopulateWhile should provide one Expr")
   [callStep slv, appendCurrSol (field ob popArr)]
 
+-- | Like 'solveAndPopulateWhile', but appends the whole current-solution
+--   expression instead of only index 0.  Use for multi-dimensional ODE state.
+solveAndPopulateWhileVec :: FunctionInterface -> CodeVarChunk -> CodeVarChunk ->
+  FunctionInterface -> CodeVarChunk -> Step
+solveAndPopulateWhileVec lc ob iv slv popArr = loopStep [lc] (\case
+  [ub] -> field ob iv $< ub
+  _ -> error "Fill for solveAndPopulateWhileVec should provide one Expr")
+  [callStep slv, appendCurrSolVec (field ob popArr)]
+
 -- | Specifies a statement where a list is returned, where each value of the list
 -- is explicitly defined.
 returnExprList :: Step
@@ -310,7 +328,20 @@ returnExprList = statementStep (\cdchs es -> case (cdchs, es) of
 
 -- | A statement where a current solution is appended to a solution list.
 appendCurrSolFS :: CodeExpr -> CodeVarChunk -> FuncStmt
-appendCurrSolFS cs s = FAppend (sy s) cs
+appendCurrSolFS cs s = FAppend (sy s) (idx cs (int 0))
+
+-- | Like 'appendCurrSolFS' but appends the whole expression (no index 0).
+--   Use for multi-dimensional ODE state where the full vector is desired.
+appendCurrSolFSVec :: CodeExpr -> CodeVarChunk -> FuncStmt
+appendCurrSolFSVec cs s = FAppend (sy s) cs
+
+-- | Specifies a statement that appends the whole current solution expression
+--   (not just index 0) to a list.  Counterpart to 'appendCurrSol' for
+--   vector-valued ODE states.
+appendCurrSolVec :: CodeExpr -> Step
+appendCurrSolVec curr = statementStep (\cdchs es -> case (cdchs, es) of
+    ([s], []) -> appendCurrSolFSVec curr s
+    (_,_) -> error "Fill for appendCurrSolVec should provide one CodeChunk and no Exprs")
 
 -- | Specifies a use-case-independent statement that returns a fixed value.
 fixedReturn :: CodeExpr -> Step

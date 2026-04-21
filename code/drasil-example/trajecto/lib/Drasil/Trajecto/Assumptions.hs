@@ -8,7 +8,6 @@ module Drasil.Trajecto.Assumptions
   ) where
 
 import Language.Drasil
-import qualified Language.Drasil.Sentence.Combinators as S
 
 import Data.Drasil.Concepts.Documentation (assumpDom)
 

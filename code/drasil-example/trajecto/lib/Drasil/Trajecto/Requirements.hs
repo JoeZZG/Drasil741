@@ -3,12 +3,10 @@ module Drasil.Trajecto.Requirements (funcReqs, nonfuncReqs, funcReqsTables) wher
 
 import Language.Drasil
 import Drasil.DocLang (inReqWTab, mkCorrectNFR, mkPortableNFR, mkMaintainableNFR)
-import qualified Language.Drasil.Sentence.Combinators as S
 
-import Data.Drasil.Concepts.Documentation (funcReqDom, output_, value)
-import Data.Drasil.Concepts.Computation (inValue)
+import Data.Drasil.Concepts.Documentation (funcReqDom)
 
-import Drasil.Trajecto.Unitals (inputs, outputs)
+import Drasil.Trajecto.Unitals (inputs)
 import Drasil.Trajecto.IMods (stateEvolIM, detHitIM)
 import Drasil.Trajecto.DataDefs (regionRectDD, fieldsByRegionDD)
 

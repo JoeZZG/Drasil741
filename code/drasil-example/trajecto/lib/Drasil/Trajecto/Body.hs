@@ -4,11 +4,10 @@ module Drasil.Trajecto.Body (mkSRS, si) where
 import Language.Drasil hiding (organization, section)
 import qualified Language.Drasil.Development as D
 import Language.Drasil.Code (Mod(Mod), asVC)
-import Theory.Drasil (TheoryModel)
 import Drasil.SRSDocument
 import Drasil.Generator (withCommonKnowledge)
 import qualified Drasil.DocLang.SRS as SRS
-import Drasil.System (SmithEtAlSRS, mkSmithEtAlICO)
+import Drasil.System (mkSmithEtAlICO)
 import Language.Drasil.Chunk.Concept.NamedCombinators
 import qualified Language.Drasil.Sentence.Combinators as S
 import Drasil.Document.Contents (foldlSP, foldlSPCol)
@@ -36,7 +35,7 @@ import Drasil.Trajecto.References (citations)
 import Drasil.Trajecto.Requirements (funcReqs, nonfuncReqs, funcReqsTables)
 import Drasil.Trajecto.TMods (tMods)
 import Drasil.Trajecto.Unitals
-  ( symbols, acronyms, inputs, outputs, inConstraints, outConstraints
+  ( symbols, inputs, outputs, inConstraints, outConstraints
   , constants, elecFieldU, chgPerMassU )
 import Drasil.Trajecto.ModuleDefs (detHitMod, implVars)
 
@@ -172,9 +171,6 @@ ideaDicts :: [IdeaDict]
 ideaDicts =
   nw progName : map nw mathcon' ++ map nw physicCon'
 
-abbreviationsList :: [IdeaDict]
-abbreviationsList = map nw symbols ++ map nw acronyms
-
 conceptChunks :: [ConceptChunk]
 conceptChunks = physicalcon ++ defs
 
@@ -201,7 +197,7 @@ symbolsWCodeSymbols = map asVC (concatMap (\(Mod _ _ _ _ l) -> l) [detHitMod])
 ---------------------------------------------------------
 
 justification :: CI -> Sentence
-justification prog = foldlSent
+justification _ = foldlSent
   [ S "The motion of a charged particle through electromagnetic fields is a"
   , S "fundamental phenomenon arising in particle accelerators, mass spectrometers,"
   , S "and plasma confinement devices. It is therefore useful to have a"

@@ -3,7 +3,6 @@
 module Drasil.Trajecto.Goals (goals, goalsInputs) where
 
 import Language.Drasil
-import qualified Language.Drasil.Sentence.Combinators as S
 
 import Data.Drasil.Concepts.Documentation (goalStmtDom)
 

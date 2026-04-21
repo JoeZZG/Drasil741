@@ -9,7 +9,6 @@ module Drasil.Trajecto.DataDefs
 
 import Language.Drasil
 import Theory.Drasil (DataDefinition, ddENoRefs)
-import qualified Language.Drasil.Sentence.Combinators as S
 
 import Drasil.Trajecto.Unitals
   ( chargeToMass, parCharge, parMass

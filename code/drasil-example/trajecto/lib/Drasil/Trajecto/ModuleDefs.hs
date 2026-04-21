@@ -3,14 +3,14 @@
 -- the particle crosses the detector line.
 module Drasil.Trajecto.ModuleDefs (detHitMod, implVars, detHitDefs) where
 
-import Drasil.Code.CodeExpr (CodeExpr, LiteralC(int))
+import Drasil.Code.CodeExpr (LiteralC(int))
 import Language.Drasil (Expr, Space(..), nounPhraseSP,
-  label, sub, HasSymbol(..), ExprC(..), DefinedQuantityDict, implVar,
+  label, sub, ExprC(..), DefinedQuantityDict, implVar,
   mkQuantDef, dqdNoUnit, dcc, variable, SimpleQDef)
 import Language.Drasil.Display (Symbol(..))
 import Language.Drasil.ShortHands
 import Language.Drasil.Code (($:=), Func, FuncStmt(..), Mod,
-  asVC, funcDef, fDecDef, ffor, packmod, quantvar)
+  funcDef, fDecDef, ffor, packmod)
 
 import qualified Drasil.Trajecto.Unitals as U
 

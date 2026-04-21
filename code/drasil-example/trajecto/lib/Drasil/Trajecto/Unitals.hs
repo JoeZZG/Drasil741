@@ -3,11 +3,8 @@
 module Drasil.Trajecto.Unitals where
 
 import Language.Drasil
-import qualified Language.Drasil.Development as D
 import Language.Drasil.Display (Symbol(..))
 import Language.Drasil.ShortHands
-import Language.Drasil.Chunk.Concept.NamedCombinators
-import qualified Language.Drasil.Sentence.Combinators as S
 
 import Data.Drasil.Constraints (gtZeroConstr)
 import Data.Drasil.Concepts.Documentation (assumption, goalStmt, physSyst,
@@ -17,8 +14,6 @@ import qualified Data.Drasil.Quantities.Physics as QP (velocity, acceleration,
   force, time, position)
 import Data.Drasil.SI_Units (metre, kilogram, second, newton, coulomb, tesla)
 import Data.Drasil.Units.Physics (velU, accelU)
-
-import Language.Drasil (cucNoUnit', newUnit, (/:))
 
 ---------------------------------------------------------
 -- Derived units specific to EM quantities

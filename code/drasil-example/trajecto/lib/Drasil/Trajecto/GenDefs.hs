@@ -5,7 +5,6 @@ module Drasil.Trajecto.GenDefs (genDefs, kin2DGD, vCrossB2DGD, dyn2DGD) where
 
 import Language.Drasil
 import Theory.Drasil
-import qualified Language.Drasil.Sentence.Combinators as S
 
 import qualified Data.Drasil.Quantities.Physics as QP (time)
 import Data.Drasil.Units.Physics (velU, accelU)

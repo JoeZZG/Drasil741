@@ -7,7 +7,6 @@ import qualified Data.List.NonEmpty as NE
 
 import Language.Drasil
 import Theory.Drasil
-import qualified Language.Drasil.Sentence.Combinators as S
 
 import Data.Drasil.Theories.Physics (accelerationTM, velocityTM)
 import Data.Drasil.Quantities.Physics (force)

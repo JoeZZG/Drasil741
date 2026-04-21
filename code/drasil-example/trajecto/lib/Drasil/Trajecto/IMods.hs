@@ -4,7 +4,6 @@ module Drasil.Trajecto.IMods (iMods, stateEvolIM, detHitIM) where
 
 import Language.Drasil
 import Theory.Drasil (InstanceModel, RelationConcept, makeRC, imNoRefs, deModel', qwUC)
-import qualified Language.Drasil.Sentence.Combinators as S
 
 import qualified Data.Drasil.Quantities.Physics as QP (time)
 
@@ -14,8 +13,7 @@ import Drasil.Trajecto.Unitals
   , xPos0, yPos0, xVel0, yVel0
   , elecFieldX, elecFieldY, magField
   , chargeToMass, tFinal
-  , tHit, xDet, xHit, yHit, yDet, yDetMin, yDetMax, xDetMin, xDetMax, detOrient
-  , nRegions, regionWidth, regionHeight, xGrid, yGrid )
+  , tHit, xDet, xHit, yHit, yDet, yDetMin, yDetMax, xDetMin, xDetMax, detOrient )
 import Drasil.Trajecto.DataDefs
   ( qOvermDD, initStateDD, fieldsByRegionDD, detectorLineDD )
 import Drasil.Trajecto.GenDefs (kin2DGD, dyn2DGD)

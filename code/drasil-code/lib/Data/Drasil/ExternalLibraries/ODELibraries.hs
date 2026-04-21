@@ -1,7 +1,7 @@
 -- | Define and collect information about ODEs and ODE solvers from various libraries.
 module Data.Drasil.ExternalLibraries.ODELibraries (
   -- * SciPy Library (Python)
-  scipyODEPckg,
+  scipyODEPckg, scipyODEVecPckg,
   -- * Oslo Library (C#)
   osloPckg, arrayVecDepVar,
   -- * Apache Commons (Java)
@@ -34,10 +34,19 @@ import Language.Drasil.Mod (pubStateVar, privStateVar, FuncStmt(..))
 
 -- SciPy Library (Python)
 
--- | [SciPy](https://www.scipy.org/) ODE library package.
+-- | [SciPy](https://www.scipy.org/) ODE library package (scalar dep-var mode).
+--   The solution list contains one scalar value per time step (index 0 of the
+--   ODE state vector).  Use for 1-D or conceptually scalar ODEs.
 scipyODEPckg :: ODELibPckg
 scipyODEPckg = mkODELibNoPath "SciPy" "1.4.1" scipyODESymbols scipyODE
   scipyCall [Python]
+
+-- | [SciPy](https://www.scipy.org/) ODE library package (vector dep-var mode).
+--   The solution list contains one sub-list (the full state vector) per time
+--   step.  Use when the dependent variable is a multi-component state vector.
+scipyODEVecPckg :: ODELibPckg
+scipyODEVecPckg = mkODELibNoPath "SciPy" "1.4.1" scipyODESymbols scipyODEVec
+  scipyCallVec [Python]
 
 scipyODE :: ExternalLibrary
 scipyODE = externalLib [
@@ -53,7 +62,7 @@ scipyODE = externalLib [
       setInitVal [inlineArg Real, inlineArg Real],
     initSolListWithVal,
     solveAndPopulateWhile (libMethod scipyImport r successful []) r t
-      (libMethod scipyImport r integrateStep [inlineArg Real]) yList]]
+      (libMethod scipyImport r integrateStep [inlineArg Real]) y]]
 
 scipyCall :: ODEInfo -> ExternalLibraryCall
 scipyCall info = externalLibCall [
@@ -67,6 +76,42 @@ scipyCall info = externalLibCall [
     solveAndPopulateWhileFill (libCallFill []) (tFinal info)
     (libCallFill [basicArgFill (field r t $+ stepSize (odeOpts info))])
     (solListVar info)]]
+  where chooseMethod Adams = (0, solveMethodFill)
+        chooseMethod BDF = (1, solveMethodFill)
+        chooseMethod RK45 = (2, solveMethodFill)
+        solveMethodFill = callStepFill $ libCallFill $ map basicArgFill
+          [absTol $ odeOpts info, relTol $ odeOpts info]
+
+-- | Vector-mode scipy library: each time step appends the full state vector.
+scipyODEVec :: ExternalLibrary
+scipyODEVec = externalLib [
+  mandatoryStep $ callStep $ libFunctionWithResult scipyImport
+    odefunc [
+      functionArg f (map unnamedParam [Real, Array Real])
+      returnExprList] r,
+  choiceStep [
+    setIntegratorMethod [vode, methodArg "adams", atol, rtol],
+    setIntegratorMethod [vode, methodArg "bdf", atol, rtol],
+    setIntegratorMethod [lockedArg (str "dopri5"), atol, rtol]],
+  mandatorySteps [callStep $ libMethod scipyImport r
+      setInitVal [inlineArg Real, inlineArg Real],
+    initSolListWithValVec,
+    solveAndPopulateWhileVec (libMethod scipyImport r successful []) r t
+      (libMethod scipyImport r integrateStep [inlineArg Real]) yList]]
+
+-- | Vector-mode scipy call: populates 'solListVar' with full state vectors.
+scipyCallVec :: ODEInfo -> ExternalLibraryCall
+scipyCallVec info = externalLibCall [
+  mandatoryStepFill $ callStepFill $ libCallFill [functionArgFill
+    (map unnamedParamFill [indepVar info, depVar info])
+    (returnExprListFill $ odeSyst info)],
+  uncurry choiceStepFill (chooseMethod $ solveMethod $ odeOpts info),
+  mandatoryStepsFill [callStepFill $ libCallFill $ map basicArgFill
+      [matrix [initVal info], tInit info],
+    initSolListWithValFill (solListVarVec info) (matrix [initVal info]),
+    solveAndPopulateWhileFill (libCallFill []) (tFinal info)
+    (libCallFill [basicArgFill (field r t $+ stepSize (odeOpts info))])
+    (solListVarVec info)]]
   where chooseMethod Adams = (0, solveMethodFill)
         chooseMethod BDF = (1, solveMethodFill)
         chooseMethod RK45 = (2, solveMethodFill)
@@ -186,7 +231,7 @@ oslo = externalLib [
     sol) [rk547m, gearBDF],
   mandatorySteps (callStep (libMethodWithResult osloImport sol
       solveFromToStep (map inlineArg [Real, Real, Real]) points) :
-    populateSolListOslo points sp x xTemp osloIdx)]
+    populateSolListOslo points sp x)]
 
 osloCall :: ODEInfo -> ExternalLibraryCall
 osloCall info = externalLibCall [
@@ -200,7 +245,7 @@ osloCall info = externalLibCall [
     callStepFill (libCallFill $ map basicArgFill
       [tInit info, tFinal info, stepSize $ odeOpts info]),
     StatementF [solListVar info] [],
-    StatementF [solListVar info] [int $ toInteger $ length $ initVal info]
+    StatementF [solListVar info] []
     ]]
   where chooseMethod RK45 = 0
         chooseMethod BDF = 1
@@ -222,10 +267,10 @@ osloImport = "Microsoft.Research.Oslo"
 
 -- | Collects variables needed for Oslo's ODEs as 'DefinedQuantityDict's.
 osloSymbols :: [DefinedQuantityDict]
-osloSymbols = map dqdWr [initv, opts, aTol, rTol, sol, points, sp, x, xTemp, osloIdx] ++
+osloSymbols = map dqdWr [initv, opts, aTol, rTol, sol, points, sp, x] ++
   map dqdWr [fOslo, options, vector, rk547m, gearBDF, solveFromToStep]
 
-initv, opts, aTol, rTol, sol, points, sp, x, xTemp, osloIdx :: CodeVarChunk
+initv, opts, aTol, rTol, sol, points, sp, x :: CodeVarChunk
 initv = quantvar $ implVar "initv_oslo" (nounPhrase
   "vector containing the initial values of the dependent variables"
   "vectors containing the initial values of the dependent variables")
@@ -257,36 +302,19 @@ sp = quantvar $ implVar "sp_oslo" (nounPhrase "ODE solution point"
 x = quantvar $ implVar "X_oslo" (nounPhrase "dependent variable"
   "dependent variables") "the dependent variable"
   (Array Real) (label "X")
-xTemp = quantvar $ implVar "xTemp_oslo" (nounPhrase
-  "temporary list for converting Oslo Vector to list"
-  "temporary lists for converting Oslo Vector to list")
-  "the temporary list for converting an Oslo Vector to a list"
-  (Vect Real) (label "xTemp")
-osloIdx = quantvar $ implVar "idx_oslo" (nounPhrase
-  "index for iterating over Oslo Vector entries"
-  "indices for iterating over Oslo Vector entries")
-  "the index for iterating over Oslo Vector entries"
-  Natural (label "i")
 
--- | Oslo-specific version of 'populateSolList' that converts each
--- @Oslo.Vector@ (@sp.X@) to a @List\<double\>@ before appending it to the
--- solution list, because @Oslo.Vector@ cannot be implicitly converted to
--- @List\<double\>@.
-populateSolListOslo :: CodeVarChunk -> CodeVarChunk -> CodeVarChunk
-                    -> CodeVarChunk -> CodeVarChunk -> [Step]
-populateSolListOslo arr el fld temp i =
+-- | Oslo-specific version of 'populateSolList' that appends the first
+-- component from each Oslo point for scalar ODE output.
+populateSolListOslo :: CodeVarChunk -> CodeVarChunk -> CodeVarChunk -> [Step]
+populateSolListOslo arr el fld =
   [Statement (\cdchs es -> case (cdchs, es) of
     ([s], []) -> FAsg s (Matrix [[]])
     (_,_) -> error popErr),
   Statement (\cdchs es -> case (cdchs, es) of
-    ([s], [solDim]) -> FForEach el (sy arr) [FMulti
-      [ FDecDef temp (Matrix [[]])
-      , FFor i (int 0) solDim (int 1)
-        [FAppend (sy temp) (field el fld `idx` sy i)]
-      , FAppend (sy s) (sy temp)
-      ]]
+    ([s], []) -> FForEach el (sy arr)
+      [FAppend (sy s) (field el fld `idx` int 0)]
     (_,_) -> error popErr)]
-  where popErr = "Fill for populateSolListOslo should provide one CodeChunk and one dimension Expr"
+  where popErr = "Fill for populateSolListOslo should provide one CodeChunk and no Exprs"
 
 fOslo, options, vector, rk547m, gearBDF, solveFromToStep :: CodeFuncChunk
 fOslo = quantfunc $ implVar "f_oslo" (nounPhrase
@@ -351,13 +379,13 @@ apacheODE = externalLib [
         stepHandler stepHandlerCtor (implementation sh [
           methodInfoNoReturn initMethod
             "initializes step handler with initial conditions"
-            (map lockedParam [t0, y0, t]) [initSolListFromArrayJava y0 y0List y0El],
+            (map lockedParam [t0, y0, t]) [initSolListFromArrayJava y0],
           methodInfoNoReturn handleStep
             "appends solution point at each ODE solution step"
             (map lockedParam [interpolator, isLast])
             [callStep $ libMethodWithResult siImp interpolator getInterpState
               [] curr,
-            appendCurrSolFromArrayJava (sy curr) currList currEl]])],
+            appendCurrSolFromArrayJava (sy curr)]])],
     callStep $ libMethod foiImp it integrate (customObjArg [apacheImport ++
       fode] "Class representing an ODE system" ode odeCtor (implementation fode
         [constructorInfo odeCtor [] [],
@@ -414,12 +442,11 @@ fode = "FirstOrderDifferentialEquations"
 -- | Collects variables needed for Apache's ODEs as 'DefinedQuantityDict's.
 apacheODESymbols :: [DefinedQuantityDict]
 apacheODESymbols = map dqdWr [it, currVals, stepHandler, t0, y0, interpolator,
-  isLast, curr, ode, y0List, y0El, currList, currEl] ++ map dqdWr [adamsC, dp54C, stepHandlerCtor, addStepHandler,
+  isLast, curr, ode] ++ map dqdWr [adamsC, dp54C, stepHandlerCtor, addStepHandler,
   initMethod, handleStep, getInterpState, integrate, odeCtor, getDimension,
   computeDerivatives]
 
-it, currVals, stepHandler, t0, y0, interpolator, isLast, curr, y0List, y0El,
-  currList, currEl :: CodeVarChunk
+it, currVals, stepHandler, t0, y0, interpolator, isLast, curr :: CodeVarChunk
 it = quantvar $ implVar "it_apache" (nounPhrase "integrator for solving ODEs"
   "integrators for solving ODEs") "the integrator for solving ODEs"
   (Actor foi) (label "it")
@@ -450,20 +477,6 @@ curr = quantvar $ implVar "curr_apache" (nounPhrase
   "ODE solution array for current step" "ODE solution arrays for current step")
   "the ODE solution array for the current step"
   (Array Real) (label "curr")
-y0List = quantvar $ implVar "y0List_apache" (nounPhrase
-  "initial ODE solution list" "initial ODE solution lists")
-  "the initial ODE solution converted to a Java list"
-  (Vect Real) (label "y0List")
-y0El = quantvar $ implVar "y0El_apache" (nounPhrase
-  "initial ODE solution value" "initial ODE solution values")
-  "an initial ODE solution value" Real (label "y0El")
-currList = quantvar $ implVar "currList_apache" (nounPhrase
-  "current ODE solution list" "current ODE solution lists")
-  "the current ODE solution converted to a Java list"
-  (Vect Real) (label "currList")
-currEl = quantvar $ implVar "currEl_apache" (nounPhrase
-  "current ODE solution value" "current ODE solution values")
-  "a current ODE solution value" Real (label "currEl")
 
 adamsC, dp54C, stepHandlerCtor, addStepHandler, initMethod, handleStep,
   getInterpState, integrate, getDimension, computeDerivatives :: CodeFuncChunk
@@ -509,23 +522,14 @@ computeDerivatives = quantfunc $ implVar "computeDerivatives_apache" (nounPhrase
   "method encoding an ODE system" "methods encoding an ODE system")
   "the method encoding an ODE system" Void (label "computeDerivatives")
 
-initSolListFromArrayJava :: CodeVarChunk -> CodeVarChunk -> CodeVarChunk -> Step
-initSolListFromArrayJava arr temp el = Statement (\cdchs es -> case (cdchs, es) of
-  ([s], []) -> FMulti
-    [ FAsg s (Matrix [[]])
-    , FDecDef temp (Matrix [[]])
-    , FForEach el (sy arr) [FAppend (sy temp) (sy el)]
-    , FAppend (sy s) (sy temp)
-    ]
+initSolListFromArrayJava :: CodeVarChunk -> Step
+initSolListFromArrayJava arr = Statement (\cdchs es -> case (cdchs, es) of
+  ([s], []) -> FAsg s (matrix [[sy arr `idx` int 0]])
   _ -> error "Fill for initSolListFromArrayJava should provide one CodeChunk and no Exprs")
 
-appendCurrSolFromArrayJava :: CodeExpr -> CodeVarChunk -> CodeVarChunk -> Step
-appendCurrSolFromArrayJava arr temp el = Statement (\cdchs es -> case (cdchs, es) of
-  ([s], []) -> FMulti
-    [ FDecDef temp (Matrix [[]])
-    , FForEach el arr [FAppend (sy temp) (sy el)]
-    , FAppend (sy s) (sy temp)
-    ]
+appendCurrSolFromArrayJava :: CodeExpr -> Step
+appendCurrSolFromArrayJava arr = Statement (\cdchs es -> case (cdchs, es) of
+  ([s], []) -> FAppend (sy s) (arr `idx` int 0)
   _ -> error "Fill for appendCurrSolFromArrayJava should provide one CodeChunk and no Exprs")
 
 -- odeint (C++)
@@ -688,11 +692,21 @@ odeMethodUnavailable :: String
 odeMethodUnavailable = "Chosen ODE solving method is not available" ++
           " in chosen ODE solving library"
 
--- | Solution list chunk constructor. Wraps the dependent variable's type in
--- an extra 'Vect' so that the generated code declares a list-of-vectors
--- (e.g. @vector<vector<double>>@) instead of a flat list.
+-- | Solution list chunk constructor.
+-- Uses the dependent variable's type directly, which keeps existing scalar ODE
+-- generators unchanged (e.g., @vector<double>@ for a scalar trajectory).
 solListVar :: ODEInfo -> CodeVarChunk
 solListVar info = quantvar $ implVarAU' (show $ dv +++ "sol")
+  (dv ^. term)
+  (dv ^. defn) (getA dv)
+  (dv ^. typ) (symbol dv Implementation) (getUnit dv)
+  where dv = depVar info
+
+-- | Vector-mode solution list chunk constructor.
+-- Wraps the dependent variable's type in an extra 'Vect' so generated code
+-- declares a list-of-vectors (e.g. @vector<vector<double>>@).
+solListVarVec :: ODEInfo -> CodeVarChunk
+solListVarVec info = quantvar $ implVarAU' (show $ dv +++ "solvec")
   (compoundPhrase (dv ^. term) (nounPhraseSP "solution list"))
   (S "list of solutions for" +:+ (dv ^. defn)) (getA dv)
   (Vect (dv ^. typ)) (symbol dv Implementation) (getUnit dv)

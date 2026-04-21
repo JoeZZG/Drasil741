@@ -527,7 +527,15 @@ genCalcMod = do
   cName <- genICName Calculations
   let elmap = extLibMap g
       libImports = concatMap (^. imports) (elems elmap)
-      modImports = concatMap (\(Mod _ _ is _ _) -> is) (modules g)
+      -- Keep class-specific Apache ODE interface imports in their generated
+      -- helper classes instead of leaking them into Calculations.java.
+      modImports = filter (`notElem` apacheAuxImports) $
+        concatMap (\(Mod _ _ is _ _) -> is) (modules g)
+      apacheAuxImports = [
+          "org.apache.commons.math3.ode.FirstOrderDifferentialEquations",
+          "org.apache.commons.math3.ode.sampling.StepHandler",
+          "org.apache.commons.math3.ode.sampling.StepInterpolator"
+        ]
   genModuleWithImports cName calcModDesc (libImports ++ modImports)
     (map (fmap Just . genCalcFunc) (codeSpec g ^. execOrderO)) []
 

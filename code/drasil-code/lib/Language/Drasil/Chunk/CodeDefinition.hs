@@ -82,4 +82,4 @@ odeDef info = CD
   where
     dv = depVar info
     odeSolList = implVarAU' (showUID dv) (dv ^. term) (dv ^. defn)
-      (getA dv) (Vect $ dv ^. typ) (symbol dv Implementation) (getUnit dv)
+      (getA dv) (dv ^. typ) (symbol dv Implementation) (getUnit dv)

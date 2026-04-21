@@ -5,7 +5,7 @@
 # initial x-position (m)
 0.0
 # initial y-position (m)
-0.0
+-0.04
 # initial x-velocity (m/s)
 1000000.0
 # initial y-velocity (m/s)
@@ -24,7 +24,7 @@
 -0.1
 # x-electric field in region 0 (N/C)
 0.0
-# x-electric field in region 1 (N/C)
+# x-electric field in region 1 (N/C)   [region 1 = center-bottom column]
 0.0
 # x-electric field in region 2 (N/C)
 0.0
@@ -36,41 +36,41 @@
 0.0
 # y-electric field in region 0 (N/C)
 0.0
-# y-electric field in region 1 (N/C)
-1000.0
+# y-electric field in region 1 (N/C)   [+3000 N/C upward deflects particle upward]
+3000.0
 # y-electric field in region 2 (N/C)
 0.0
 # y-electric field in region 3 (N/C)
 0.0
 # y-electric field in region 4 (N/C)
--1000.0
+0.0
 # y-electric field in region 5 (N/C)
 0.0
 # magnetic flux density in region 0 (T)
-1.0e-4
+0.0
 # magnetic flux density in region 1 (T)
 0.0
 # magnetic flux density in region 2 (T)
-1.0e-4
+0.0
 # magnetic flux density in region 3 (T)
-1.0e-4
+0.0
 # magnetic flux density in region 4 (T)
 0.0
 # magnetic flux density in region 5 (T)
-1.0e-4
-# detector orientation
 0.0
-# detector line x-position (m)
-5.0e-2
-# detector line y-position (m)
+# detector orientation (0=vertical, 1=horizontal)
+1.0
+# detector line x-position (m)  [used when d_orient=0, not relevant here]
 0.0
-# minimum y-coordinate of detector (m)
--5.0e-2
-# maximum y-coordinate of detector (m)
-5.0e-2
-# minimum x-coordinate of detector (m)
+# detector line y-position (m)  [used when d_orient=1: y=-0.01m]
+-0.01
+# minimum y-coordinate of detector (m)  [used when d_orient=0, not relevant here]
 0.0
-# maximum x-coordinate of detector (m)
+# maximum y-coordinate of detector (m)  [used when d_orient=0, not relevant here]
 0.1
+# minimum x-coordinate of detector (m)  [d_orient=1: x in [0.05, 0.15]]
+0.05
+# maximum x-coordinate of detector (m)
+0.15
 # final simulation time (s)
-7.0e-7
+2.0e-7

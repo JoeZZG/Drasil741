@@ -19,13 +19,13 @@ endif
 
 build: Trajecto$(TARGET_EXTENSION)
 
-Trajecto$(TARGET_EXTENSION): InputParameters.hpp Constants.hpp Calculations.hpp OutputFormat.hpp Populate.hpp ODE.hpp Control.cpp InputParameters.cpp Constants.cpp Calculations.cpp OutputFormat.cpp Populate.cpp ODE.cpp
-	"$(CXX)" Control.cpp InputParameters.cpp Constants.cpp Calculations.cpp OutputFormat.cpp Populate.cpp ODE.cpp --std=c++11 -o Trajecto$(TARGET_EXTENSION) -I .
+Trajecto$(TARGET_EXTENSION): InputParameters.hpp Constants.hpp Calculations.hpp OutputFormat.hpp DetectorHit.hpp Populate.hpp ODE.hpp Control.cpp InputParameters.cpp Constants.cpp Calculations.cpp OutputFormat.cpp DetectorHit.cpp Populate.cpp ODE.cpp
+	"$(CXX)" Control.cpp InputParameters.cpp Constants.cpp Calculations.cpp OutputFormat.cpp DetectorHit.cpp Populate.cpp ODE.cpp --std=c++11 -o Trajecto$(TARGET_EXTENSION) -I .
 
 run: build
 	./Trajecto$(TARGET_EXTENSION) $(RUNARGS)
 
-doc: doxConfig InputParameters.hpp Constants.hpp Calculations.hpp OutputFormat.hpp Populate.hpp ODE.hpp Control.cpp
+doc: doxConfig InputParameters.hpp Constants.hpp Calculations.hpp OutputFormat.hpp DetectorHit.hpp Populate.hpp ODE.hpp Control.cpp
 	doxygen doxConfig
 
 .PHONY: build run doc

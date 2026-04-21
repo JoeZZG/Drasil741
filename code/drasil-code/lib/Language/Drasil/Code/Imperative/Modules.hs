@@ -73,6 +73,7 @@ import Language.Drasil.Chunk.Parameter (pcAuto)
 import Language.Drasil.Code.CodeQuantityDicts (inFileName, inParams, consts)
 import Language.Drasil.Code.DataDesc (DataDesc, junkLine, singleton)
 import Language.Drasil.Code.ExtLibImport (defs, imports, steps)
+import Language.Drasil.Mod (Mod(..))
 import Language.Drasil.Choices (Comments(..), ConstantStructure(..),
   ConstantRepr(..), ConstraintBehaviour(..), ImplementationType(..),
   Logging(..), Structure(..), hasSampleInput, InternalConcept(..))
@@ -525,8 +526,10 @@ genCalcMod = do
   g <- get
   cName <- genICName Calculations
   let elmap = extLibMap g
-  genModuleWithImports cName calcModDesc (concatMap (^. imports) $
-    elems elmap) (map (fmap Just . genCalcFunc) (codeSpec g ^. execOrderO)) []
+      libImports = concatMap (^. imports) (elems elmap)
+      modImports = concatMap (\(Mod _ _ is _ _) -> is) (modules g)
+  genModuleWithImports cName calcModDesc (libImports ++ modImports)
+    (map (fmap Just . genCalcFunc) (codeSpec g ^. execOrderO)) []
 
 -- | Generates a calculation function corresponding to the 'CodeDefinition'.
 -- For solving ODEs, the 'ExtLibState' containing the information needed to

@@ -14,13 +14,29 @@ import Constants
 # \return initial x-velocity (m/s)
 # \return initial y-velocity (m/s)
 # \return number of field regions
+# \return number of grid columns
 # \return region width (m)
 # \return region height (m)
 # \return grid origin x-coordinate (m)
 # \return grid origin y-coordinate (m)
-# \return x-component of the electric field (N/C)
-# \return y-component of the electric field (N/C)
-# \return out-of-plane magnetic flux density (T)
+# \return x-electric field in region 0 (N/C)
+# \return x-electric field in region 1 (N/C)
+# \return x-electric field in region 2 (N/C)
+# \return x-electric field in region 3 (N/C)
+# \return x-electric field in region 4 (N/C)
+# \return x-electric field in region 5 (N/C)
+# \return y-electric field in region 0 (N/C)
+# \return y-electric field in region 1 (N/C)
+# \return y-electric field in region 2 (N/C)
+# \return y-electric field in region 3 (N/C)
+# \return y-electric field in region 4 (N/C)
+# \return y-electric field in region 5 (N/C)
+# \return magnetic flux density in region 0 (T)
+# \return magnetic flux density in region 1 (T)
+# \return magnetic flux density in region 2 (T)
+# \return magnetic flux density in region 3 (T)
+# \return magnetic flux density in region 4 (T)
+# \return magnetic flux density in region 5 (T)
 # \return detector orientation
 # \return detector line x-position (m)
 # \return detector line y-position (m)
@@ -46,6 +62,8 @@ def get_input(filename):
     infile.readline()
     N = float(infile.readline())
     infile.readline()
+    N_col = float(infile.readline())
+    infile.readline()
     w = float(infile.readline())
     infile.readline()
     h = float(infile.readline())
@@ -54,11 +72,41 @@ def get_input(filename):
     infile.readline()
     y_grid = float(infile.readline())
     infile.readline()
-    E_x = float(infile.readline())
+    E_x0 = float(infile.readline())
     infile.readline()
-    E_y = float(infile.readline())
+    E_x1 = float(infile.readline())
     infile.readline()
-    B = float(infile.readline())
+    E_x2 = float(infile.readline())
+    infile.readline()
+    E_x3 = float(infile.readline())
+    infile.readline()
+    E_x4 = float(infile.readline())
+    infile.readline()
+    E_x5 = float(infile.readline())
+    infile.readline()
+    E_y0 = float(infile.readline())
+    infile.readline()
+    E_y1 = float(infile.readline())
+    infile.readline()
+    E_y2 = float(infile.readline())
+    infile.readline()
+    E_y3 = float(infile.readline())
+    infile.readline()
+    E_y4 = float(infile.readline())
+    infile.readline()
+    E_y5 = float(infile.readline())
+    infile.readline()
+    B_0 = float(infile.readline())
+    infile.readline()
+    B_1 = float(infile.readline())
+    infile.readline()
+    B_2 = float(infile.readline())
+    infile.readline()
+    B_3 = float(infile.readline())
+    infile.readline()
+    B_4 = float(infile.readline())
+    infile.readline()
+    B_5 = float(infile.readline())
     infile.readline()
     d_orient = float(infile.readline())
     infile.readline()
@@ -66,18 +114,18 @@ def get_input(filename):
     infile.readline()
     y_det = float(infile.readline())
     infile.readline()
-    y_min^det = float(infile.readline())
+    y_detMin = float(infile.readline())
     infile.readline()
-    y_max^det = float(infile.readline())
+    y_detMax = float(infile.readline())
     infile.readline()
-    x_min^det = float(infile.readline())
+    x_detMin = float(infile.readline())
     infile.readline()
-    x_max^det = float(infile.readline())
+    x_detMax = float(infile.readline())
     infile.readline()
     t_final = float(infile.readline())
     infile.close()
     
-    return m, q, x_0, y_0, v_x0, v_y0, N, w, h, x_grid, y_grid, E_x, E_y, B, d_orient, x_det, y_det, y_min^det, y_max^det, x_min^det, x_max^det, t_final
+    return m, q, x_0, y_0, v_x0, v_y0, N, N_col, w, h, x_grid, y_grid, E_x0, E_x1, E_x2, E_x3, E_x4, E_x5, E_y0, E_y1, E_y2, E_y3, E_y4, E_y5, B_0, B_1, B_2, B_3, B_4, B_5, d_orient, x_det, y_det, y_detMin, y_detMax, x_detMin, x_detMax, t_final
 
 ## \brief Calculates values that can be immediately derived from the inputs
 # \param q particle charge (C)
@@ -86,9 +134,9 @@ def get_input(filename):
 # \param y_0 initial y-position (m)
 # \param v_x0 initial x-velocity (m/s)
 # \param v_y0 initial y-velocity (m/s)
-# \param E_x x-component of the electric field (N/C)
-# \param E_y y-component of the electric field (N/C)
-# \param B out-of-plane magnetic flux density (T)
+# \param E_x0 x-electric field in region 0 (N/C)
+# \param E_y0 y-electric field in region 0 (N/C)
+# \param B_0 magnetic flux density in region 0 (T)
 # \param x_grid grid origin x-coordinate (m)
 # \param y_grid grid origin y-coordinate (m)
 # \param w region width (m)
@@ -96,10 +144,10 @@ def get_input(filename):
 # \param d_orient detector orientation
 # \param x_det detector line x-position (m)
 # \param y_det detector line y-position (m)
-# \param y_min^det minimum y-coordinate of detector (m)
-# \param y_max^det maximum y-coordinate of detector (m)
-# \param x_min^det minimum x-coordinate of detector (m)
-# \param x_max^det maximum x-coordinate of detector (m)
+# \param y_detMin minimum y-coordinate of detector (m)
+# \param y_detMax maximum y-coordinate of detector (m)
+# \param x_detMin minimum x-coordinate of detector (m)
+# \param x_detMax maximum x-coordinate of detector (m)
 # \return charge-to-mass ratio (C/kg)
 # \return initial state vector
 # \return electric field vector (N/C)
@@ -107,20 +155,20 @@ def get_input(filename):
 # \return rectangular field region
 # \return electric field in region i (N/C)
 # \return detector line
-def derived_values(q, m, x_0, y_0, v_x0, v_y0, E_x, E_y, B, x_grid, y_grid, w, h, d_orient, x_det, y_det, y_min^det, y_max^det, x_min^det, x_max^det):
+def derived_values(q, m, x_0, y_0, v_x0, v_y0, E_x0, E_y0, B_0, x_grid, y_grid, w, h, d_orient, x_det, y_det, y_detMin, y_detMax, x_detMin, x_detMax):
     κ = q / m
     
     s_0 = [x_0, y_0, v_x0, v_y0]
     
-    E_vect = [E_x, E_y, 0.0]
+    E_vect = [E_x0, E_y0, 0.0]
     
-    B_vect = [0.0, 0.0, B]
+    B_vect = [0.0, 0.0, B_0]
     
     R_i = [x_grid, y_grid, w, h]
     
-    E_vect_i = [E_x, E_y, B]
+    E_vect_i = [E_x0, E_y0, B_0]
     
-    L_det = [d_orient, x_det, y_det, y_min^det, y_max^det, x_min^det, x_max^det]
+    L_det = [d_orient, x_det, y_det, y_detMin, y_detMax, x_detMin, x_detMax]
     
     return κ, s_0, E_vect, B_vect, R_i, E_vect_i, L_det
 
@@ -132,22 +180,20 @@ def derived_values(q, m, x_0, y_0, v_x0, v_y0, E_x, E_y, B, x_grid, y_grid, w, h
 # \param v_x0 initial x-velocity (m/s)
 # \param v_y0 initial y-velocity (m/s)
 # \param N number of field regions
+# \param N_col number of grid columns
 # \param w region width (m)
 # \param h region height (m)
 # \param x_grid grid origin x-coordinate (m)
 # \param y_grid grid origin y-coordinate (m)
-# \param E_x x-component of the electric field (N/C)
-# \param E_y y-component of the electric field (N/C)
-# \param B out-of-plane magnetic flux density (T)
 # \param d_orient detector orientation
 # \param x_det detector line x-position (m)
 # \param y_det detector line y-position (m)
-# \param y_min^det minimum y-coordinate of detector (m)
-# \param y_max^det maximum y-coordinate of detector (m)
-# \param x_min^det minimum x-coordinate of detector (m)
-# \param x_max^det maximum x-coordinate of detector (m)
+# \param y_detMin minimum y-coordinate of detector (m)
+# \param y_detMax maximum y-coordinate of detector (m)
+# \param x_detMin minimum x-coordinate of detector (m)
+# \param x_detMax maximum x-coordinate of detector (m)
 # \param t_final final simulation time (s)
-def input_constraints(m, q, x_0, y_0, v_x0, v_y0, N, w, h, x_grid, y_grid, E_x, E_y, B, d_orient, x_det, y_det, y_min^det, y_max^det, x_min^det, x_max^det, t_final):
+def input_constraints(m, q, x_0, y_0, v_x0, v_y0, N, N_col, w, h, x_grid, y_grid, d_orient, x_det, y_det, y_detMin, y_detMax, x_detMin, x_detMax, t_final):
     if not(Constants.Constants.M_MIN <= m and m <= Constants.Constants.M_MAX):
         print("Warning: ", end="")
         print("m has value ", end="")
@@ -196,42 +242,6 @@ def input_constraints(m, q, x_0, y_0, v_x0, v_y0, N, w, h, x_grid, y_grid, E_x, 
         print(Constants.Constants.V_MAX, end="")
         print(" (v_max)", end="")
         print(".")
-    if not(-Constants.Constants.E_MAX <= E_x and E_x <= Constants.Constants.E_MAX):
-        print("Warning: ", end="")
-        print("E_x has value ", end="")
-        print(E_x, end="")
-        print(", but is suggested to be ", end="")
-        print("between ", end="")
-        print(-Constants.Constants.E_MAX, end="")
-        print(" (-E_max)", end="")
-        print(" and ", end="")
-        print(Constants.Constants.E_MAX, end="")
-        print(" (E_max)", end="")
-        print(".")
-    if not(-Constants.Constants.E_MAX <= E_y and E_y <= Constants.Constants.E_MAX):
-        print("Warning: ", end="")
-        print("E_y has value ", end="")
-        print(E_y, end="")
-        print(", but is suggested to be ", end="")
-        print("between ", end="")
-        print(-Constants.Constants.E_MAX, end="")
-        print(" (-E_max)", end="")
-        print(" and ", end="")
-        print(Constants.Constants.E_MAX, end="")
-        print(" (E_max)", end="")
-        print(".")
-    if not(-Constants.Constants.B_MAX <= B and B <= Constants.Constants.B_MAX):
-        print("Warning: ", end="")
-        print("B has value ", end="")
-        print(B, end="")
-        print(", but is suggested to be ", end="")
-        print("between ", end="")
-        print(-Constants.Constants.B_MAX, end="")
-        print(" (-B_max)", end="")
-        print(" and ", end="")
-        print(Constants.Constants.B_MAX, end="")
-        print(" (B_max)", end="")
-        print(".")
     if not(0.0 <= d_orient and d_orient <= 1.0):
         print("Warning: ", end="")
         print("d_orient has value ", end="")
@@ -264,6 +274,14 @@ def input_constraints(m, q, x_0, y_0, v_x0, v_y0, N, w, h, x_grid, y_grid, E_x, 
         print("Warning: ", end="")
         print("N has value ", end="")
         print(N, end="")
+        print(", but is suggested to be ", end="")
+        print("above ", end="")
+        print(0.0, end="")
+        print(".")
+    if not(N_col > 0.0):
+        print("Warning: ", end="")
+        print("N_col has value ", end="")
+        print(N_col, end="")
         print(", but is suggested to be ", end="")
         print("above ", end="")
         print(0.0, end="")

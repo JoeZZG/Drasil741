@@ -17,11 +17,30 @@ class ODE {
     public:
         /** \brief Constructor for ODE objects
             \param κ charge-to-mass ratio (C/kg)
-            \param E_x x-component of the electric field (N/C)
-            \param E_y y-component of the electric field (N/C)
-            \param B out-of-plane magnetic flux density (T)
+            \param E_x0 x-electric field in region 0 (N/C)
+            \param E_x1 x-electric field in region 1 (N/C)
+            \param E_x2 x-electric field in region 2 (N/C)
+            \param E_x3 x-electric field in region 3 (N/C)
+            \param E_x4 x-electric field in region 4 (N/C)
+            \param E_x5 x-electric field in region 5 (N/C)
+            \param E_y0 y-electric field in region 0 (N/C)
+            \param E_y1 y-electric field in region 1 (N/C)
+            \param E_y2 y-electric field in region 2 (N/C)
+            \param E_y3 y-electric field in region 3 (N/C)
+            \param E_y4 y-electric field in region 4 (N/C)
+            \param E_y5 y-electric field in region 5 (N/C)
+            \param B_0 magnetic flux density in region 0 (T)
+            \param B_1 magnetic flux density in region 1 (T)
+            \param B_2 magnetic flux density in region 2 (T)
+            \param B_3 magnetic flux density in region 3 (T)
+            \param B_4 magnetic flux density in region 4 (T)
+            \param B_5 magnetic flux density in region 5 (T)
+            \param x_grid grid origin x-coordinate (m)
+            \param y_grid grid origin y-coordinate (m)
+            \param w region width (m)
+            \param h region height (m)
         */
-        ODE(double κ, double E_x, double E_y, double B);
+        ODE(double κ, double E_x0, double E_x1, double E_x2, double E_x3, double E_x4, double E_x5, double E_y0, double E_y1, double E_y2, double E_y3, double E_y4, double E_y5, double B_0, double B_1, double B_2, double B_3, double B_4, double B_5, double x_grid, double y_grid, double w, double h);
         /** \brief function representation of ODE system
             \param s dependent variables (m)
             \param ds change in dependent variables (m)
@@ -31,9 +50,28 @@ class ODE {
     
     private:
         double κ;
-        double E_x;
-        double E_y;
-        double B;
+        double E_x0;
+        double E_x1;
+        double E_x2;
+        double E_x3;
+        double E_x4;
+        double E_x5;
+        double E_y0;
+        double E_y1;
+        double E_y2;
+        double E_y3;
+        double E_y4;
+        double E_y5;
+        double B_0;
+        double B_1;
+        double B_2;
+        double B_3;
+        double B_4;
+        double B_5;
+        double x_grid;
+        double y_grid;
+        double w;
+        double h;
         
 };
 

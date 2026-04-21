@@ -11,7 +11,9 @@
 # initial y-velocity (m/s)
 0.0
 # number of field regions
-1.0
+6.0
+# number of grid columns
+3.0
 # region width (m)
 0.1
 # region height (m)
@@ -19,12 +21,42 @@
 # grid origin x-coordinate (m)
 0.0
 # grid origin y-coordinate (m)
--5.0e-2
-# x-component of the electric field (N/C)
+-0.1
+# x-electric field in region 0 (N/C)
 0.0
-# y-component of the electric field (N/C)
+# x-electric field in region 1 (N/C)
 0.0
-# out-of-plane magnetic flux density (T)
+# x-electric field in region 2 (N/C)
+0.0
+# x-electric field in region 3 (N/C)
+0.0
+# x-electric field in region 4 (N/C)
+0.0
+# x-electric field in region 5 (N/C)
+0.0
+# y-electric field in region 0 (N/C)
+0.0
+# y-electric field in region 1 (N/C)
+1000.0
+# y-electric field in region 2 (N/C)
+0.0
+# y-electric field in region 3 (N/C)
+0.0
+# y-electric field in region 4 (N/C)
+-1000.0
+# y-electric field in region 5 (N/C)
+0.0
+# magnetic flux density in region 0 (T)
+1.0e-4
+# magnetic flux density in region 1 (T)
+0.0
+# magnetic flux density in region 2 (T)
+1.0e-4
+# magnetic flux density in region 3 (T)
+1.0e-4
+# magnetic flux density in region 4 (T)
+0.0
+# magnetic flux density in region 5 (T)
 1.0e-4
 # detector orientation
 0.0

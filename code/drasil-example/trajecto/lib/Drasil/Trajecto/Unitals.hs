@@ -41,14 +41,15 @@ symbols = map dqdWr
   [ parMass, parCharge
   , xPos, yPos, xPos0, yPos0
   , xVel, yVel, xVel0, yVel0
-  , xAccel, yAccel
-  , elecFieldX, elecFieldY, magField
-  , elecFieldVec, magFieldVec
+  , xAccel, yAccel ]
+  ++ map dqdWr exFields ++ map dqdWr eyFields ++ map dqdWr bFields
+  ++ map dqdWr
+  [ elecFieldVec, magFieldVec
   , fieldRegionE, fieldRegionB
   , chargeToMass
   , tFinal, tHit, xDet, xHit, yHit
   , yDetMin, yDetMax ]
-  ++ [dqdWr nRegions]
+  ++ [dqdWr nRegions, dqdWr nCols]
   ++ map dqdWr [ regionWidth, regionHeight, xGrid, yGrid ]
   ++ [dqdWr detOrient]
   ++ map dqdWr [ yDet, xDetMin, xDetMax
@@ -67,16 +68,16 @@ inputs :: [DefinedQuantityDict]
 inputs = map dqdWr
   [ parMass, parCharge
   , xPos0, yPos0, xVel0, yVel0 ]
-  ++ [dqdWr nRegions]
-  ++ map dqdWr [ regionWidth, regionHeight, xGrid, yGrid
-  , elecFieldX, elecFieldY, magField ]
+  ++ [dqdWr nRegions, dqdWr nCols]
+  ++ map dqdWr [ regionWidth, regionHeight, xGrid, yGrid ]
+  ++ map dqdWr exFields ++ map dqdWr eyFields ++ map dqdWr bFields
   ++ [dqdWr detOrient]
   ++ map dqdWr [ xDet, yDet, yDetMin, yDetMax, xDetMin, xDetMax
   , tFinal ]
 
--- | Output variables (ODE state vector: [x, y, vx, vy])
+-- | Output variables (ODE state vector + detector hit results)
 outputs :: [DefinedQuantityDict]
-outputs = [dqdWr particleState]
+outputs = [dqdWr particleState, dqdWr tHit, dqdWr xHit, dqdWr yHit]
 
 -- | Named constants
 constants :: [ConstQDef]
@@ -160,22 +161,60 @@ yAccel = uc' "ay" (nounPhraseSP "y-acceleration of the particle")
 
 ---------------------------------------------------------
 -- Electromagnetic field quantities
+-- Per-region field values: 6 regions (3 cols × 2 rows)
 ---------------------------------------------------------
 
+-- | Helper to create an Ex variable for region i
+mkExI :: Int -> UnitalChunk
+mkExI i = uc' ("Ex" ++ show i) (nounPhraseSP $ "x-electric field in region " ++ show i)
+  (S $ "x-component of E in region " ++ show i)
+  (sub cE (Concat [labelx, Integ i])) Real elecFieldU
+
+-- | Helper to create an Ey variable for region i
+mkEyI :: Int -> UnitalChunk
+mkEyI i = uc' ("Ey" ++ show i) (nounPhraseSP $ "y-electric field in region " ++ show i)
+  (S $ "y-component of E in region " ++ show i)
+  (sub cE (Concat [labely, Integ i])) Real elecFieldU
+
+-- | Helper to create a B variable for region i
+mkBI :: Int -> UnitalChunk
+mkBI i = uc' ("B" ++ show i) (nounPhraseSP $ "magnetic flux density in region " ++ show i)
+  (S $ "z-component of B in region " ++ show i)
+  (sub cB (Integ i)) Real tesla
+
+ex0, ex1, ex2, ex3, ex4, ex5 :: UnitalChunk
+ex0 = mkExI 0; ex1 = mkExI 1; ex2 = mkExI 2
+ex3 = mkExI 3; ex4 = mkExI 4; ex5 = mkExI 5
+
+ey0, ey1, ey2, ey3, ey4, ey5 :: UnitalChunk
+ey0 = mkEyI 0; ey1 = mkEyI 1; ey2 = mkEyI 2
+ey3 = mkEyI 3; ey4 = mkEyI 4; ey5 = mkEyI 5
+
+b0, b1, b2, b3, b4, b5 :: UnitalChunk
+b0 = mkBI 0; b1 = mkBI 1; b2 = mkBI 2
+b3 = mkBI 3; b4 = mkBI 4; b5 = mkBI 5
+
+-- | All per-region Ex fields
+exFields :: [UnitalChunk]
+exFields = [ex0, ex1, ex2, ex3, ex4, ex5]
+
+-- | All per-region Ey fields
+eyFields :: [UnitalChunk]
+eyFields = [ey0, ey1, ey2, ey3, ey4, ey5]
+
+-- | All per-region B fields
+bFields :: [UnitalChunk]
+bFields = [b0, b1, b2, b3, b4, b5]
+
+-- | Legacy aliases (kept for DataDefs compatibility)
 elecFieldX :: UnitalChunk
-elecFieldX = uc' "Ex" (nounPhraseSP "x-component of the electric field")
-  (S "x-component of the electric field vector in the particle's current region")
-  (sub cE labelx) Real elecFieldU
+elecFieldX = ex0
 
 elecFieldY :: UnitalChunk
-elecFieldY = uc' "Ey" (nounPhraseSP "y-component of the electric field")
-  (S "y-component of the electric field vector in the particle's current region")
-  (sub cE labely) Real elecFieldU
+elecFieldY = ey0
 
 magField :: UnitalChunk
-magField = uc' "B" (nounPhraseSP "out-of-plane magnetic flux density")
-  (S "the z-component of the magnetic flux density, perpendicular to the x-y plane")
-  cB Real tesla
+magField = b0
 
 ---------------------------------------------------------
 -- Charge-to-mass ratio
@@ -262,12 +301,12 @@ detLine = dqdNoUnit
 yDetMin :: UnitalChunk
 yDetMin = uc' "y_det_min" (nounPhraseSP "minimum y-coordinate of detector")
   (S "the lower y-bound of the detector line segment")
-  (sup (sub lY (label "min")) (label "det")) Real metre
+  (sub lY (label "detMin")) Real metre
 
 yDetMax :: UnitalChunk
 yDetMax = uc' "y_det_max" (nounPhraseSP "maximum y-coordinate of detector")
   (S "the upper y-bound of the detector line segment")
-  (sup (sub lY (label "max")) (label "det")) Real metre
+  (sub lY (label "detMax")) Real metre
 
 ---------------------------------------------------------
 -- Region grid quantities
@@ -277,6 +316,11 @@ nRegions :: ConstrConcept
 nRegions = cucNoUnit' "nRegions" (nounPhraseSP "number of field regions")
   "the total number of rectangular field regions in the grid"
   cN Real [gtZeroConstr] (exactDbl 1)
+
+nCols :: ConstrConcept
+nCols = cucNoUnit' "nCols" (nounPhraseSP "number of grid columns")
+  "the number of columns in the rectangular grid of field regions"
+  (sub cN (label "col")) Real [gtZeroConstr] (exactDbl 1)
 
 regionWidth :: UnitalChunk
 regionWidth = uc' "w" (nounPhraseSP "region width")
@@ -317,12 +361,12 @@ yDet = uc' "y_det" (nounPhraseSP "detector line y-position")
 xDetMin :: UnitalChunk
 xDetMin = uc' "x_det_min" (nounPhraseSP "minimum x-coordinate of detector")
   (S "the lower x-bound of a horizontal detector line segment")
-  (sup (sub lX (label "min")) (label "det")) Real metre
+  (sub lX (label "detMin")) Real metre
 
 xDetMax :: UnitalChunk
 xDetMax = uc' "x_det_max" (nounPhraseSP "maximum x-coordinate of detector")
   (S "the upper x-bound of a horizontal detector line segment")
-  (sup (sub lX (label "max")) (label "det")) Real metre
+  (sub lX (label "detMax")) Real metre
 
 ---------------------------------------------------------
 -- State vector and cross-product result (DD2, GD2)
@@ -500,13 +544,11 @@ inConstraints =
   , uq xVel0Con    (uncty 0.10 Nothing)
   , uq yVel0Con    (uncty 0.10 Nothing)
   , uq nRegions exact
+  , uq nCols exact
   , uq regionWidthCon exact
   , uq regionHeightCon exact
   , uq xGridCon    exact
   , uq yGridCon    exact
-  , uq elecFieldXCon (uncty 0.10 Nothing)
-  , uq elecFieldYCon (uncty 0.10 Nothing)
-  , uq magFieldCon   (uncty 0.10 Nothing)
   , uq detOrient exact
   , uq xDetCon     exact
   , uq yDetCon     exact

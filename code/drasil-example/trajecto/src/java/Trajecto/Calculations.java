@@ -14,9 +14,28 @@ public class Calculations {
     
     /** \brief Calculates dependent variables (m)
         \param κ charge-to-mass ratio (C/kg)
-        \param E_x x-component of the electric field (N/C)
-        \param B out-of-plane magnetic flux density (T)
-        \param E_y y-component of the electric field (N/C)
+        \param E_x0 x-electric field in region 0 (N/C)
+        \param E_x1 x-electric field in region 1 (N/C)
+        \param E_x2 x-electric field in region 2 (N/C)
+        \param E_x3 x-electric field in region 3 (N/C)
+        \param E_x4 x-electric field in region 4 (N/C)
+        \param E_x5 x-electric field in region 5 (N/C)
+        \param x_grid grid origin x-coordinate (m)
+        \param w region width (m)
+        \param y_grid grid origin y-coordinate (m)
+        \param h region height (m)
+        \param B_0 magnetic flux density in region 0 (T)
+        \param B_1 magnetic flux density in region 1 (T)
+        \param B_2 magnetic flux density in region 2 (T)
+        \param B_3 magnetic flux density in region 3 (T)
+        \param B_4 magnetic flux density in region 4 (T)
+        \param B_5 magnetic flux density in region 5 (T)
+        \param E_y0 y-electric field in region 0 (N/C)
+        \param E_y1 y-electric field in region 1 (N/C)
+        \param E_y2 y-electric field in region 2 (N/C)
+        \param E_y3 y-electric field in region 3 (N/C)
+        \param E_y4 y-electric field in region 4 (N/C)
+        \param E_y5 y-electric field in region 5 (N/C)
         \param x_0 initial x-position (m)
         \param y_0 initial y-position (m)
         \param v_x0 initial x-velocity (m/s)
@@ -24,10 +43,10 @@ public class Calculations {
         \param t_final final simulation time (s)
         \return dependent variables (m)
     */
-    public static ArrayList<ArrayList<Double>> func_s(double κ, double E_x, double B, double E_y, double x_0, double y_0, double v_x0, double v_y0, double t_final) {
+    public static ArrayList<ArrayList<Double>> func_s(double κ, double E_x0, double E_x1, double E_x2, double E_x3, double E_x4, double E_x5, double x_grid, double w, double y_grid, double h, double B_0, double B_1, double B_2, double B_3, double B_4, double B_5, double E_y0, double E_y1, double E_y2, double E_y3, double E_y4, double E_y5, double x_0, double y_0, double v_x0, double v_y0, double t_final) {
         ArrayList<ArrayList<Double>> s;
         ODEStepHandler stepHandler = new ODEStepHandler();
-        ODE ode = new ODE(κ, E_x, E_y, B);
+        ODE ode = new ODE(κ, E_x0, E_x1, E_x2, E_x3, E_x4, E_x5, E_y0, E_y1, E_y2, E_y3, E_y4, E_y5, B_0, B_1, B_2, B_3, B_4, B_5, x_grid, y_grid, w, h);
         double[] curr_vals = {x_0, y_0, v_x0, v_y0};
         
         FirstOrderIntegrator it = new DormandPrince54Integrator(1.0e-9, 1.0e-9, 1.0e-6, 1.0e-6);

@@ -22,13 +22,13 @@ endif
 
 build: Trajecto$(TARGET_EXTENSION)
 
-Trajecto$(TARGET_EXTENSION): Control.cs InputParameters.cs Constants.cs Calculations.cs OutputFormat.cs
-	$(CSC) -out:Trajecto$(TARGET_EXTENSION) -r:Microsoft.Research.Oslo.dll Control.cs InputParameters.cs Constants.cs Calculations.cs OutputFormat.cs
+Trajecto$(TARGET_EXTENSION): Control.cs InputParameters.cs Constants.cs Calculations.cs OutputFormat.cs DetectorHit.cs
+	$(CSC) -out:Trajecto$(TARGET_EXTENSION) -r:Microsoft.Research.Oslo.dll Control.cs InputParameters.cs Constants.cs Calculations.cs OutputFormat.cs DetectorHit.cs
 
 run: build
 	./Trajecto$(TARGET_EXTENSION) $(RUNARGS)
 
-doc: doxConfig Control.cs InputParameters.cs Constants.cs Calculations.cs OutputFormat.cs
+doc: doxConfig Control.cs InputParameters.cs Constants.cs Calculations.cs OutputFormat.cs DetectorHit.cs
 	doxygen doxConfig
 
 .PHONY: build run doc

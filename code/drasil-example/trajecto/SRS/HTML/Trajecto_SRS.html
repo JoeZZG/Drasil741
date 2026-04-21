@@ -192,13 +192,33 @@
                   <td><em>\(\frac{\text{m}}{\text{s}^{2}}\)</em></td>
                 </tr>
                 <tr>
-                  <td><em>B</em></td>
-                  <td>Out-of-plane magnetic flux density</td>
+                  <td><em>B<sub>0</sub></em></td>
+                  <td>Magnetic flux density in region 0</td>
                   <td><em>T</em></td>
                 </tr>
                 <tr>
-                  <td><em>B<sub>max</sub></em></td>
-                  <td>Maximum magnetic flux density</td>
+                  <td><em>B<sub>1</sub></em></td>
+                  <td>Magnetic flux density in region 1</td>
+                  <td><em>T</em></td>
+                </tr>
+                <tr>
+                  <td><em>B<sub>2</sub></em></td>
+                  <td>Magnetic flux density in region 2</td>
+                  <td><em>T</em></td>
+                </tr>
+                <tr>
+                  <td><em>B<sub>3</sub></em></td>
+                  <td>Magnetic flux density in region 3</td>
+                  <td><em>T</em></td>
+                </tr>
+                <tr>
+                  <td><em>B<sub>4</sub></em></td>
+                  <td>Magnetic flux density in region 4</td>
+                  <td><em>T</em></td>
+                </tr>
+                <tr>
+                  <td><em>B<sub>5</sub></em></td>
+                  <td>Magnetic flux density in region 5</td>
                   <td><em>T</em></td>
                 </tr>
                 <tr>
@@ -217,18 +237,63 @@
                   <td>--</td>
                 </tr>
                 <tr>
-                  <td><em>E<sub>max</sub></em></td>
-                  <td>Maximum electric field magnitude</td>
+                  <td><em>E<sub>x0</sub></em></td>
+                  <td>X-electric field in region 0</td>
                   <td><em>\(\frac{\text{N}}{\text{C}}\)</em></td>
                 </tr>
                 <tr>
-                  <td><em>E<sub>x</sub></em></td>
-                  <td>X-component of the electric field</td>
+                  <td><em>E<sub>x1</sub></em></td>
+                  <td>X-electric field in region 1</td>
                   <td><em>\(\frac{\text{N}}{\text{C}}\)</em></td>
                 </tr>
                 <tr>
-                  <td><em>E<sub>y</sub></em></td>
-                  <td>Y-component of the electric field</td>
+                  <td><em>E<sub>x2</sub></em></td>
+                  <td>X-electric field in region 2</td>
+                  <td><em>\(\frac{\text{N}}{\text{C}}\)</em></td>
+                </tr>
+                <tr>
+                  <td><em>E<sub>x3</sub></em></td>
+                  <td>X-electric field in region 3</td>
+                  <td><em>\(\frac{\text{N}}{\text{C}}\)</em></td>
+                </tr>
+                <tr>
+                  <td><em>E<sub>x4</sub></em></td>
+                  <td>X-electric field in region 4</td>
+                  <td><em>\(\frac{\text{N}}{\text{C}}\)</em></td>
+                </tr>
+                <tr>
+                  <td><em>E<sub>x5</sub></em></td>
+                  <td>X-electric field in region 5</td>
+                  <td><em>\(\frac{\text{N}}{\text{C}}\)</em></td>
+                </tr>
+                <tr>
+                  <td><em>E<sub>y0</sub></em></td>
+                  <td>Y-electric field in region 0</td>
+                  <td><em>\(\frac{\text{N}}{\text{C}}\)</em></td>
+                </tr>
+                <tr>
+                  <td><em>E<sub>y1</sub></em></td>
+                  <td>Y-electric field in region 1</td>
+                  <td><em>\(\frac{\text{N}}{\text{C}}\)</em></td>
+                </tr>
+                <tr>
+                  <td><em>E<sub>y2</sub></em></td>
+                  <td>Y-electric field in region 2</td>
+                  <td><em>\(\frac{\text{N}}{\text{C}}\)</em></td>
+                </tr>
+                <tr>
+                  <td><em>E<sub>y3</sub></em></td>
+                  <td>Y-electric field in region 3</td>
+                  <td><em>\(\frac{\text{N}}{\text{C}}\)</em></td>
+                </tr>
+                <tr>
+                  <td><em>E<sub>y4</sub></em></td>
+                  <td>Y-electric field in region 4</td>
+                  <td><em>\(\frac{\text{N}}{\text{C}}\)</em></td>
+                </tr>
+                <tr>
+                  <td><em>E<sub>y5</sub></em></td>
+                  <td>Y-electric field in region 5</td>
                   <td><em>\(\frac{\text{N}}{\text{C}}\)</em></td>
                 </tr>
                 <tr>
@@ -274,6 +339,11 @@
                 <tr>
                   <td><em>N</em></td>
                   <td>Number of field regions</td>
+                  <td>--</td>
+                </tr>
+                <tr>
+                  <td><em>N<sub>col</sub></em></td>
+                  <td>Number of grid columns</td>
                   <td>--</td>
                 </tr>
                 <tr>
@@ -382,6 +452,16 @@
                   <td><em>m</em></td>
                 </tr>
                 <tr>
+                  <td><em>x<sub>detMax</sub></em></td>
+                  <td>Maximum x-coordinate of detector</td>
+                  <td><em>m</em></td>
+                </tr>
+                <tr>
+                  <td><em>x<sub>detMin</sub></em></td>
+                  <td>Minimum x-coordinate of detector</td>
+                  <td><em>m</em></td>
+                </tr>
+                <tr>
                   <td><em>x<sub>grid</sub></em></td>
                   <td>Grid origin x-coordinate</td>
                   <td><em>m</em></td>
@@ -389,16 +469,6 @@
                 <tr>
                   <td><em>x<sub>hit</sub></em></td>
                   <td>X-coordinate of impact point</td>
-                  <td><em>m</em></td>
-                </tr>
-                <tr>
-                  <td><em>x<sub>max</sub><sup>det</sup></em></td>
-                  <td>Maximum x-coordinate of detector</td>
-                  <td><em>m</em></td>
-                </tr>
-                <tr>
-                  <td><em>x<sub>min</sub><sup>det</sup></em></td>
-                  <td>Minimum x-coordinate of detector</td>
                   <td><em>m</em></td>
                 </tr>
                 <tr>
@@ -417,6 +487,16 @@
                   <td><em>m</em></td>
                 </tr>
                 <tr>
+                  <td><em>y<sub>detMax</sub></em></td>
+                  <td>Maximum y-coordinate of detector</td>
+                  <td><em>m</em></td>
+                </tr>
+                <tr>
+                  <td><em>y<sub>detMin</sub></em></td>
+                  <td>Minimum y-coordinate of detector</td>
+                  <td><em>m</em></td>
+                </tr>
+                <tr>
                   <td><em>y<sub>grid</sub></em></td>
                   <td>Grid origin y-coordinate</td>
                   <td><em>m</em></td>
@@ -424,16 +504,6 @@
                 <tr>
                   <td><em>y<sub>hit</sub></em></td>
                   <td>Y-coordinate of impact point</td>
-                  <td><em>m</em></td>
-                </tr>
-                <tr>
-                  <td><em>y<sub>max</sub><sup>det</sup></em></td>
-                  <td>Maximum y-coordinate of detector</td>
-                  <td><em>m</em></td>
-                </tr>
-                <tr>
-                  <td><em>y<sub>min</sub><sup>det</sup></em></td>
-                  <td>Minimum y-coordinate of detector</td>
                   <td><em>m</em></td>
                 </tr>
                 <tr>
@@ -691,7 +761,7 @@
               <div class="subsubsection">
                 <h3>Goal Statements</h3>
                 <p class="paragraph">
-                  Given the particle properties (<em>q</em> and <em>m</em>), initial conditions (<em>x<sub>0</sub></em>, <em>y<sub>0</sub></em>, <em>v<sub>x0</sub></em>, <em>v<sub>y0</sub></em>), the number of field regions <em>N</em>, the per-region fields (<em>E<sub>x</sub></em>, <em>E<sub>y</sub></em>, <em>B</em> for each region), the region grid specification (<em>x<sub>grid</sub></em>, <em>y<sub>grid</sub></em>, <em>w</em>, <em>h</em>), the detector specification (<em>d<sub>orient</sub></em>, <em>x<sub>det</sub></em>, <em>y<sub>det</sub></em> and extent), and the simulation time <em>t<sub>final</sub></em>, the goal statements are:
+                  Given the particle properties (<em>q</em> and <em>m</em>), initial conditions (<em>x<sub>0</sub></em>, <em>y<sub>0</sub></em>, <em>v<sub>x0</sub></em>, <em>v<sub>y0</sub></em>), the number of field regions <em>N</em>, the per-region fields (<em>E<sub>x0</sub></em>, <em>E<sub>y0</sub></em>, <em>B<sub>0</sub></em> for each region), the region grid specification (<em>x<sub>grid</sub></em>, <em>y<sub>grid</sub></em>, <em>w</em>, <em>h</em>), the detector specification (<em>d<sub>orient</sub></em>, <em>x<sub>det</sub></em>, <em>y<sub>det</sub></em> and extent), and the simulation time <em>t<sub>final</sub></em>, the goal statements are:
                 </p>
                 <div class="list">
                   <p>
@@ -945,8 +1015,8 @@
                     <tr>
                       <th>Equation</th>
                       <td>
-                        \[{a_{\text{x}}}=\frac{q}{m}\,\left({E_{\text{x}}}+{v_{\text{y}}}\,B\right)\]
-                        \[{a_{\text{y}}}=\frac{q}{m}\,\left({E_{\text{y}}}-{v_{\text{x}}}\,B\right)\]
+                        \[{a_{\text{x}}}=\frac{q}{m}\,\left({E_{\text{x}0}}+{v_{\text{y}}}\,{B_{0}}\right)\]
+                        \[{a_{\text{y}}}=\frac{q}{m}\,\left({E_{\text{y}0}}-{v_{\text{x}}}\,{B_{0}}\right)\]
                       </td>
                     </tr>
                     <tr>
@@ -959,13 +1029,13 @@
                           <li><em>q</em> is the particle charge (<em>C</em>)</li>
                           <li><em>m</em> is the particle mass (<em>kg</em>)</li>
                           <li>
-                            <em>E<sub>x</sub></em> is the x-component of the electric field (<em>\(\frac{\text{N}}{\text{C}}\)</em>)
+                            <em>E<sub>x0</sub></em> is the x-electric field in region 0 (<em>\(\frac{\text{N}}{\text{C}}\)</em>)
                           </li>
                           <li>
                             <em>v<sub>y</sub></em> is the y-velocity of the particle (<em>\(\frac{\text{m}}{\text{s}}\)</em>)
                           </li>
                           <li>
-                            <em>B</em> is the out-of-plane magnetic flux density (<em>T</em>)
+                            <em>B<sub>0</sub></em> is the magnetic flux density in region 0 (<em>T</em>)
                           </li>
                         </ul>
                         <ul class="hide-list-style-no-indent">
@@ -975,13 +1045,13 @@
                           <li><em>q</em> is the particle charge (<em>C</em>)</li>
                           <li><em>m</em> is the particle mass (<em>kg</em>)</li>
                           <li>
-                            <em>E<sub>y</sub></em> is the y-component of the electric field (<em>\(\frac{\text{N}}{\text{C}}\)</em>)
+                            <em>E<sub>y0</sub></em> is the y-electric field in region 0 (<em>\(\frac{\text{N}}{\text{C}}\)</em>)
                           </li>
                           <li>
                             <em>v<sub>x</sub></em> is the x-velocity of the particle (<em>\(\frac{\text{m}}{\text{s}}\)</em>)
                           </li>
                           <li>
-                            <em>B</em> is the out-of-plane magnetic flux density (<em>T</em>)
+                            <em>B<sub>0</sub></em> is the magnetic flux density in region 0 (<em>T</em>)
                           </li>
                         </ul>
                       </td>
@@ -1098,7 +1168,7 @@
                       <th>Equation</th>
                       <td>
                         \[\symbf{v}\text{×}\symbf{B}=\begin{bmatrix}
-                                                     {v_{\text{y}}}\,B & -{v_{\text{x}}}\,B & 0
+                                                     {v_{\text{y}}}\,{B_{0}} & -{v_{\text{x}}}\,{B_{0}} & 0
                                                      \end{bmatrix}\]
                       </td>
                     </tr>
@@ -1113,7 +1183,7 @@
                             <em>v<sub>y</sub></em> is the y-velocity of the particle (<em>\(\frac{\text{m}}{\text{s}}\)</em>)
                           </li>
                           <li>
-                            <em>B</em> is the out-of-plane magnetic flux density (<em>T</em>)
+                            <em>B<sub>0</sub></em> is the magnetic flux density in region 0 (<em>T</em>)
                           </li>
                           <li>
                             <em>v<sub>x</sub></em> is the x-velocity of the particle (<em>\(\frac{\text{m}}{\text{s}}\)</em>)
@@ -1162,7 +1232,7 @@
                     <tr>
                       <th>Equation</th>
                       <td>
-                        \[\frac{\,d{v_{\text{x}}}}{\,dt}=κ\,\left({E_{\text{x}}}+{v_{\text{y}}}\,B\right)\land{}\frac{\,d{v_{\text{y}}}}{\,dt}=κ\,\left({E_{\text{y}}}-{v_{\text{x}}}\,B\right)\]
+                        \[\frac{\,d{v_{\text{x}}}}{\,dt}=κ\,\left({E_{\text{x}0}}+{v_{\text{y}}}\,{B_{0}}\right)\land{}\frac{\,d{v_{\text{y}}}}{\,dt}=κ\,\left({E_{\text{y}0}}-{v_{\text{x}}}\,{B_{0}}\right)\]
                       </td>
                     </tr>
                     <tr>
@@ -1177,16 +1247,16 @@
                             <em>κ</em> is the charge-to-mass ratio (<em>\(\frac{\text{C}}{\text{kg}}\)</em>)
                           </li>
                           <li>
-                            <em>E<sub>x</sub></em> is the x-component of the electric field (<em>\(\frac{\text{N}}{\text{C}}\)</em>)
+                            <em>E<sub>x0</sub></em> is the x-electric field in region 0 (<em>\(\frac{\text{N}}{\text{C}}\)</em>)
                           </li>
                           <li>
                             <em>v<sub>y</sub></em> is the y-velocity of the particle (<em>\(\frac{\text{m}}{\text{s}}\)</em>)
                           </li>
                           <li>
-                            <em>B</em> is the out-of-plane magnetic flux density (<em>T</em>)
+                            <em>B<sub>0</sub></em> is the magnetic flux density in region 0 (<em>T</em>)
                           </li>
                           <li>
-                            <em>E<sub>y</sub></em> is the y-component of the electric field (<em>\(\frac{\text{N}}{\text{C}}\)</em>)
+                            <em>E<sub>y0</sub></em> is the y-electric field in region 0 (<em>\(\frac{\text{N}}{\text{C}}\)</em>)
                           </li>
                         </ul>
                       </td>
@@ -1369,7 +1439,7 @@
                       <th>Equation</th>
                       <td>
                         \[\symbf{E}=\begin{bmatrix}
-                                    {E_{\text{x}}} & {E_{\text{y}}} & 0
+                                    {E_{\text{x}0}} & {E_{\text{y}0}} & 0
                                     \end{bmatrix}\]
                       </td>
                     </tr>
@@ -1381,10 +1451,10 @@
                             <em><b>E</b></em> is the electric field vector (<em>\(\frac{\text{N}}{\text{C}}\)</em>)
                           </li>
                           <li>
-                            <em>E<sub>x</sub></em> is the x-component of the electric field (<em>\(\frac{\text{N}}{\text{C}}\)</em>)
+                            <em>E<sub>x0</sub></em> is the x-electric field in region 0 (<em>\(\frac{\text{N}}{\text{C}}\)</em>)
                           </li>
                           <li>
-                            <em>E<sub>y</sub></em> is the y-component of the electric field (<em>\(\frac{\text{N}}{\text{C}}\)</em>)
+                            <em>E<sub>y0</sub></em> is the y-electric field in region 0 (<em>\(\frac{\text{N}}{\text{C}}\)</em>)
                           </li>
                         </ul>
                       </td>
@@ -1393,7 +1463,7 @@
                       <th>Notes</th>
                       <td>
                         <p class="paragraph">
-                          <em><b>E</b></em> is the electric field vector. <em>E<sub>x</sub></em> and <em>E<sub>y</sub></em> are the in-plane components (N/C). The out-of-plane component is zero by <a href=#eAxisAligned>A:eAxisAligned</a>, and the fields are user-specified per <a href=#prescribedFields>A:prescribedFields</a>.
+                          <em><b>E</b></em> is the electric field vector. <em>E<sub>x0</sub></em> and <em>E<sub>y0</sub></em> are the in-plane components (N/C). The out-of-plane component is zero by <a href=#eAxisAligned>A:eAxisAligned</a>, and the fields are user-specified per <a href=#prescribedFields>A:prescribedFields</a>.
                         </p>
                       </td>
                     </tr>
@@ -1429,7 +1499,7 @@
                       <th>Equation</th>
                       <td>
                         \[\symbf{B}=\begin{bmatrix}
-                                    0 & 0 & B
+                                    0 & 0 & {B_{0}}
                                     \end{bmatrix}\]
                       </td>
                     </tr>
@@ -1441,7 +1511,7 @@
                             <em><b>B</b></em> is the magnetic flux density vector (<em>T</em>)
                           </li>
                           <li>
-                            <em>B</em> is the out-of-plane magnetic flux density (<em>T</em>)
+                            <em>B<sub>0</sub></em> is the magnetic flux density in region 0 (<em>T</em>)
                           </li>
                         </ul>
                       </td>
@@ -1450,7 +1520,7 @@
                       <th>Notes</th>
                       <td>
                         <p class="paragraph">
-                          <em><b>B</b></em> is the magnetic flux density vector. <em>B</em> is the out-of-plane (z) component (T). The in-plane components are zero by <a href=#bPerpPlane>A:bPerpPlane</a>; fields are fixed by <a href=#prescribedFields>A:prescribedFields</a>.
+                          <em><b>B</b></em> is the magnetic flux density vector. <em>B<sub>0</sub></em> is the out-of-plane (z) component (T). The in-plane components are zero by <a href=#bPerpPlane>A:bPerpPlane</a>; fields are fixed by <a href=#prescribedFields>A:prescribedFields</a>.
                         </p>
                       </td>
                     </tr>
@@ -1554,7 +1624,7 @@
                       <th>Equation</th>
                       <td>
                         \[{\symbf{E}_{i}}=\begin{bmatrix}
-                                          {E_{\text{x}}} & {E_{\text{y}}} & B
+                                          {E_{\text{x}0}} & {E_{\text{y}0}} & {B_{0}}
                                           \end{bmatrix}\]
                       </td>
                     </tr>
@@ -1566,13 +1636,13 @@
                             <em><b>E</b><sub>i</sub></em> is the electric field in region i (<em>\(\frac{\text{N}}{\text{C}}\)</em>)
                           </li>
                           <li>
-                            <em>E<sub>x</sub></em> is the x-component of the electric field (<em>\(\frac{\text{N}}{\text{C}}\)</em>)
+                            <em>E<sub>x0</sub></em> is the x-electric field in region 0 (<em>\(\frac{\text{N}}{\text{C}}\)</em>)
                           </li>
                           <li>
-                            <em>E<sub>y</sub></em> is the y-component of the electric field (<em>\(\frac{\text{N}}{\text{C}}\)</em>)
+                            <em>E<sub>y0</sub></em> is the y-electric field in region 0 (<em>\(\frac{\text{N}}{\text{C}}\)</em>)
                           </li>
                           <li>
-                            <em>B</em> is the out-of-plane magnetic flux density (<em>T</em>)
+                            <em>B<sub>0</sub></em> is the magnetic flux density in region 0 (<em>T</em>)
                           </li>
                         </ul>
                       </td>
@@ -1621,7 +1691,7 @@
                       <th>Equation</th>
                       <td>
                         \[{L_{\text{det}}}=\begin{bmatrix}
-                                           {d_{\text{orient}}} & {x_{\text{det}}} & {y_{\text{det}}} & {{y_{\text{min}}}^{\text{det}}} & {{y_{\text{max}}}^{\text{det}}} & {{x_{\text{min}}}^{\text{det}}} & {{x_{\text{max}}}^{\text{det}}}
+                                           {d_{\text{orient}}} & {x_{\text{det}}} & {y_{\text{det}}} & {y_{\text{detMin}}} & {y_{\text{detMax}}} & {x_{\text{detMin}}} & {x_{\text{detMax}}}
                                            \end{bmatrix}\]
                       </td>
                     </tr>
@@ -1640,16 +1710,16 @@
                             <em>y<sub>det</sub></em> is the detector line y-position (<em>m</em>)
                           </li>
                           <li>
-                            <em>y<sub>min</sub><sup>det</sup></em> is the minimum y-coordinate of detector (<em>m</em>)
+                            <em>y<sub>detMin</sub></em> is the minimum y-coordinate of detector (<em>m</em>)
                           </li>
                           <li>
-                            <em>y<sub>max</sub><sup>det</sup></em> is the maximum y-coordinate of detector (<em>m</em>)
+                            <em>y<sub>detMax</sub></em> is the maximum y-coordinate of detector (<em>m</em>)
                           </li>
                           <li>
-                            <em>x<sub>min</sub><sup>det</sup></em> is the minimum x-coordinate of detector (<em>m</em>)
+                            <em>x<sub>detMin</sub></em> is the minimum x-coordinate of detector (<em>m</em>)
                           </li>
                           <li>
-                            <em>x<sub>max</sub><sup>det</sup></em> is the maximum x-coordinate of detector (<em>m</em>)
+                            <em>x<sub>detMax</sub></em> is the maximum x-coordinate of detector (<em>m</em>)
                           </li>
                         </ul>
                       </td>
@@ -1696,7 +1766,7 @@
                       <th>Input</th>
                       <td>
                         <p class="paragraph">
-                          <em>m</em>, <em>q</em>, <em>x<sub>0</sub></em>, <em>y<sub>0</sub></em>, <em>v<sub>x0</sub></em>, <em>v<sub>y0</sub></em>, <em>E<sub>x</sub></em>, <em>E<sub>y</sub></em>, <em>B</em>, <em>t<sub>final</sub></em>
+                          <em>m</em>, <em>q</em>, <em>x<sub>0</sub></em>, <em>y<sub>0</sub></em>, <em>v<sub>x0</sub></em>, <em>v<sub>y0</sub></em>, <em>E<sub>x0</sub></em>, <em>E<sub>y0</sub></em>, <em>B<sub>0</sub></em>, <em>t<sub>final</sub></em>
                         </p>
                       </td>
                     </tr>
@@ -1715,7 +1785,7 @@
                     <tr>
                       <th>Equation</th>
                       <td>
-                        \[\frac{\,dx}{\,dt}={v_{\text{x}}}\land{}\frac{\,dy}{\,dt}={v_{\text{y}}}\land{}\frac{\,d{v_{\text{x}}}}{\,dt}=κ\,\left({E_{\text{x}}}+{v_{\text{y}}}\,B\right)\land{}\frac{\,d{v_{\text{y}}}}{\,dt}=κ\,\left({E_{\text{y}}}-{v_{\text{x}}}\,B\right)\]
+                        \[\frac{\,dx}{\,dt}={v_{\text{x}}}\land{}\frac{\,dy}{\,dt}={v_{\text{y}}}\land{}\frac{\,d{v_{\text{x}}}}{\,dt}=κ\,\left({E_{\text{x}0}}+{v_{\text{y}}}\,{B_{0}}\right)\land{}\frac{\,d{v_{\text{y}}}}{\,dt}=κ\,\left({E_{\text{y}0}}-{v_{\text{x}}}\,{B_{0}}\right)\]
                       </td>
                     </tr>
                     <tr>
@@ -1735,13 +1805,13 @@
                             <em>κ</em> is the charge-to-mass ratio (<em>\(\frac{\text{C}}{\text{kg}}\)</em>)
                           </li>
                           <li>
-                            <em>E<sub>x</sub></em> is the x-component of the electric field (<em>\(\frac{\text{N}}{\text{C}}\)</em>)
+                            <em>E<sub>x0</sub></em> is the x-electric field in region 0 (<em>\(\frac{\text{N}}{\text{C}}\)</em>)
                           </li>
                           <li>
-                            <em>B</em> is the out-of-plane magnetic flux density (<em>T</em>)
+                            <em>B<sub>0</sub></em> is the magnetic flux density in region 0 (<em>T</em>)
                           </li>
                           <li>
-                            <em>E<sub>y</sub></em> is the y-component of the electric field (<em>\(\frac{\text{N}}{\text{C}}\)</em>)
+                            <em>E<sub>y0</sub></em> is the y-electric field in region 0 (<em>\(\frac{\text{N}}{\text{C}}\)</em>)
                           </li>
                         </ul>
                       </td>
@@ -1786,7 +1856,7 @@
                       <th>Input</th>
                       <td>
                         <p class="paragraph">
-                          <em>d<sub>orient</sub></em>, <em>x<sub>det</sub></em>, <em>y<sub>det</sub></em>, <em>y<sub>min</sub><sup>det</sup></em>, <em>y<sub>max</sub><sup>det</sup></em>, <em>x<sub>min</sub><sup>det</sup></em>, <em>x<sub>max</sub><sup>det</sup></em>, <em>t<sub>final</sub></em>, <em>x</em>, <em>y</em>
+                          <em>d<sub>orient</sub></em>, <em>x<sub>det</sub></em>, <em>y<sub>det</sub></em>, <em>y<sub>detMin</sub></em>, <em>y<sub>detMax</sub></em>, <em>x<sub>detMin</sub></em>, <em>x<sub>detMax</sub></em>, <em>t<sub>final</sub></em>, <em>x</em>, <em>y</em>
                         </p>
                       </td>
                     </tr>
@@ -1805,7 +1875,7 @@
                     <tr>
                       <th>Equation</th>
                       <td>
-                        \[x={x_{\text{det}}}\land{}{y_{\text{hit}}}\geq{}{{y_{\text{min}}}^{\text{det}}}\land{}{y_{\text{hit}}}\leq{}{{y_{\text{max}}}^{\text{det}}}\lor{}y={y_{\text{det}}}\land{}{x_{\text{hit}}}\geq{}{{x_{\text{min}}}^{\text{det}}}\land{}{x_{\text{hit}}}\leq{}{{x_{\text{max}}}^{\text{det}}}\]
+                        \[x={x_{\text{det}}}\land{}{y_{\text{hit}}}\geq{}{y_{\text{detMin}}}\land{}{y_{\text{hit}}}\leq{}{y_{\text{detMax}}}\lor{}y={y_{\text{det}}}\land{}{x_{\text{hit}}}\geq{}{x_{\text{detMin}}}\land{}{x_{\text{hit}}}\leq{}{x_{\text{detMax}}}\]
                       </td>
                     </tr>
                     <tr>
@@ -1820,10 +1890,10 @@
                             <em>y<sub>hit</sub></em> is the y-coordinate of impact point (<em>m</em>)
                           </li>
                           <li>
-                            <em>y<sub>min</sub><sup>det</sup></em> is the minimum y-coordinate of detector (<em>m</em>)
+                            <em>y<sub>detMin</sub></em> is the minimum y-coordinate of detector (<em>m</em>)
                           </li>
                           <li>
-                            <em>y<sub>max</sub><sup>det</sup></em> is the maximum y-coordinate of detector (<em>m</em>)
+                            <em>y<sub>detMax</sub></em> is the maximum y-coordinate of detector (<em>m</em>)
                           </li>
                           <li><em>y</em> is the y-position of the particle (<em>m</em>)</li>
                           <li>
@@ -1833,10 +1903,10 @@
                             <em>x<sub>hit</sub></em> is the x-coordinate of impact point (<em>m</em>)
                           </li>
                           <li>
-                            <em>x<sub>min</sub><sup>det</sup></em> is the minimum x-coordinate of detector (<em>m</em>)
+                            <em>x<sub>detMin</sub></em> is the minimum x-coordinate of detector (<em>m</em>)
                           </li>
                           <li>
-                            <em>x<sub>max</sub><sup>det</sup></em> is the maximum x-coordinate of detector (<em>m</em>)
+                            <em>x<sub>detMax</sub></em> is the maximum x-coordinate of detector (<em>m</em>)
                           </li>
                         </ul>
                       </td>
@@ -1845,7 +1915,7 @@
                       <th>Notes</th>
                       <td>
                         <p class="paragraph">
-                          The detector is modelled as a line segment that may be vertical or horizontal, selected by the orientation flag <em>d<sub>orient</sub></em> (<a href=#DD:detectorLine>DD:detectorLine</a>). Vertical case (D = 0): the detector is at x = <em>x<sub>det</sub></em> with y-bounds [<em>y<sub>min</sub><sup>det</sup></em>, <em>y<sub>max</sub><sup>det</sup></em>]. The hit condition is x(t) = x_det and y(t) in [y_min, y_max]. Horizontal case (D = 1): the detector is at y = <em>y<sub>det</sub></em> with x-bounds [<em>x<sub>min</sub><sup>det</sup></em>, <em>x<sub>max</sub><sup>det</sup></em>]. The hit condition is y(t) = y_det and x(t) in [x_min, x_max]. In both cases, <em>t<sub>hit</sub></em> is the minimum t in [0, <em>t<sub>final</sub></em>] satisfying the condition. If no such t exists, <em>t<sub>hit</sub></em> is set to -1 as a sentinel value indicating no hit, and the hit coordinates are undefined. The trajectory (x(t), y(t)) is provided by <a href=#IM:stateEvol>IM:stateEvol</a>. Applicable assumptions: <a href=#fullDetection>A:fullDetection</a> and <a href=#lineDetector>A:lineDetector</a>.
+                          The detector is modelled as a line segment that may be vertical or horizontal, selected by the orientation flag <em>d<sub>orient</sub></em> (<a href=#DD:detectorLine>DD:detectorLine</a>). Vertical case (D = 0): the detector is at x = <em>x<sub>det</sub></em> with y-bounds [<em>y<sub>detMin</sub></em>, <em>y<sub>detMax</sub></em>]. The hit condition is x(t) = x_det and y(t) in [y_min, y_max]. Horizontal case (D = 1): the detector is at y = <em>y<sub>det</sub></em> with x-bounds [<em>x<sub>detMin</sub></em>, <em>x<sub>detMax</sub></em>]. The hit condition is y(t) = y_det and x(t) in [x_min, x_max]. In both cases, <em>t<sub>hit</sub></em> is the minimum t in [0, <em>t<sub>final</sub></em>] satisfying the condition. If no such t exists, <em>t<sub>hit</sub></em> is set to -1 as a sentinel value indicating no hit, and the hit coordinates are undefined. The trajectory (x(t), y(t)) is provided by <a href=#IM:stateEvol>IM:stateEvol</a>. Applicable assumptions: <a href=#fullDetection>A:fullDetection</a> and <a href=#lineDetector>A:lineDetector</a>.
                         </p>
                       </td>
                     </tr>
@@ -1881,15 +1951,6 @@
                       <th><span title="typical uncertainty">Uncert.</span></th>
                     </tr>
                     <tr>
-                      <td><em>B</em></td>
-                      <td>--</td>
-                      <td>
-                        <em>&minus;B<sub>max</sub>&thinsp;&le;&thinsp;B&thinsp;&le;&thinsp;B<sub>max</sub></em>
-                      </td>
-                      <td><em>0.01</em> <em>T</em></td>
-                      <td>10.0<em>%</em></td>
-                    </tr>
-                    <tr>
                       <td><em>d<sub>orient</sub></em></td>
                       <td>--</td>
                       <td>
@@ -1897,26 +1958,6 @@
                       </td>
                       <td><em>0</em></td>
                       <td>0.0<em>%</em></td>
-                    </tr>
-                    <tr>
-                      <td><em>E<sub>x</sub></em></td>
-                      <td>--</td>
-                      <td>
-                        <em>&minus;E<sub>max</sub>&thinsp;&le;&thinsp;E<sub>x</sub>&thinsp;&le;&thinsp;E<sub>max</sub></em>
-                      </td>
-                      <td><em>0</em> <em>\(\frac{\text{N}}{\text{C}}\)</em></td>
-                      <td>10.0<em>%</em></td>
-                    </tr>
-                    <tr>
-                      <td><em>E<sub>y</sub></em></td>
-                      <td>--</td>
-                      <td>
-                        <em>&minus;E<sub>max</sub>&thinsp;&le;&thinsp;E<sub>y</sub>&thinsp;&le;&thinsp;E<sub>max</sub></em>
-                      </td>
-                      <td>
-                        <em>1.0&sdot;10<sup>3</sup></em> <em>\(\frac{\text{N}}{\text{C}}\)</em>
-                      </td>
-                      <td>10.0<em>%</em></td>
                     </tr>
                     <tr>
                       <td><em>h</em></td>
@@ -1937,6 +1978,13 @@
                     <tr>
                       <td><em>N</em></td>
                       <td><em>N&thinsp;&gt;&thinsp;0</em></td>
+                      <td>--</td>
+                      <td><em>1</em></td>
+                      <td>0.0<em>%</em></td>
+                    </tr>
+                    <tr>
+                      <td><em>N<sub>col</sub></em></td>
+                      <td><em>N<sub>col</sub>&thinsp;&gt;&thinsp;0</em></td>
                       <td>--</td>
                       <td><em>1</em></td>
                       <td>0.0<em>%</em></td>
@@ -2001,21 +2049,21 @@
                       <td>0.0<em>%</em></td>
                     </tr>
                     <tr>
-                      <td><em>x<sub>grid</sub></em></td>
-                      <td>--</td>
-                      <td>--</td>
-                      <td><em>0</em> <em>m</em></td>
-                      <td>0.0<em>%</em></td>
-                    </tr>
-                    <tr>
-                      <td><em>x<sub>max</sub><sup>det</sup></em></td>
+                      <td><em>x<sub>detMax</sub></em></td>
                       <td>--</td>
                       <td>--</td>
                       <td><em>0.1</em> <em>m</em></td>
                       <td>0.0<em>%</em></td>
                     </tr>
                     <tr>
-                      <td><em>x<sub>min</sub><sup>det</sup></em></td>
+                      <td><em>x<sub>detMin</sub></em></td>
+                      <td>--</td>
+                      <td>--</td>
+                      <td><em>0</em> <em>m</em></td>
+                      <td>0.0<em>%</em></td>
+                    </tr>
+                    <tr>
+                      <td><em>x<sub>grid</sub></em></td>
                       <td>--</td>
                       <td>--</td>
                       <td><em>0</em> <em>m</em></td>
@@ -2036,24 +2084,24 @@
                       <td>0.0<em>%</em></td>
                     </tr>
                     <tr>
-                      <td><em>y<sub>grid</sub></em></td>
-                      <td>--</td>
-                      <td>--</td>
-                      <td><em>0</em> <em>m</em></td>
-                      <td>0.0<em>%</em></td>
-                    </tr>
-                    <tr>
-                      <td><em>y<sub>max</sub><sup>det</sup></em></td>
+                      <td><em>y<sub>detMax</sub></em></td>
                       <td>--</td>
                       <td>--</td>
                       <td><em>0.05</em> <em>m</em></td>
                       <td>0.0<em>%</em></td>
                     </tr>
                     <tr>
-                      <td><em>y<sub>min</sub><sup>det</sup></em></td>
+                      <td><em>y<sub>detMin</sub></em></td>
                       <td>--</td>
                       <td>--</td>
                       <td><em>0.0-5</em> <em>m</em></td>
+                      <td>0.0<em>%</em></td>
+                    </tr>
+                    <tr>
+                      <td><em>y<sub>grid</sub></em></td>
+                      <td>--</td>
+                      <td>--</td>
+                      <td><em>0</em> <em>m</em></td>
                       <td>0.0<em>%</em></td>
                     </tr>
                   </table>
@@ -2145,8 +2193,33 @@
                   <th>Units</th>
                 </tr>
                 <tr>
-                  <td><em>B</em></td>
-                  <td>Out-of-plane magnetic flux density</td>
+                  <td><em>B<sub>0</sub></em></td>
+                  <td>Magnetic flux density in region 0</td>
+                  <td><em>T</em></td>
+                </tr>
+                <tr>
+                  <td><em>B<sub>1</sub></em></td>
+                  <td>Magnetic flux density in region 1</td>
+                  <td><em>T</em></td>
+                </tr>
+                <tr>
+                  <td><em>B<sub>2</sub></em></td>
+                  <td>Magnetic flux density in region 2</td>
+                  <td><em>T</em></td>
+                </tr>
+                <tr>
+                  <td><em>B<sub>3</sub></em></td>
+                  <td>Magnetic flux density in region 3</td>
+                  <td><em>T</em></td>
+                </tr>
+                <tr>
+                  <td><em>B<sub>4</sub></em></td>
+                  <td>Magnetic flux density in region 4</td>
+                  <td><em>T</em></td>
+                </tr>
+                <tr>
+                  <td><em>B<sub>5</sub></em></td>
+                  <td>Magnetic flux density in region 5</td>
                   <td><em>T</em></td>
                 </tr>
                 <tr>
@@ -2155,13 +2228,63 @@
                   <td>--</td>
                 </tr>
                 <tr>
-                  <td><em>E<sub>x</sub></em></td>
-                  <td>X-component of the electric field</td>
+                  <td><em>E<sub>x0</sub></em></td>
+                  <td>X-electric field in region 0</td>
                   <td><em>\(\frac{\text{N}}{\text{C}}\)</em></td>
                 </tr>
                 <tr>
-                  <td><em>E<sub>y</sub></em></td>
-                  <td>Y-component of the electric field</td>
+                  <td><em>E<sub>x1</sub></em></td>
+                  <td>X-electric field in region 1</td>
+                  <td><em>\(\frac{\text{N}}{\text{C}}\)</em></td>
+                </tr>
+                <tr>
+                  <td><em>E<sub>x2</sub></em></td>
+                  <td>X-electric field in region 2</td>
+                  <td><em>\(\frac{\text{N}}{\text{C}}\)</em></td>
+                </tr>
+                <tr>
+                  <td><em>E<sub>x3</sub></em></td>
+                  <td>X-electric field in region 3</td>
+                  <td><em>\(\frac{\text{N}}{\text{C}}\)</em></td>
+                </tr>
+                <tr>
+                  <td><em>E<sub>x4</sub></em></td>
+                  <td>X-electric field in region 4</td>
+                  <td><em>\(\frac{\text{N}}{\text{C}}\)</em></td>
+                </tr>
+                <tr>
+                  <td><em>E<sub>x5</sub></em></td>
+                  <td>X-electric field in region 5</td>
+                  <td><em>\(\frac{\text{N}}{\text{C}}\)</em></td>
+                </tr>
+                <tr>
+                  <td><em>E<sub>y0</sub></em></td>
+                  <td>Y-electric field in region 0</td>
+                  <td><em>\(\frac{\text{N}}{\text{C}}\)</em></td>
+                </tr>
+                <tr>
+                  <td><em>E<sub>y1</sub></em></td>
+                  <td>Y-electric field in region 1</td>
+                  <td><em>\(\frac{\text{N}}{\text{C}}\)</em></td>
+                </tr>
+                <tr>
+                  <td><em>E<sub>y2</sub></em></td>
+                  <td>Y-electric field in region 2</td>
+                  <td><em>\(\frac{\text{N}}{\text{C}}\)</em></td>
+                </tr>
+                <tr>
+                  <td><em>E<sub>y3</sub></em></td>
+                  <td>Y-electric field in region 3</td>
+                  <td><em>\(\frac{\text{N}}{\text{C}}\)</em></td>
+                </tr>
+                <tr>
+                  <td><em>E<sub>y4</sub></em></td>
+                  <td>Y-electric field in region 4</td>
+                  <td><em>\(\frac{\text{N}}{\text{C}}\)</em></td>
+                </tr>
+                <tr>
+                  <td><em>E<sub>y5</sub></em></td>
+                  <td>Y-electric field in region 5</td>
                   <td><em>\(\frac{\text{N}}{\text{C}}\)</em></td>
                 </tr>
                 <tr>
@@ -2177,6 +2300,11 @@
                 <tr>
                   <td><em>N</em></td>
                   <td>Number of field regions</td>
+                  <td>--</td>
+                </tr>
+                <tr>
+                  <td><em>N<sub>col</sub></em></td>
+                  <td>Number of grid columns</td>
                   <td>--</td>
                 </tr>
                 <tr>
@@ -2215,18 +2343,18 @@
                   <td><em>m</em></td>
                 </tr>
                 <tr>
-                  <td><em>x<sub>grid</sub></em></td>
-                  <td>Grid origin x-coordinate</td>
-                  <td><em>m</em></td>
-                </tr>
-                <tr>
-                  <td><em>x<sub>max</sub><sup>det</sup></em></td>
+                  <td><em>x<sub>detMax</sub></em></td>
                   <td>Maximum x-coordinate of detector</td>
                   <td><em>m</em></td>
                 </tr>
                 <tr>
-                  <td><em>x<sub>min</sub><sup>det</sup></em></td>
+                  <td><em>x<sub>detMin</sub></em></td>
                   <td>Minimum x-coordinate of detector</td>
+                  <td><em>m</em></td>
+                </tr>
+                <tr>
+                  <td><em>x<sub>grid</sub></em></td>
+                  <td>Grid origin x-coordinate</td>
                   <td><em>m</em></td>
                 </tr>
                 <tr>
@@ -2240,18 +2368,18 @@
                   <td><em>m</em></td>
                 </tr>
                 <tr>
-                  <td><em>y<sub>grid</sub></em></td>
-                  <td>Grid origin y-coordinate</td>
-                  <td><em>m</em></td>
-                </tr>
-                <tr>
-                  <td><em>y<sub>max</sub><sup>det</sup></em></td>
+                  <td><em>y<sub>detMax</sub></em></td>
                   <td>Maximum y-coordinate of detector</td>
                   <td><em>m</em></td>
                 </tr>
                 <tr>
-                  <td><em>y<sub>min</sub><sup>det</sup></em></td>
+                  <td><em>y<sub>detMin</sub></em></td>
                   <td>Minimum y-coordinate of detector</td>
+                  <td><em>m</em></td>
+                </tr>
+                <tr>
+                  <td><em>y<sub>grid</sub></em></td>
+                  <td>Grid origin y-coordinate</td>
                   <td><em>m</em></td>
                 </tr>
               </table>

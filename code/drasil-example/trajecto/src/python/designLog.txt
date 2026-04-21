@@ -23,3 +23,4 @@ Successfully matched Array Real with Array Double.
 Successfully matched Actor "ode" with Object "ode".
 Successfully matched Void with Void.
 Successfully matched Boolean with Boolean.
+Successfully matched Natural with Integer.

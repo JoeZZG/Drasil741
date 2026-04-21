@@ -16,7 +16,10 @@ using std::vector;
 
 /** \brief Writes the output values to output.txt
     \param s dependent variables (m)
+    \param t_hit time of detector hit (s)
+    \param x_hit x-coordinate of impact point (m)
+    \param y_hit y-coordinate of impact point (m)
 */
-void write_output(vector<double> &s);
+void write_output(vector<double> &s, double t_hit, double x_hit, double y_hit);
 
 #endif

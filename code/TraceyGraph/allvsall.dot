@@ -1,12 +1,17 @@
 digraph "allvsall" {
+    "instance:noInteractions" -> "instance:singleParticle";
+    "instance:bPerpPlane" -> "instance:twoDMotion";
+    "instance:eAxisAligned" -> "instance:twoDMotion";
+    "instance:gridLayout" -> "instance:rectRegions";
     "dataDefn:Evec" -> "instance:prescribedFields";
     "dataDefn:Evec" -> "instance:eAxisAligned";
     "dataDefn:Bvec" -> "instance:prescribedFields";
     "dataDefn:Bvec" -> "instance:bPerpPlane";
     "dataDefn:Ri" -> "instance:rectRegions";
+    "dataDefn:Ri" -> "instance:gridLayout";
     "dataDefn:Ei" -> "instance:piecewiseUniform";
-    "dataDefn:Ei" -> "dataDefn:Evec";
-    "dataDefn:Ei" -> "dataDefn:Bvec";
+    "dataDefn:Ei" -> "instance:prescribedFields";
+    "dataDefn:Ei" -> "dataDefn:Ri";
     "dataDefn:Ldet" -> "instance:lineDetector";
     "theory:lorentzForceCS" -> "instance:singleParticle";
     "theory:lorentzForceCS" -> "instance:prescribedFields";
@@ -35,15 +40,17 @@ digraph "allvsall" {
     "theory:stateEvolRC" -> "dataDefn:Ei";
     "theory:stateEvolRC" -> "theory:kin2DRC";
     "theory:stateEvolRC" -> "theory:dyn2DRC";
-    "theory:detHitIM" -> "instance:lineDetector";
-    "theory:detHitIM" -> "instance:fullDetection";
-    "theory:detHitIM" -> "dataDefn:Ldet";
-    "theory:detHitIM" -> "theory:stateEvolRC";
+    "theory:detHitRC" -> "instance:lineDetector";
+    "theory:detHitRC" -> "instance:fullDetection";
+    "theory:detHitRC" -> "dataDefn:Ldet";
+    "theory:detHitRC" -> "theory:stateEvolRC";
+    "instance:buildRegionGrid" -> "dataDefn:Ri";
+    "instance:lookupActiveRegion" -> "dataDefn:Ei";
     "instance:computeTraj" -> "theory:stateEvolRC";
     "instance:reportOutputs" -> "theory:stateEvolRC";
-    "instance:reportOutputs" -> "theory:detHitIM";
+    "instance:reportOutputs" -> "theory:detHitRC";
     "instance:predictTrajectory" -> "theory:stateEvolRC";
-    "instance:determineDetectorOutcome" -> "theory:detHitIM";
+    "instance:determineDetectorOutcome" -> "theory:detHitRC";
     "instance:lcExtendTo3D" -> "instance:twoDMotion";
     "instance:ucLorentzForce" -> "instance:lorentzOnly";
     "instance:piecewiseUniform" [shape=box, color=black, style=filled, fillcolor="mistyrose", label="A:piecewiseUniform"];
@@ -54,12 +61,13 @@ digraph "allvsall" {
     "instance:bPerpPlane" [shape=box, color=black, style=filled, fillcolor="mistyrose", label="A:bPerpPlane"];
     "instance:eAxisAligned" [shape=box, color=black, style=filled, fillcolor="mistyrose", label="A:eAxisAligned"];
     "instance:rectRegions" [shape=box, color=black, style=filled, fillcolor="mistyrose", label="A:rectRegions"];
+    "instance:gridLayout" [shape=box, color=black, style=filled, fillcolor="mistyrose", label="A:gridLayout"];
     "instance:lineDetector" [shape=box, color=black, style=filled, fillcolor="mistyrose", label="A:lineDetector"];
     "instance:fullDetection" [shape=box, color=black, style=filled, fillcolor="mistyrose", label="A:fullDetection"];
     "instance:lorentzOnly" [shape=box, color=black, style=filled, fillcolor="mistyrose", label="A:lorentzOnly"];
     subgraph "A" {
         rank="same";
-        "instance:piecewiseUniform" "instance:singleParticle" "instance:noInteractions" "instance:prescribedFields" "instance:twoDMotion" "instance:bPerpPlane" "instance:eAxisAligned" "instance:rectRegions" "instance:lineDetector" "instance:fullDetection" "instance:lorentzOnly";
+        "instance:piecewiseUniform" "instance:singleParticle" "instance:noInteractions" "instance:prescribedFields" "instance:twoDMotion" "instance:bPerpPlane" "instance:eAxisAligned" "instance:rectRegions" "instance:gridLayout" "instance:lineDetector" "instance:fullDetection" "instance:lorentzOnly";
     }
     "dataDefn:kappa" [shape=box, color=black, style=filled, fillcolor="paleturquoise1", label="DD:qOverm"];
     "dataDefn:s0" [shape=box, color=black, style=filled, fillcolor="paleturquoise1", label="DD:initState"];
@@ -88,13 +96,15 @@ digraph "allvsall" {
         "theory:kin2DRC" "theory:vCrossB" "theory:dyn2DRC";
     }
     "theory:stateEvolRC" [shape=box, color=black, style=filled, fillcolor="khaki1", label="IM:stateEvol"];
-    "theory:detHitIM" [shape=box, color=black, style=filled, fillcolor="khaki1", label="IM:detHit"];
+    "theory:detHitRC" [shape=box, color=black, style=filled, fillcolor="khaki1", label="IM:detHit"];
     subgraph "IM" {
         rank="same";
-        "theory:stateEvolRC" "theory:detHitIM";
+        "theory:stateEvolRC" "theory:detHitRC";
     }
     "instance:inputValues" [shape=box, color=black, style=filled, fillcolor="ivory", label="FR:inputValues"];
     "instance:echoInputs" [shape=box, color=black, style=filled, fillcolor="ivory", label="FR:echoInputs"];
+    "instance:buildRegionGrid" [shape=box, color=black, style=filled, fillcolor="ivory", label="FR:buildRegionGrid"];
+    "instance:lookupActiveRegion" [shape=box, color=black, style=filled, fillcolor="ivory", label="FR:lookupActiveRegion"];
     "instance:computeTraj" [shape=box, color=black, style=filled, fillcolor="ivory", label="FR:computeTraj"];
     "instance:reportOutputs" [shape=box, color=black, style=filled, fillcolor="ivory", label="FR:reportOutputs"];
     "instance:correct" [shape=box, color=black, style=filled, fillcolor="ivory", label="NFR:correct"];
@@ -102,7 +112,7 @@ digraph "allvsall" {
     "instance:portable" [shape=box, color=black, style=filled, fillcolor="ivory", label="NFR:portable"];
     subgraph "FR" {
         rank="same";
-        "instance:inputValues" "instance:echoInputs" "instance:computeTraj" "instance:reportOutputs" "instance:correct" "instance:maintainable" "instance:portable";
+        "instance:inputValues" "instance:echoInputs" "instance:buildRegionGrid" "instance:lookupActiveRegion" "instance:computeTraj" "instance:reportOutputs" "instance:correct" "instance:maintainable" "instance:portable";
     }
     "instance:predictTrajectory" [shape=box, color=black, style=filled, fillcolor="darkgoldenrod1", label="GS:predictTrajectory"];
     "instance:determineDetectorOutcome" [shape=box, color=black, style=filled, fillcolor="darkgoldenrod1", label="GS:determineDetectorOutcome"];

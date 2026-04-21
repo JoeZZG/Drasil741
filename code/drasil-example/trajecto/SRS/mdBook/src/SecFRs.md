@@ -28,29 +28,45 @@ Report-Outputs: Report the final position, velocity, and whether the particle re
 
 <div id="Table:ReqInputs"></div>
 
-|Symbol                                |Description                       |Units                          |
-|:-------------------------------------|:---------------------------------|:------------------------------|
-|\\(B\\)                               |Out-of-plane magnetic flux density|\\({\text{T}}\\)               |
-|\\({d\_{\text{orient}}}\\)            |Detector orientation              |--                             |
-|\\({E\_{\text{x}}}\\)                 |X-component of the electric field |\\(\frac{\text{N}}{\text{C}}\\)|
-|\\({E\_{\text{y}}}\\)                 |Y-component of the electric field |\\(\frac{\text{N}}{\text{C}}\\)|
-|\\(h\\)                               |Region height                     |\\({\text{m}}\\)               |
-|\\(m\\)                               |Particle mass                     |\\({\text{kg}}\\)              |
-|\\(N\\)                               |Number of field regions           |--                             |
-|\\(q\\)                               |Particle charge                   |\\({\text{C}}\\)               |
-|\\({t\_{\text{final}}}\\)             |Final simulation time             |\\({\text{s}}\\)               |
-|\\({v\_{\text{x}0}}\\)                |Initial x-velocity                |\\(\frac{\text{m}}{\text{s}}\\)|
-|\\({v\_{\text{y}0}}\\)                |Initial y-velocity                |\\(\frac{\text{m}}{\text{s}}\\)|
-|\\(w\\)                               |Region width                      |\\({\text{m}}\\)               |
-|\\({x\_{0}}\\)                        |Initial x-position                |\\({\text{m}}\\)               |
-|\\({x\_{\text{det}}}\\)               |Detector line x-position          |\\({\text{m}}\\)               |
-|\\({x\_{\text{grid}}}\\)              |Grid origin x-coordinate          |\\({\text{m}}\\)               |
-|\\({{x\_{\text{max}}}^{\text{det}}}\\)|Maximum x-coordinate of detector  |\\({\text{m}}\\)               |
-|\\({{x\_{\text{min}}}^{\text{det}}}\\)|Minimum x-coordinate of detector  |\\({\text{m}}\\)               |
-|\\({y\_{0}}\\)                        |Initial y-position                |\\({\text{m}}\\)               |
-|\\({y\_{\text{det}}}\\)               |Detector line y-position          |\\({\text{m}}\\)               |
-|\\({y\_{\text{grid}}}\\)              |Grid origin y-coordinate          |\\({\text{m}}\\)               |
-|\\({{y\_{\text{max}}}^{\text{det}}}\\)|Maximum y-coordinate of detector  |\\({\text{m}}\\)               |
-|\\({{y\_{\text{min}}}^{\text{det}}}\\)|Minimum y-coordinate of detector  |\\({\text{m}}\\)               |
+|Symbol                    |Description                      |Units                          |
+|:-------------------------|:--------------------------------|:------------------------------|
+|\\({B\_{0}}\\)            |Magnetic flux density in region 0|\\({\text{T}}\\)               |
+|\\({B\_{1}}\\)            |Magnetic flux density in region 1|\\({\text{T}}\\)               |
+|\\({B\_{2}}\\)            |Magnetic flux density in region 2|\\({\text{T}}\\)               |
+|\\({B\_{3}}\\)            |Magnetic flux density in region 3|\\({\text{T}}\\)               |
+|\\({B\_{4}}\\)            |Magnetic flux density in region 4|\\({\text{T}}\\)               |
+|\\({B\_{5}}\\)            |Magnetic flux density in region 5|\\({\text{T}}\\)               |
+|\\({d\_{\text{orient}}}\\)|Detector orientation             |--                             |
+|\\({E\_{\text{x}0}}\\)    |X-electric field in region 0     |\\(\frac{\text{N}}{\text{C}}\\)|
+|\\({E\_{\text{x}1}}\\)    |X-electric field in region 1     |\\(\frac{\text{N}}{\text{C}}\\)|
+|\\({E\_{\text{x}2}}\\)    |X-electric field in region 2     |\\(\frac{\text{N}}{\text{C}}\\)|
+|\\({E\_{\text{x}3}}\\)    |X-electric field in region 3     |\\(\frac{\text{N}}{\text{C}}\\)|
+|\\({E\_{\text{x}4}}\\)    |X-electric field in region 4     |\\(\frac{\text{N}}{\text{C}}\\)|
+|\\({E\_{\text{x}5}}\\)    |X-electric field in region 5     |\\(\frac{\text{N}}{\text{C}}\\)|
+|\\({E\_{\text{y}0}}\\)    |Y-electric field in region 0     |\\(\frac{\text{N}}{\text{C}}\\)|
+|\\({E\_{\text{y}1}}\\)    |Y-electric field in region 1     |\\(\frac{\text{N}}{\text{C}}\\)|
+|\\({E\_{\text{y}2}}\\)    |Y-electric field in region 2     |\\(\frac{\text{N}}{\text{C}}\\)|
+|\\({E\_{\text{y}3}}\\)    |Y-electric field in region 3     |\\(\frac{\text{N}}{\text{C}}\\)|
+|\\({E\_{\text{y}4}}\\)    |Y-electric field in region 4     |\\(\frac{\text{N}}{\text{C}}\\)|
+|\\({E\_{\text{y}5}}\\)    |Y-electric field in region 5     |\\(\frac{\text{N}}{\text{C}}\\)|
+|\\(h\\)                   |Region height                    |\\({\text{m}}\\)               |
+|\\(m\\)                   |Particle mass                    |\\({\text{kg}}\\)              |
+|\\(N\\)                   |Number of field regions          |--                             |
+|\\({N\_{\text{col}}}\\)   |Number of grid columns           |--                             |
+|\\(q\\)                   |Particle charge                  |\\({\text{C}}\\)               |
+|\\({t\_{\text{final}}}\\) |Final simulation time            |\\({\text{s}}\\)               |
+|\\({v\_{\text{x}0}}\\)    |Initial x-velocity               |\\(\frac{\text{m}}{\text{s}}\\)|
+|\\({v\_{\text{y}0}}\\)    |Initial y-velocity               |\\(\frac{\text{m}}{\text{s}}\\)|
+|\\(w\\)                   |Region width                     |\\({\text{m}}\\)               |
+|\\({x\_{0}}\\)            |Initial x-position               |\\({\text{m}}\\)               |
+|\\({x\_{\text{det}}}\\)   |Detector line x-position         |\\({\text{m}}\\)               |
+|\\({x\_{\text{detMax}}}\\)|Maximum x-coordinate of detector |\\({\text{m}}\\)               |
+|\\({x\_{\text{detMin}}}\\)|Minimum x-coordinate of detector |\\({\text{m}}\\)               |
+|\\({x\_{\text{grid}}}\\)  |Grid origin x-coordinate         |\\({\text{m}}\\)               |
+|\\({y\_{0}}\\)            |Initial y-position               |\\({\text{m}}\\)               |
+|\\({y\_{\text{det}}}\\)   |Detector line y-position         |\\({\text{m}}\\)               |
+|\\({y\_{\text{detMax}}}\\)|Maximum y-coordinate of detector |\\({\text{m}}\\)               |
+|\\({y\_{\text{detMin}}}\\)|Minimum y-coordinate of detector |\\({\text{m}}\\)               |
+|\\({y\_{\text{grid}}}\\)  |Grid origin y-coordinate         |\\({\text{m}}\\)               |
 
 **<p align="center">Required Inputs</p>**

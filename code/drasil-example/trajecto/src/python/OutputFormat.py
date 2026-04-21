@@ -5,8 +5,17 @@
 
 ## \brief Writes the output values to output.txt
 # \param s dependent variables (m)
-def write_output(s):
+# \param t_hit time of detector hit (s)
+# \param x_hit x-coordinate of impact point (m)
+# \param y_hit y-coordinate of impact point (m)
+def write_output(s, t_hit, x_hit, y_hit):
     outputfile = open("output.txt", "w")
     print("s = ", end="", file=outputfile)
     print(s, file=outputfile)
+    print("t_hit = ", end="", file=outputfile)
+    print(t_hit, file=outputfile)
+    print("x_hit = ", end="", file=outputfile)
+    print(x_hit, file=outputfile)
+    print("y_hit = ", end="", file=outputfile)
+    print(y_hit, file=outputfile)
     outputfile.close()

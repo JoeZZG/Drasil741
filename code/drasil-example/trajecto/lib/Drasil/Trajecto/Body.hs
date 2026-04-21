@@ -3,6 +3,7 @@ module Drasil.Trajecto.Body (mkSRS, si) where
 
 import Language.Drasil hiding (organization, section)
 import qualified Language.Drasil.Development as D
+import Language.Drasil.Code (Mod(Mod), asVC)
 import Theory.Drasil (TheoryModel)
 import Drasil.SRSDocument
 import Drasil.Generator (withCommonKnowledge)
@@ -37,6 +38,7 @@ import Drasil.Trajecto.TMods (tMods)
 import Drasil.Trajecto.Unitals
   ( symbols, acronyms, inputs, outputs, inConstraints, outConstraints
   , constants, elecFieldU, chgPerMassU )
+import Drasil.Trajecto.ModuleDefs (detHitMod, implVars)
 
 ---------------------------------------------------------
 -- Author
@@ -182,11 +184,17 @@ conceptChunks = physicalcon ++ defs
 
 symbMap :: ChunkDB
 symbMap = withCommonKnowledge []
-  symbols ideaDicts conceptChunks
+  symbolsWCodeSymbols ideaDicts conceptChunks
   [elecFieldU, chgPerMassU]
   dataDefs iMods genDefs tMods
   concIns citations
   (labelledContent ++ funcReqsTables)
+
+-- | Include symbols from extra modules (detector hit function) alongside
+-- the standard symbols, following the glassbr pattern.
+symbolsWCodeSymbols :: [DefinedQuantityDict]
+symbolsWCodeSymbols = map asVC (concatMap (\(Mod _ _ _ _ l) -> l) [detHitMod])
+  ++ implVars ++ symbols
 
 ---------------------------------------------------------
 -- Introduction helpers

@@ -9,6 +9,7 @@ import Data.Drasil.ExternalLibraries.ODELibraries (scipyODEPckg, osloPckg,
   apacheODEPckg, odeintPckg)
 
 import Drasil.Trajecto.ODEs (trajectODEInfo)
+import Drasil.Trajecto.ModuleDefs (detHitMod, detHitDefs)
 
 choices :: Choices
 choices = defaultChoices {
@@ -20,5 +21,7 @@ choices = defaultChoices {
     (makeLogConfig [] "log.txt")
     [SampleInput "../../datafiles/trajecto/sampleInput.txt", ReadME],
   srsConstraints = makeConstraints Warning Warning,
-  extLibs = [Math (makeODE [trajectODEInfo] [scipyODEPckg, osloPckg, apacheODEPckg, odeintPckg])]
+  extLibs = [Math (makeODE [trajectODEInfo] [scipyODEPckg, osloPckg, apacheODEPckg, odeintPckg])],
+  extraMods = [detHitMod],
+  handWiredDefs = detHitDefs
 }

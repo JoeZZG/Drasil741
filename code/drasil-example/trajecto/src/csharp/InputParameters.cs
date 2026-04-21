@@ -18,23 +18,39 @@ public class InputParameters {
         \param v_x0 initial x-velocity (m/s)
         \param v_y0 initial y-velocity (m/s)
         \param N number of field regions
+        \param N_col number of grid columns
         \param w region width (m)
         \param h region height (m)
         \param x_grid grid origin x-coordinate (m)
         \param y_grid grid origin y-coordinate (m)
-        \param E_x x-component of the electric field (N/C)
-        \param E_y y-component of the electric field (N/C)
-        \param B out-of-plane magnetic flux density (T)
+        \param E_x0 x-electric field in region 0 (N/C)
+        \param E_x1 x-electric field in region 1 (N/C)
+        \param E_x2 x-electric field in region 2 (N/C)
+        \param E_x3 x-electric field in region 3 (N/C)
+        \param E_x4 x-electric field in region 4 (N/C)
+        \param E_x5 x-electric field in region 5 (N/C)
+        \param E_y0 y-electric field in region 0 (N/C)
+        \param E_y1 y-electric field in region 1 (N/C)
+        \param E_y2 y-electric field in region 2 (N/C)
+        \param E_y3 y-electric field in region 3 (N/C)
+        \param E_y4 y-electric field in region 4 (N/C)
+        \param E_y5 y-electric field in region 5 (N/C)
+        \param B_0 magnetic flux density in region 0 (T)
+        \param B_1 magnetic flux density in region 1 (T)
+        \param B_2 magnetic flux density in region 2 (T)
+        \param B_3 magnetic flux density in region 3 (T)
+        \param B_4 magnetic flux density in region 4 (T)
+        \param B_5 magnetic flux density in region 5 (T)
         \param d_orient detector orientation
         \param x_det detector line x-position (m)
         \param y_det detector line y-position (m)
-        \param y_min^det minimum y-coordinate of detector (m)
-        \param y_max^det maximum y-coordinate of detector (m)
-        \param x_min^det minimum x-coordinate of detector (m)
-        \param x_max^det maximum x-coordinate of detector (m)
+        \param y_detMin minimum y-coordinate of detector (m)
+        \param y_detMax maximum y-coordinate of detector (m)
+        \param x_detMin minimum x-coordinate of detector (m)
+        \param x_detMax maximum x-coordinate of detector (m)
         \param t_final final simulation time (s)
     */
-    public static void get_input(string filename, out double m, out double q, out double x_0, out double y_0, out double v_x0, out double v_y0, out double N, out double w, out double h, out double x_grid, out double y_grid, out double E_x, out double E_y, out double B, out double d_orient, out double x_det, out double y_det, out double y_min^det, out double y_max^det, out double x_min^det, out double x_max^det, out double t_final) {
+    public static void get_input(string filename, out double m, out double q, out double x_0, out double y_0, out double v_x0, out double v_y0, out double N, out double N_col, out double w, out double h, out double x_grid, out double y_grid, out double E_x0, out double E_x1, out double E_x2, out double E_x3, out double E_x4, out double E_x5, out double E_y0, out double E_y1, out double E_y2, out double E_y3, out double E_y4, out double E_y5, out double B_0, out double B_1, out double B_2, out double B_3, out double B_4, out double B_5, out double d_orient, out double x_det, out double y_det, out double y_detMin, out double y_detMax, out double x_detMin, out double x_detMax, out double t_final) {
         StreamReader infile;
         infile = new StreamReader(filename);
         infile.ReadLine();
@@ -52,6 +68,8 @@ public class InputParameters {
         infile.ReadLine();
         N = Double.Parse(infile.ReadLine());
         infile.ReadLine();
+        N_col = Double.Parse(infile.ReadLine());
+        infile.ReadLine();
         w = Double.Parse(infile.ReadLine());
         infile.ReadLine();
         h = Double.Parse(infile.ReadLine());
@@ -60,11 +78,41 @@ public class InputParameters {
         infile.ReadLine();
         y_grid = Double.Parse(infile.ReadLine());
         infile.ReadLine();
-        E_x = Double.Parse(infile.ReadLine());
+        E_x0 = Double.Parse(infile.ReadLine());
         infile.ReadLine();
-        E_y = Double.Parse(infile.ReadLine());
+        E_x1 = Double.Parse(infile.ReadLine());
         infile.ReadLine();
-        B = Double.Parse(infile.ReadLine());
+        E_x2 = Double.Parse(infile.ReadLine());
+        infile.ReadLine();
+        E_x3 = Double.Parse(infile.ReadLine());
+        infile.ReadLine();
+        E_x4 = Double.Parse(infile.ReadLine());
+        infile.ReadLine();
+        E_x5 = Double.Parse(infile.ReadLine());
+        infile.ReadLine();
+        E_y0 = Double.Parse(infile.ReadLine());
+        infile.ReadLine();
+        E_y1 = Double.Parse(infile.ReadLine());
+        infile.ReadLine();
+        E_y2 = Double.Parse(infile.ReadLine());
+        infile.ReadLine();
+        E_y3 = Double.Parse(infile.ReadLine());
+        infile.ReadLine();
+        E_y4 = Double.Parse(infile.ReadLine());
+        infile.ReadLine();
+        E_y5 = Double.Parse(infile.ReadLine());
+        infile.ReadLine();
+        B_0 = Double.Parse(infile.ReadLine());
+        infile.ReadLine();
+        B_1 = Double.Parse(infile.ReadLine());
+        infile.ReadLine();
+        B_2 = Double.Parse(infile.ReadLine());
+        infile.ReadLine();
+        B_3 = Double.Parse(infile.ReadLine());
+        infile.ReadLine();
+        B_4 = Double.Parse(infile.ReadLine());
+        infile.ReadLine();
+        B_5 = Double.Parse(infile.ReadLine());
         infile.ReadLine();
         d_orient = Double.Parse(infile.ReadLine());
         infile.ReadLine();
@@ -72,13 +120,13 @@ public class InputParameters {
         infile.ReadLine();
         y_det = Double.Parse(infile.ReadLine());
         infile.ReadLine();
-        y_min^det = Double.Parse(infile.ReadLine());
+        y_detMin = Double.Parse(infile.ReadLine());
         infile.ReadLine();
-        y_max^det = Double.Parse(infile.ReadLine());
+        y_detMax = Double.Parse(infile.ReadLine());
         infile.ReadLine();
-        x_min^det = Double.Parse(infile.ReadLine());
+        x_detMin = Double.Parse(infile.ReadLine());
         infile.ReadLine();
-        x_max^det = Double.Parse(infile.ReadLine());
+        x_detMax = Double.Parse(infile.ReadLine());
         infile.ReadLine();
         t_final = Double.Parse(infile.ReadLine());
         infile.Close();
@@ -91,9 +139,9 @@ public class InputParameters {
         \param y_0 initial y-position (m)
         \param v_x0 initial x-velocity (m/s)
         \param v_y0 initial y-velocity (m/s)
-        \param E_x x-component of the electric field (N/C)
-        \param E_y y-component of the electric field (N/C)
-        \param B out-of-plane magnetic flux density (T)
+        \param E_x0 x-electric field in region 0 (N/C)
+        \param E_y0 y-electric field in region 0 (N/C)
+        \param B_0 magnetic flux density in region 0 (T)
         \param x_grid grid origin x-coordinate (m)
         \param y_grid grid origin y-coordinate (m)
         \param w region width (m)
@@ -101,10 +149,10 @@ public class InputParameters {
         \param d_orient detector orientation
         \param x_det detector line x-position (m)
         \param y_det detector line y-position (m)
-        \param y_min^det minimum y-coordinate of detector (m)
-        \param y_max^det maximum y-coordinate of detector (m)
-        \param x_min^det minimum x-coordinate of detector (m)
-        \param x_max^det maximum x-coordinate of detector (m)
+        \param y_detMin minimum y-coordinate of detector (m)
+        \param y_detMax maximum y-coordinate of detector (m)
+        \param x_detMin minimum x-coordinate of detector (m)
+        \param x_detMax maximum x-coordinate of detector (m)
         \param κ charge-to-mass ratio (C/kg)
         \param s_0 initial state vector
         \param E_vect electric field vector (N/C)
@@ -113,20 +161,20 @@ public class InputParameters {
         \param E_vect_i electric field in region i (N/C)
         \param L_det detector line
     */
-    public static void derived_values(double q, double m, double x_0, double y_0, double v_x0, double v_y0, double E_x, double E_y, double B, double x_grid, double y_grid, double w, double h, double d_orient, double x_det, double y_det, double y_min^det, double y_max^det, double x_min^det, double x_max^det, out double κ, out double s_0, out double E_vect, out double B_vect, out double R_i, out double E_vect_i, out double L_det) {
+    public static void derived_values(double q, double m, double x_0, double y_0, double v_x0, double v_y0, double E_x0, double E_y0, double B_0, double x_grid, double y_grid, double w, double h, double d_orient, double x_det, double y_det, double y_detMin, double y_detMax, double x_detMin, double x_detMax, out double κ, out double s_0, out double E_vect, out double B_vect, out double R_i, out double E_vect_i, out double L_det) {
         κ = q / m;
         
         s_0 = new double[] {x_0, y_0, v_x0, v_y0};
         
-        E_vect = new double[] {E_x, E_y, 0.0};
+        E_vect = new double[] {E_x0, E_y0, 0.0};
         
-        B_vect = new double[] {0.0, 0.0, B};
+        B_vect = new double[] {0.0, 0.0, B_0};
         
         R_i = new double[] {x_grid, y_grid, w, h};
         
-        E_vect_i = new double[] {E_x, E_y, B};
+        E_vect_i = new double[] {E_x0, E_y0, B_0};
         
-        L_det = new double[] {d_orient, x_det, y_det, y_min^det, y_max^det, x_min^det, x_max^det};
+        L_det = new double[] {d_orient, x_det, y_det, y_detMin, y_detMax, x_detMin, x_detMax};
     }
     
     /** \brief Verifies that input values satisfy the physical constraints and software constraints
@@ -137,23 +185,21 @@ public class InputParameters {
         \param v_x0 initial x-velocity (m/s)
         \param v_y0 initial y-velocity (m/s)
         \param N number of field regions
+        \param N_col number of grid columns
         \param w region width (m)
         \param h region height (m)
         \param x_grid grid origin x-coordinate (m)
         \param y_grid grid origin y-coordinate (m)
-        \param E_x x-component of the electric field (N/C)
-        \param E_y y-component of the electric field (N/C)
-        \param B out-of-plane magnetic flux density (T)
         \param d_orient detector orientation
         \param x_det detector line x-position (m)
         \param y_det detector line y-position (m)
-        \param y_min^det minimum y-coordinate of detector (m)
-        \param y_max^det maximum y-coordinate of detector (m)
-        \param x_min^det minimum x-coordinate of detector (m)
-        \param x_max^det maximum x-coordinate of detector (m)
+        \param y_detMin minimum y-coordinate of detector (m)
+        \param y_detMax maximum y-coordinate of detector (m)
+        \param x_detMin minimum x-coordinate of detector (m)
+        \param x_detMax maximum x-coordinate of detector (m)
         \param t_final final simulation time (s)
     */
-    public static void input_constraints(double m, double q, double x_0, double y_0, double v_x0, double v_y0, double N, double w, double h, double x_grid, double y_grid, double E_x, double E_y, double B, double d_orient, double x_det, double y_det, double y_min^det, double y_max^det, double x_min^det, double x_max^det, double t_final) {
+    public static void input_constraints(double m, double q, double x_0, double y_0, double v_x0, double v_y0, double N, double N_col, double w, double h, double x_grid, double y_grid, double d_orient, double x_det, double y_det, double y_detMin, double y_detMax, double x_detMin, double x_detMax, double t_final) {
         if (!(Constants.m_min <= m && m <= Constants.m_max)) {
             Console.Write("Warning: ");
             Console.Write("m has value ");
@@ -206,45 +252,6 @@ public class InputParameters {
             Console.Write(" (v_max)");
             Console.WriteLine(".");
         }
-        if (!(-Constants.E_max <= E_x && E_x <= Constants.E_max)) {
-            Console.Write("Warning: ");
-            Console.Write("E_x has value ");
-            Console.Write(E_x);
-            Console.Write(", but is suggested to be ");
-            Console.Write("between ");
-            Console.Write(-Constants.E_max);
-            Console.Write(" (-E_max)");
-            Console.Write(" and ");
-            Console.Write(Constants.E_max);
-            Console.Write(" (E_max)");
-            Console.WriteLine(".");
-        }
-        if (!(-Constants.E_max <= E_y && E_y <= Constants.E_max)) {
-            Console.Write("Warning: ");
-            Console.Write("E_y has value ");
-            Console.Write(E_y);
-            Console.Write(", but is suggested to be ");
-            Console.Write("between ");
-            Console.Write(-Constants.E_max);
-            Console.Write(" (-E_max)");
-            Console.Write(" and ");
-            Console.Write(Constants.E_max);
-            Console.Write(" (E_max)");
-            Console.WriteLine(".");
-        }
-        if (!(-Constants.B_max <= B && B <= Constants.B_max)) {
-            Console.Write("Warning: ");
-            Console.Write("B has value ");
-            Console.Write(B);
-            Console.Write(", but is suggested to be ");
-            Console.Write("between ");
-            Console.Write(-Constants.B_max);
-            Console.Write(" (-B_max)");
-            Console.Write(" and ");
-            Console.Write(Constants.B_max);
-            Console.Write(" (B_max)");
-            Console.WriteLine(".");
-        }
         if (!(0.0 <= d_orient && d_orient <= 1.0)) {
             Console.Write("Warning: ");
             Console.Write("d_orient has value ");
@@ -280,6 +287,15 @@ public class InputParameters {
             Console.Write("Warning: ");
             Console.Write("N has value ");
             Console.Write(N);
+            Console.Write(", but is suggested to be ");
+            Console.Write("above ");
+            Console.Write(0.0);
+            Console.WriteLine(".");
+        }
+        if (!(N_col > 0.0)) {
+            Console.Write("Warning: ");
+            Console.Write("N_col has value ");
+            Console.Write(N_col);
             Console.Write(", but is suggested to be ");
             Console.Write("above ");
             Console.Write(0.0);

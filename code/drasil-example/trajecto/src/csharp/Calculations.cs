@@ -12,9 +12,28 @@ public class Calculations {
     
     /** \brief Calculates dependent variables (m)
         \param κ charge-to-mass ratio (C/kg)
-        \param E_x x-component of the electric field (N/C)
-        \param B out-of-plane magnetic flux density (T)
-        \param E_y y-component of the electric field (N/C)
+        \param E_x0 x-electric field in region 0 (N/C)
+        \param E_x1 x-electric field in region 1 (N/C)
+        \param E_x2 x-electric field in region 2 (N/C)
+        \param E_x3 x-electric field in region 3 (N/C)
+        \param E_x4 x-electric field in region 4 (N/C)
+        \param E_x5 x-electric field in region 5 (N/C)
+        \param x_grid grid origin x-coordinate (m)
+        \param w region width (m)
+        \param y_grid grid origin y-coordinate (m)
+        \param h region height (m)
+        \param B_0 magnetic flux density in region 0 (T)
+        \param B_1 magnetic flux density in region 1 (T)
+        \param B_2 magnetic flux density in region 2 (T)
+        \param B_3 magnetic flux density in region 3 (T)
+        \param B_4 magnetic flux density in region 4 (T)
+        \param B_5 magnetic flux density in region 5 (T)
+        \param E_y0 y-electric field in region 0 (N/C)
+        \param E_y1 y-electric field in region 1 (N/C)
+        \param E_y2 y-electric field in region 2 (N/C)
+        \param E_y3 y-electric field in region 3 (N/C)
+        \param E_y4 y-electric field in region 4 (N/C)
+        \param E_y5 y-electric field in region 5 (N/C)
         \param x_0 initial x-position (m)
         \param y_0 initial y-position (m)
         \param v_x0 initial x-velocity (m/s)
@@ -22,10 +41,10 @@ public class Calculations {
         \param t_final final simulation time (s)
         \return dependent variables (m)
     */
-    public static List<List<double>> func_s(double κ, double E_x, double B, double E_y, double x_0, double y_0, double v_x0, double v_y0, double t_final) {
+    public static List<List<double>> func_s(double κ, double E_x0, double E_x1, double E_x2, double E_x3, double E_x4, double E_x5, double x_grid, double w, double y_grid, double h, double B_0, double B_1, double B_2, double B_3, double B_4, double B_5, double E_y0, double E_y1, double E_y2, double E_y3, double E_y4, double E_y5, double x_0, double y_0, double v_x0, double v_y0, double t_final) {
         List<List<double>> s;
         Func<double, Vector, Vector> f = (t, s_vec) => {
-            return new Vector(s_vec[2], s_vec[3], κ * (E_x + s_vec[3] * B), κ * (E_y - s_vec[2] * B));
+            return new Vector(s_vec[2], s_vec[3], κ * ((s[0] >= x_grid + 0.0 * w && (s[0] < x_grid + w && (s[1] >= y_grid + 0.0 * h && s[1] < y_grid + h)) ? E_x0 : s[0] >= x_grid + w && (s[0] < x_grid + 2.0 * w && (s[1] >= y_grid + 0.0 * h && s[1] < y_grid + h)) ? E_x1 : s[0] >= x_grid + 2.0 * w && (s[0] < x_grid + 3.0 * w && (s[1] >= y_grid + 0.0 * h && s[1] < y_grid + h)) ? E_x2 : s[0] >= x_grid + 0.0 * w && (s[0] < x_grid + w && (s[1] >= y_grid + h && s[1] < y_grid + 2.0 * h)) ? E_x3 : s[0] >= x_grid + w && (s[0] < x_grid + 2.0 * w && (s[1] >= y_grid + h && s[1] < y_grid + 2.0 * h)) ? E_x4 : s[0] >= x_grid + 2.0 * w && (s[0] < x_grid + 3.0 * w && (s[1] >= y_grid + h && s[1] < y_grid + 2.0 * h)) ? E_x5 : 0.0) + s_vec[3] * (s[0] >= x_grid + 0.0 * w && (s[0] < x_grid + w && (s[1] >= y_grid + 0.0 * h && s[1] < y_grid + h)) ? B_0 : s[0] >= x_grid + w && (s[0] < x_grid + 2.0 * w && (s[1] >= y_grid + 0.0 * h && s[1] < y_grid + h)) ? B_1 : s[0] >= x_grid + 2.0 * w && (s[0] < x_grid + 3.0 * w && (s[1] >= y_grid + 0.0 * h && s[1] < y_grid + h)) ? B_2 : s[0] >= x_grid + 0.0 * w && (s[0] < x_grid + w && (s[1] >= y_grid + h && s[1] < y_grid + 2.0 * h)) ? B_3 : s[0] >= x_grid + w && (s[0] < x_grid + 2.0 * w && (s[1] >= y_grid + h && s[1] < y_grid + 2.0 * h)) ? B_4 : s[0] >= x_grid + 2.0 * w && (s[0] < x_grid + 3.0 * w && (s[1] >= y_grid + h && s[1] < y_grid + 2.0 * h)) ? B_5 : 0.0)), κ * ((s[0] >= x_grid + 0.0 * w && (s[0] < x_grid + w && (s[1] >= y_grid + 0.0 * h && s[1] < y_grid + h)) ? E_y0 : s[0] >= x_grid + w && (s[0] < x_grid + 2.0 * w && (s[1] >= y_grid + 0.0 * h && s[1] < y_grid + h)) ? E_y1 : s[0] >= x_grid + 2.0 * w && (s[0] < x_grid + 3.0 * w && (s[1] >= y_grid + 0.0 * h && s[1] < y_grid + h)) ? E_y2 : s[0] >= x_grid + 0.0 * w && (s[0] < x_grid + w && (s[1] >= y_grid + h && s[1] < y_grid + 2.0 * h)) ? E_y3 : s[0] >= x_grid + w && (s[0] < x_grid + 2.0 * w && (s[1] >= y_grid + h && s[1] < y_grid + 2.0 * h)) ? E_y4 : s[0] >= x_grid + 2.0 * w && (s[0] < x_grid + 3.0 * w && (s[1] >= y_grid + h && s[1] < y_grid + 2.0 * h)) ? E_y5 : 0.0) - s_vec[2] * (s[0] >= x_grid + 0.0 * w && (s[0] < x_grid + w && (s[1] >= y_grid + 0.0 * h && s[1] < y_grid + h)) ? B_0 : s[0] >= x_grid + w && (s[0] < x_grid + 2.0 * w && (s[1] >= y_grid + 0.0 * h && s[1] < y_grid + h)) ? B_1 : s[0] >= x_grid + 2.0 * w && (s[0] < x_grid + 3.0 * w && (s[1] >= y_grid + 0.0 * h && s[1] < y_grid + h)) ? B_2 : s[0] >= x_grid + 0.0 * w && (s[0] < x_grid + w && (s[1] >= y_grid + h && s[1] < y_grid + 2.0 * h)) ? B_3 : s[0] >= x_grid + w && (s[0] < x_grid + 2.0 * w && (s[1] >= y_grid + h && s[1] < y_grid + 2.0 * h)) ? B_4 : s[0] >= x_grid + 2.0 * w && (s[0] < x_grid + 3.0 * w && (s[1] >= y_grid + h && s[1] < y_grid + 2.0 * h)) ? B_5 : 0.0)));
         };
         Options opts = new Options();
         opts.AbsoluteTolerance = 1.0e-6;
@@ -44,5 +63,50 @@ public class Calculations {
         }
         
         return s;
+    }
+    
+    /** \brief Calculates time of detector hit (s)
+        \param d_orient detector orientation
+        \param x_det detector line x-position (m)
+        \param y_det detector line y-position (m)
+        \param y_detMin minimum y-coordinate of detector (m)
+        \param y_detMax maximum y-coordinate of detector (m)
+        \param x_detMin minimum x-coordinate of detector (m)
+        \param x_detMax maximum x-coordinate of detector (m)
+        \param s dependent variables (m)
+        \return time of detector hit (s)
+    */
+    public static double func_t_hit(double d_orient, double x_det, double y_det, double y_detMin, double y_detMax, double x_detMin, double x_detMax, List<double> s) {
+        return func_t_hit(s, d_orient, x_det, y_det, y_detMin, y_detMax, x_detMin, x_detMax);
+    }
+    
+    /** \brief Calculates x-coordinate of impact point (m)
+        \param d_orient detector orientation
+        \param x_det detector line x-position (m)
+        \param y_det detector line y-position (m)
+        \param y_detMin minimum y-coordinate of detector (m)
+        \param y_detMax maximum y-coordinate of detector (m)
+        \param x_detMin minimum x-coordinate of detector (m)
+        \param x_detMax maximum x-coordinate of detector (m)
+        \param s dependent variables (m)
+        \return x-coordinate of impact point (m)
+    */
+    public static double func_x_hit(double d_orient, double x_det, double y_det, double y_detMin, double y_detMax, double x_detMin, double x_detMax, List<double> s) {
+        return func_x_hit(s, d_orient, x_det, y_det, y_detMin, y_detMax, x_detMin, x_detMax);
+    }
+    
+    /** \brief Calculates y-coordinate of impact point (m)
+        \param d_orient detector orientation
+        \param x_det detector line x-position (m)
+        \param y_det detector line y-position (m)
+        \param y_detMin minimum y-coordinate of detector (m)
+        \param y_detMax maximum y-coordinate of detector (m)
+        \param x_detMin minimum x-coordinate of detector (m)
+        \param x_detMax maximum x-coordinate of detector (m)
+        \param s dependent variables (m)
+        \return y-coordinate of impact point (m)
+    */
+    public static double func_y_hit(double d_orient, double x_det, double y_det, double y_detMin, double y_detMax, double x_detMin, double x_detMax, List<double> s) {
+        return func_y_hit(s, d_orient, x_det, y_det, y_detMin, y_detMax, x_detMin, x_detMax);
     }
 }

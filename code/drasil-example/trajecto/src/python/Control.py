@@ -11,8 +11,8 @@ import OutputFormat
 
 filename = sys.argv[1]
 m, q, x_0, y_0, v_x0, v_y0, N, N_col, w, h, x_grid, y_grid, E_x0, E_x1, E_x2, E_x3, E_x4, E_x5, E_y0, E_y1, E_y2, E_y3, E_y4, E_y5, B_0, B_1, B_2, B_3, B_4, B_5, d_orient, d_pos, d_start, d_len, t_final = InputParameters.get_input(filename)
-InputParameters.input_constraints(m, q, x_0, y_0, v_x0, v_y0, N, N_col, w, h, x_grid, y_grid, d_orient, d_pos, d_start, d_len, t_final)
 d_orient, κ, s_0, E_vect, B_vect, R_i, E_vect_i = InputParameters.derived_values(d_orient, q, m, x_0, y_0, v_x0, v_y0, E_x0, E_y0, B_0, x_grid, y_grid, w, h)
+InputParameters.input_constraints(m, q, x_0, y_0, v_x0, v_y0, N, N_col, w, h, x_grid, y_grid, d_orient, d_pos, d_start, d_len, t_final)
 s = Calculations.func_s(κ, E_x0, E_x1, E_x2, E_x3, E_x4, E_x5, x_grid, N_col, w, y_grid, h, B_0, B_1, B_2, B_3, B_4, B_5, E_y0, E_y1, E_y2, E_y3, E_y4, E_y5, x_0, y_0, v_x0, v_y0, t_final)
 t_hit = Calculations.func_t_hit(d_orient, d_pos, d_start, d_len, t_final, s)
 x_hit = Calculations.func_x_hit(d_orient, d_pos, d_start, d_len, t_final, s)

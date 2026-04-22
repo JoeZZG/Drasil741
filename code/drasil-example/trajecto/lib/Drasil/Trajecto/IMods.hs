@@ -13,7 +13,7 @@ import Drasil.Trajecto.Unitals
   , xPos0, yPos0, xVel0, yVel0
   , elecFieldX, elecFieldY, magField
   , chargeToMass, tFinal
-  , tHit, xDet, xHit, yHit, yDet, yDetMin, yDetMax, xDetMin, xDetMax, detOrient )
+  , tHit, xHit, yHit, detPos, detStart, detLength, detOrient )
 import Drasil.Trajecto.DataDefs
   ( qOvermDD, initStateDD, fieldsByRegionDD, detectorLineDD )
 import Drasil.Trajecto.GenDefs (kin2DGD, dyn2DGD)
@@ -82,8 +82,7 @@ stateEvolNote = foldlSent
 detHitIM :: InstanceModel
 detHitIM = imNoRefs
   (deModel' detHitRC)
-  [ qwUC detOrient, qwUC xDet, qwUC yDet
-  , qwUC yDetMin, qwUC yDetMax, qwUC xDetMin, qwUC xDetMax
+  [ qwUC detOrient, qwUC detPos, qwUC detStart, qwUC detLength
   , qwUC tFinal, qwUC xPos, qwUC yPos ]
   (dqdWr tHit)
   []
@@ -96,34 +95,37 @@ detHitRC = makeRC "detHitRC"
   (nounPhraseSP "First detector intersection (hit time and hit location)")
   EmptyS detHitRel
 
--- The relation shows both detector orientations joined by logical OR.
+-- detPos = perpendicular-axis coordinate; detStart..detStart+detLength = extent.
+-- Vertical (d_orient=0): at x=detPos, y in [detStart, detStart+detLength]
+-- Horizontal (d_orient=1): at y=detPos, x in [detStart, detStart+detLength]
 detHitRel :: ModelExpr
 detHitRel =
-  (  (sy xPos $= sy xDet)
-     $&& (sy yHit $>= sy yDetMin)
-     $&& (sy yHit $<= sy yDetMax)
+  (  (sy xPos $= sy detPos)
+     $&& (sy yHit $>= sy detStart)
+     $&& (sy yHit $<= (sy detStart $+ sy detLength))
   )
   $||
-  (  (sy yPos $= sy yDet)
-     $&& (sy xHit $>= sy xDetMin)
-     $&& (sy xHit $<= sy xDetMax)
+  (  (sy yPos $= sy detPos)
+     $&& (sy xHit $>= sy detStart)
+     $&& (sy xHit $<= (sy detStart $+ sy detLength))
   )
 
 detHitNote :: Sentence
 detHitNote = foldlSent
   [ S "The detector is modelled as a line segment that may be vertical or horizontal,"
   , S "selected by the orientation flag" +:+ ch detOrient +:+ sParen (refS detectorLineDD) :+: S "."
-  , S "Vertical case (D = 0): the detector is at x =" +:+ ch xDet
-  , S "with y-bounds [" <> ch yDetMin <> S "," +:+ ch yDetMax <> S "]."
-  , S "The hit condition is x(t) = x_det and y(t) in [y_min, y_max]."
-  , S "Horizontal case (D = 1): the detector is at y =" +:+ ch yDet
-  , S "with x-bounds [" <> ch xDetMin <> S "," +:+ ch xDetMax <> S "]."
-  , S "The hit condition is y(t) = y_det and x(t) in [x_min, x_max]."
+  , ch detPos +:+ S "is the coordinate along the detector's perpendicular axis."
+  , ch detStart +:+ S "is the start of the segment along its parallel axis;"
+  , S "the segment extends to" +:+ ch detStart +:+ S "+" +:+ ch detLength :+: S "."
+  , S "Vertical case (D = 0): the detector is at x =" +:+ ch detPos
+  , S "spanning y from" +:+ ch detStart +:+ S "to" +:+ ch detStart +:+ S "+" +:+ ch detLength :+: S "."
+  , S "Horizontal case (D = 1): the detector is at y =" +:+ ch detPos
+  , S "spanning x from" +:+ ch detStart +:+ S "to" +:+ ch detStart +:+ S "+" +:+ ch detLength :+: S "."
   , S "In both cases," +:+ ch tHit
   , S "is the minimum t in [0," +:+ ch tFinal <> S "] satisfying the condition."
   , S "If no such t exists,"
   , ch tHit +:+ S "is set to -1 as a sentinel value indicating no hit,"
-  , S "and the hit coordinates are undefined."
+  , S "and the hit coordinates are set to -1."
   , S "The trajectory (x(t), y(t)) is provided by" +:+. refS stateEvolIM
   , S "Applicable assumptions:" +:+ refS fullDetection +:+ S "and" +:+ refS lineDetector
   ]

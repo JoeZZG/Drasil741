@@ -12,36 +12,39 @@ public class DetectorHit {
     /** \brief Finds time of detector hit
         \param traj trajectory
         \param d_orient detector orientation
-        \param x_det detector line x-position
-        \param y_det detector line y-position
-        \param y_detMin detector y min
-        \param y_detMax detector y max
-        \param x_detMin detector x min
-        \param x_detMax detector x max
+        \param d_pos detector line position
+        \param d_start detector start coordinate
+        \param d_len detector line length
+        \param t_final final simulation time
         \return Finds time of detector hit
     */
-    public static double func_t_hit(List<List<double>> traj, int d_orient, double x_det, double y_det, double y_detMin, double y_detMax, double x_detMin, double x_detMax) {
+    public static double func_t_hit(List<List<double>> traj, int d_orient, double d_pos, double d_start, double d_len, double t_final) {
         int num_pts = traj.Count;
         double t_best = -1;
-        double x_best = 0;
-        double y_best = 0;
+        double x_best = -1;
+        double y_best = -1;
+        double t_step = t_final / (num_pts - 1);
+        double x_prev = traj[0][0];
+        double y_prev = traj[0][1];
         for (int i = 0; i < num_pts; i += 1) {
             double x_i = traj[i][0];
             double y_i = traj[i][1];
             if (d_orient == 0) {
-                if (t_best < 0 && (x_i >= x_det && (y_i >= y_detMin && y_i <= y_detMax))) {
-                    t_best = 0;
+                if (t_best < 0 && (x_prev < d_pos && (x_i >= d_pos && (y_i >= d_start && y_i <= d_start + d_len)))) {
+                    t_best = i * t_step;
                     x_best = x_i;
                     y_best = y_i;
                 }
             }
             else {
-                if (t_best < 0 && (y_i >= y_det && (x_i >= x_detMin && x_i <= x_detMax))) {
-                    t_best = 0;
+                if (t_best < 0 && (y_prev < d_pos && (y_i >= d_pos && (x_i >= d_start && x_i <= d_start + d_len)))) {
+                    t_best = i * t_step;
                     x_best = x_i;
                     y_best = y_i;
                 }
             }
+            x_prev = x_i;
+            y_prev = y_i;
         }
         return t_best;
     }
@@ -49,36 +52,39 @@ public class DetectorHit {
     /** \brief Finds x-coordinate of detector hit
         \param traj trajectory
         \param d_orient detector orientation
-        \param x_det detector line x-position
-        \param y_det detector line y-position
-        \param y_detMin detector y min
-        \param y_detMax detector y max
-        \param x_detMin detector x min
-        \param x_detMax detector x max
+        \param d_pos detector line position
+        \param d_start detector start coordinate
+        \param d_len detector line length
+        \param t_final final simulation time
         \return Finds x-coordinate of detector hit
     */
-    public static double func_x_hit(List<List<double>> traj, int d_orient, double x_det, double y_det, double y_detMin, double y_detMax, double x_detMin, double x_detMax) {
+    public static double func_x_hit(List<List<double>> traj, int d_orient, double d_pos, double d_start, double d_len, double t_final) {
         int num_pts = traj.Count;
         double t_best = -1;
-        double x_best = 0;
-        double y_best = 0;
+        double x_best = -1;
+        double y_best = -1;
+        double t_step = t_final / (num_pts - 1);
+        double x_prev = traj[0][0];
+        double y_prev = traj[0][1];
         for (int i = 0; i < num_pts; i += 1) {
             double x_i = traj[i][0];
             double y_i = traj[i][1];
             if (d_orient == 0) {
-                if (t_best < 0 && (x_i >= x_det && (y_i >= y_detMin && y_i <= y_detMax))) {
-                    t_best = 0;
+                if (t_best < 0 && (x_prev < d_pos && (x_i >= d_pos && (y_i >= d_start && y_i <= d_start + d_len)))) {
+                    t_best = i * t_step;
                     x_best = x_i;
                     y_best = y_i;
                 }
             }
             else {
-                if (t_best < 0 && (y_i >= y_det && (x_i >= x_detMin && x_i <= x_detMax))) {
-                    t_best = 0;
+                if (t_best < 0 && (y_prev < d_pos && (y_i >= d_pos && (x_i >= d_start && x_i <= d_start + d_len)))) {
+                    t_best = i * t_step;
                     x_best = x_i;
                     y_best = y_i;
                 }
             }
+            x_prev = x_i;
+            y_prev = y_i;
         }
         return x_best;
     }
@@ -86,36 +92,39 @@ public class DetectorHit {
     /** \brief Finds y-coordinate of detector hit
         \param traj trajectory
         \param d_orient detector orientation
-        \param x_det detector line x-position
-        \param y_det detector line y-position
-        \param y_detMin detector y min
-        \param y_detMax detector y max
-        \param x_detMin detector x min
-        \param x_detMax detector x max
+        \param d_pos detector line position
+        \param d_start detector start coordinate
+        \param d_len detector line length
+        \param t_final final simulation time
         \return Finds y-coordinate of detector hit
     */
-    public static double func_y_hit(List<List<double>> traj, int d_orient, double x_det, double y_det, double y_detMin, double y_detMax, double x_detMin, double x_detMax) {
+    public static double func_y_hit(List<List<double>> traj, int d_orient, double d_pos, double d_start, double d_len, double t_final) {
         int num_pts = traj.Count;
         double t_best = -1;
-        double x_best = 0;
-        double y_best = 0;
+        double x_best = -1;
+        double y_best = -1;
+        double t_step = t_final / (num_pts - 1);
+        double x_prev = traj[0][0];
+        double y_prev = traj[0][1];
         for (int i = 0; i < num_pts; i += 1) {
             double x_i = traj[i][0];
             double y_i = traj[i][1];
             if (d_orient == 0) {
-                if (t_best < 0 && (x_i >= x_det && (y_i >= y_detMin && y_i <= y_detMax))) {
-                    t_best = 0;
+                if (t_best < 0 && (x_prev < d_pos && (x_i >= d_pos && (y_i >= d_start && y_i <= d_start + d_len)))) {
+                    t_best = i * t_step;
                     x_best = x_i;
                     y_best = y_i;
                 }
             }
             else {
-                if (t_best < 0 && (y_i >= y_det && (x_i >= x_detMin && x_i <= x_detMax))) {
-                    t_best = 0;
+                if (t_best < 0 && (y_prev < d_pos && (y_i >= d_pos && (x_i >= d_start && x_i <= d_start + d_len)))) {
+                    t_best = i * t_step;
                     x_best = x_i;
                     y_best = y_i;
                 }
             }
+            x_prev = x_i;
+            y_prev = y_i;
         }
         return y_best;
     }

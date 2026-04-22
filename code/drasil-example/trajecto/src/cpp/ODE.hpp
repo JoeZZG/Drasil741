@@ -39,8 +39,9 @@ class ODE {
             \param y_grid grid origin y-coordinate (m)
             \param w region width (m)
             \param h region height (m)
+            \param N_col number of grid columns
         */
-        ODE(double κ, double E_x0, double E_x1, double E_x2, double E_x3, double E_x4, double E_x5, double E_y0, double E_y1, double E_y2, double E_y3, double E_y4, double E_y5, double B_0, double B_1, double B_2, double B_3, double B_4, double B_5, double x_grid, double y_grid, double w, double h);
+        ODE(double κ, double E_x0, double E_x1, double E_x2, double E_x3, double E_x4, double E_x5, double E_y0, double E_y1, double E_y2, double E_y3, double E_y4, double E_y5, double B_0, double B_1, double B_2, double B_3, double B_4, double B_5, double x_grid, double y_grid, double w, double h, int N_col);
         /** \brief function representation of ODE system
             \param s dependent variables (m)
             \param ds change in dependent variables (m)
@@ -72,6 +73,7 @@ class ODE {
         double y_grid;
         double w;
         double h;
+        int N_col;
         
 };
 

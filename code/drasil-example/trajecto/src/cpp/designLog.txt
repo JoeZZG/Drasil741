@@ -5,7 +5,7 @@ Constant Structure selected as Store Bundled.
 Constant Representation selected as Const.
 Implementation Type selected as Program.
 Software Constraint Behaviour selected as Warning.
-Physical Constraint Behaviour selected as Warning.
+Physical Constraint Behaviour selected as Exception.
 Comments selected as CommentFunc CommentClass CommentMod.
 Dox Verbosity selected as Quiet.
 Dates selected as Hide.
@@ -20,7 +20,7 @@ Successfully matched String with String.
 Successfully matched Actor "Constants" with Object "Constants".
 Successfully matched Actor "InputParameters" with Object "InputParameters".
 Successfully matched Real with Double.
-Successfully matched Vect (Vect Real) with List (List Double).
+Successfully matched Integer with Integer.
 Successfully matched Vect Real with List Double.
 Successfully matched Actor "ODE" with Object "ODE".
 Successfully matched Actor "Populate" with Object "Populate".
@@ -28,3 +28,4 @@ Successfully matched Actor "boost::numeric::odeint::runge_kutta_dopri5<vector<do
 Successfully matched Actor "auto" with Object "auto".
 Successfully matched Void with Void.
 Successfully matched Natural with Integer.
+Successfully matched Vect (Vect Real) with List (List Double).

@@ -42,15 +42,12 @@ public class InputParameters {
         \param B_4 magnetic flux density in region 4 (T)
         \param B_5 magnetic flux density in region 5 (T)
         \param d_orient detector orientation
-        \param x_det detector line x-position (m)
-        \param y_det detector line y-position (m)
-        \param y_detMin minimum y-coordinate of detector (m)
-        \param y_detMax maximum y-coordinate of detector (m)
-        \param x_detMin minimum x-coordinate of detector (m)
-        \param x_detMax maximum x-coordinate of detector (m)
+        \param d_pos detector line position (m)
+        \param d_start detector start coordinate (m)
+        \param d_len detector line length (m)
         \param t_final final simulation time (s)
     */
-    public static void get_input(string filename, out double m, out double q, out double x_0, out double y_0, out double v_x0, out double v_y0, out double N, out double N_col, out double w, out double h, out double x_grid, out double y_grid, out double E_x0, out double E_x1, out double E_x2, out double E_x3, out double E_x4, out double E_x5, out double E_y0, out double E_y1, out double E_y2, out double E_y3, out double E_y4, out double E_y5, out double B_0, out double B_1, out double B_2, out double B_3, out double B_4, out double B_5, out double d_orient, out double x_det, out double y_det, out double y_detMin, out double y_detMax, out double x_detMin, out double x_detMax, out double t_final) {
+    public static void get_input(string filename, out double m, out double q, out double x_0, out double y_0, out double v_x0, out double v_y0, out int N, out int N_col, out double w, out double h, out double x_grid, out double y_grid, out double E_x0, out double E_x1, out double E_x2, out double E_x3, out double E_x4, out double E_x5, out double E_y0, out double E_y1, out double E_y2, out double E_y3, out double E_y4, out double E_y5, out double B_0, out double B_1, out double B_2, out double B_3, out double B_4, out double B_5, out int d_orient, out double d_pos, out double d_start, out double d_len, out double t_final) {
         StreamReader infile;
         infile = new StreamReader(filename);
         infile.ReadLine();
@@ -66,9 +63,9 @@ public class InputParameters {
         infile.ReadLine();
         v_y0 = Double.Parse(infile.ReadLine());
         infile.ReadLine();
-        N = Double.Parse(infile.ReadLine());
+        N = Int32.Parse(infile.ReadLine());
         infile.ReadLine();
-        N_col = Double.Parse(infile.ReadLine());
+        N_col = Int32.Parse(infile.ReadLine());
         infile.ReadLine();
         w = Double.Parse(infile.ReadLine());
         infile.ReadLine();
@@ -114,25 +111,20 @@ public class InputParameters {
         infile.ReadLine();
         B_5 = Double.Parse(infile.ReadLine());
         infile.ReadLine();
-        d_orient = Double.Parse(infile.ReadLine());
+        d_orient = Int32.Parse(infile.ReadLine());
         infile.ReadLine();
-        x_det = Double.Parse(infile.ReadLine());
+        d_pos = Double.Parse(infile.ReadLine());
         infile.ReadLine();
-        y_det = Double.Parse(infile.ReadLine());
+        d_start = Double.Parse(infile.ReadLine());
         infile.ReadLine();
-        y_detMin = Double.Parse(infile.ReadLine());
-        infile.ReadLine();
-        y_detMax = Double.Parse(infile.ReadLine());
-        infile.ReadLine();
-        x_detMin = Double.Parse(infile.ReadLine());
-        infile.ReadLine();
-        x_detMax = Double.Parse(infile.ReadLine());
+        d_len = Double.Parse(infile.ReadLine());
         infile.ReadLine();
         t_final = Double.Parse(infile.ReadLine());
         infile.Close();
     }
     
     /** \brief Calculates values that can be immediately derived from the inputs
+        \param d_orient detector orientation
         \param q particle charge (C)
         \param m particle mass (kg)
         \param x_0 initial x-position (m)
@@ -146,22 +138,14 @@ public class InputParameters {
         \param y_grid grid origin y-coordinate (m)
         \param w region width (m)
         \param h region height (m)
-        \param d_orient detector orientation
-        \param x_det detector line x-position (m)
-        \param y_det detector line y-position (m)
-        \param y_detMin minimum y-coordinate of detector (m)
-        \param y_detMax maximum y-coordinate of detector (m)
-        \param x_detMin minimum x-coordinate of detector (m)
-        \param x_detMax maximum x-coordinate of detector (m)
         \param κ charge-to-mass ratio (C/kg)
         \param s_0 initial state vector
         \param E_vect electric field vector (N/C)
         \param B_vect magnetic flux density vector (T)
         \param R_i rectangular field region
         \param E_vect_i electric field in region i (N/C)
-        \param L_det detector line
     */
-    public static void derived_values(double q, double m, double x_0, double y_0, double v_x0, double v_y0, double E_x0, double E_y0, double B_0, double x_grid, double y_grid, double w, double h, double d_orient, double x_det, double y_det, double y_detMin, double y_detMax, double x_detMin, double x_detMax, out double κ, out double s_0, out double E_vect, out double B_vect, out double R_i, out double E_vect_i, out double L_det) {
+    public static void derived_values(ref int d_orient, double q, double m, double x_0, double y_0, double v_x0, double v_y0, double E_x0, double E_y0, double B_0, double x_grid, double y_grid, double w, double h, out double κ, out double s_0, out double E_vect, out double B_vect, out double R_i, out double E_vect_i) {
         κ = q / m;
         
         s_0 = new double[] {x_0, y_0, v_x0, v_y0};
@@ -174,7 +158,7 @@ public class InputParameters {
         
         E_vect_i = new double[] {E_x0, E_y0, B_0};
         
-        L_det = new double[] {d_orient, x_det, y_det, y_detMin, y_detMax, x_detMin, x_detMax};
+        d_orient = d_orient;
     }
     
     /** \brief Verifies that input values satisfy the physical constraints and software constraints
@@ -191,15 +175,12 @@ public class InputParameters {
         \param x_grid grid origin x-coordinate (m)
         \param y_grid grid origin y-coordinate (m)
         \param d_orient detector orientation
-        \param x_det detector line x-position (m)
-        \param y_det detector line y-position (m)
-        \param y_detMin minimum y-coordinate of detector (m)
-        \param y_detMax maximum y-coordinate of detector (m)
-        \param x_detMin minimum x-coordinate of detector (m)
-        \param x_detMax maximum x-coordinate of detector (m)
+        \param d_pos detector line position (m)
+        \param d_start detector start coordinate (m)
+        \param d_len detector line length (m)
         \param t_final final simulation time (s)
     */
-    public static void input_constraints(double m, double q, double x_0, double y_0, double v_x0, double v_y0, double N, double N_col, double w, double h, double x_grid, double y_grid, double d_orient, double x_det, double y_det, double y_detMin, double y_detMax, double x_detMin, double x_detMax, double t_final) {
+    public static void input_constraints(double m, double q, double x_0, double y_0, double v_x0, double v_y0, int N, int N_col, double w, double h, double x_grid, double y_grid, int d_orient, double d_pos, double d_start, double d_len, double t_final) {
         if (!(Constants.m_min <= m && m <= Constants.m_max)) {
             Console.Write("Warning: ");
             Console.Write("m has value ");
@@ -275,58 +256,67 @@ public class InputParameters {
         }
         
         if (!(m > 0.0)) {
-            Console.Write("Warning: ");
             Console.Write("m has value ");
             Console.Write(m);
-            Console.Write(", but is suggested to be ");
+            Console.Write(", but is expected to be ");
             Console.Write("above ");
             Console.Write(0.0);
             Console.WriteLine(".");
+            throw new Exception("InputError");
         }
         if (!(N > 0.0)) {
-            Console.Write("Warning: ");
             Console.Write("N has value ");
             Console.Write(N);
-            Console.Write(", but is suggested to be ");
+            Console.Write(", but is expected to be ");
             Console.Write("above ");
             Console.Write(0.0);
             Console.WriteLine(".");
+            throw new Exception("InputError");
         }
         if (!(N_col > 0.0)) {
-            Console.Write("Warning: ");
             Console.Write("N_col has value ");
             Console.Write(N_col);
-            Console.Write(", but is suggested to be ");
+            Console.Write(", but is expected to be ");
             Console.Write("above ");
             Console.Write(0.0);
             Console.WriteLine(".");
+            throw new Exception("InputError");
         }
         if (!(w > 0.0)) {
-            Console.Write("Warning: ");
             Console.Write("w has value ");
             Console.Write(w);
-            Console.Write(", but is suggested to be ");
+            Console.Write(", but is expected to be ");
             Console.Write("above ");
             Console.Write(0.0);
             Console.WriteLine(".");
+            throw new Exception("InputError");
         }
         if (!(h > 0.0)) {
-            Console.Write("Warning: ");
             Console.Write("h has value ");
             Console.Write(h);
-            Console.Write(", but is suggested to be ");
+            Console.Write(", but is expected to be ");
             Console.Write("above ");
             Console.Write(0.0);
             Console.WriteLine(".");
+            throw new Exception("InputError");
+        }
+        if (!(d_len > 0.0)) {
+            Console.Write("d_len has value ");
+            Console.Write(d_len);
+            Console.Write(", but is expected to be ");
+            Console.Write("above ");
+            Console.Write(0.0);
+            Console.WriteLine(".");
+            throw new Exception("InputError");
         }
         if (!(t_final > 0.0)) {
-            Console.Write("Warning: ");
             Console.Write("t_final has value ");
             Console.Write(t_final);
-            Console.Write(", but is suggested to be ");
+            Console.Write(", but is expected to be ");
             Console.Write("above ");
             Console.Write(0.0);
             Console.WriteLine(".");
+            throw new Exception("InputError");
         }
     }
 }

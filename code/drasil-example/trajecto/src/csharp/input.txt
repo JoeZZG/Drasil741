@@ -11,9 +11,9 @@
 # initial y-velocity (m/s)
 0.0
 # number of field regions
-6.0
+6
 # number of grid columns
-3.0
+3
 # region width (m)
 0.1
 # region height (m)
@@ -59,18 +59,12 @@
 # magnetic flux density in region 5 (T)
 1.0e-4
 # detector orientation
-0.0
-# detector line x-position (m)
+0
+# detector line position (m)
 5.0e-2
-# detector line y-position (m)
-0.0
-# minimum y-coordinate of detector (m)
+# detector start coordinate (m)
 -5.0e-2
-# maximum y-coordinate of detector (m)
-5.0e-2
-# minimum x-coordinate of detector (m)
-0.0
-# maximum x-coordinate of detector (m)
+# detector line length (m)
 0.1
 # final simulation time (s)
 7.0e-7

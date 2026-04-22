@@ -5,7 +5,7 @@ import Control.Lens ((^.))
 import Drasil.Database (HasUID(..))
 
 import Drasil.Code.Classes (IsArgumentName, Callable)
-import Drasil.Code.CodeExpr.Lang (CodeExpr(FCall, New, Message, Field))
+import Drasil.Code.CodeExpr.Lang (CodeExpr(FCall, New, Message, Field, IntDivC, IntModC))
 import Drasil.Code.CodeVar (CodeIdea, CodeVarChunk)
 import Language.Drasil.Symbol (HasSymbol)
 import Language.Drasil.Space (Space(Actor), HasSpace(..))
@@ -35,6 +35,14 @@ class CodeExprC r where
   applyWithNamedArgs :: (HasUID f, HasSymbol f, HasUID a, IsArgumentName a) => f
     -> [r] -> [(a, r)] -> r
 
+  -- | Integer (floor) division: @a // b@.
+  infixl 7 $//
+  ($//) :: r -> r -> r
+
+  -- | Integer modulo: @a % b@.
+  infixl 7 $%
+  ($%) :: r -> r -> r
+
 instance CodeExprC CodeExpr where
   new c ps = New (c ^. uid) ps []
 
@@ -61,3 +69,6 @@ instance CodeExprC CodeExpr where
   applyWithNamedArgs f [] [] = sy f
   applyWithNamedArgs f ps ns = FCall (f ^. uid) ps (zip (map ((^. uid) . fst) ns)
     (map snd ns))
+
+  ($//) = IntDivC
+  ($%)  = IntModC

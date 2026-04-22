@@ -91,7 +91,13 @@ $\symbf{B}$ & Magnetic flux density vector & ${\text{T}}$
 \\
 ${\symbf{B}_{i}}$ & Magnetic flux density in region i & ${\text{T}}$
 \\
+${d_{\text{len}}}$ & Detector line length & ${\text{m}}$
+\\
 ${d_{\text{orient}}}$ & Detector orientation & --
+\\
+${d_{\text{pos}}}$ & Detector line position & ${\text{m}}$
+\\
+${d_{\text{start}}}$ & Detector start coordinate & ${\text{m}}$
 \\
 ${E_{\text{x}0}}$ & X-electric field in region 0 & $\frac{\text{N}}{\text{C}}$
 \\
@@ -124,8 +130,6 @@ ${\symbf{E}_{i}}$ & Electric field in region i & $\frac{\text{N}}{\text{C}}$
 $\symbf{F}$ & Force & ${\text{N}}$
 \\
 $h$ & Region height & ${\text{m}}$
-\\
-${L_{\text{det}}}$ & Detector line & --
 \\
 $m$ & Particle mass & ${\text{kg}}$
 \\
@@ -177,12 +181,6 @@ $x$ & X-position of the particle & ${\text{m}}$
 \\
 ${x_{0}}$ & Initial x-position & ${\text{m}}$
 \\
-${x_{\text{det}}}$ & Detector line x-position & ${\text{m}}$
-\\
-${x_{\text{detMax}}}$ & Maximum x-coordinate of detector & ${\text{m}}$
-\\
-${x_{\text{detMin}}}$ & Minimum x-coordinate of detector & ${\text{m}}$
-\\
 ${x_{\text{grid}}}$ & Grid origin x-coordinate & ${\text{m}}$
 \\
 ${x_{\text{hit}}}$ & X-coordinate of impact point & ${\text{m}}$
@@ -190,12 +188,6 @@ ${x_{\text{hit}}}$ & X-coordinate of impact point & ${\text{m}}$
 $y$ & Y-position of the particle & ${\text{m}}$
 \\
 ${y_{0}}$ & Initial y-position & ${\text{m}}$
-\\
-${y_{\text{det}}}$ & Detector line y-position & ${\text{m}}$
-\\
-${y_{\text{detMax}}}$ & Maximum y-coordinate of detector & ${\text{m}}$
-\\
-${y_{\text{detMin}}}$ & Minimum y-coordinate of detector & ${\text{m}}$
 \\
 ${y_{\text{grid}}}$ & Grid origin y-coordinate & ${\text{m}}$
 \\
@@ -335,7 +327,7 @@ The physical system of Trajecto, as shown in \hyperref[Figure:trajectoPhysSys]{F
 \end{figure}
 \subsubsection{Goal Statements}
 \label{Sec:GoalStmt}
-Given the particle properties ($q$ and $m$), initial conditions (${x_{0}}$, ${y_{0}}$, ${v_{\text{x}0}}$, ${v_{\text{y}0}}$), the number of field regions $N$, the per-region fields (${E_{\text{x}0}}$, ${E_{\text{y}0}}$, ${B_{0}}$ for each region), the region grid specification (${x_{\text{grid}}}$, ${y_{\text{grid}}}$, $w$, $h$), the detector specification (${d_{\text{orient}}}$, ${x_{\text{det}}}$, ${y_{\text{det}}}$ and extent), and the simulation time ${t_{\text{final}}}$, the goal statements are:
+Given the particle properties ($q$ and $m$), initial conditions (${x_{0}}$, ${y_{0}}$, ${v_{\text{x}0}}$, ${v_{\text{y}0}}$), the number of field regions $N$, the per-region fields (${E_{\text{x}0}}$, ${E_{\text{y}0}}$, ${B_{0}}$ for each region), the region grid specification (${x_{\text{grid}}}$, ${y_{\text{grid}}}$, $w$, $h$), the detector specification (${d_{\text{orient}}}$, ${d_{\text{pos}}}$, ${d_{\text{start}}}$, ${d_{\text{len}}}$), and the simulation time ${t_{\text{final}}}$, the goal statements are:
 
 \begin{description}[font=\normalfont]
 \item[predictTrajectory:\phantomsection\label{predictTrajectory}]{Predict the trajectory of a charged particle under prescribed electric and magnetic fields, computed using \hyperref[IM:stateEvol]{IM:stateEvol}.}
@@ -886,33 +878,25 @@ RefBy & \hyperref[IM:stateEvol]{IM:stateEvol} and \hyperref[lookupActiveRegion]{
 \phantomsection 
 \label{DD:detectorLine}
 \\ \midrule
-Label & Detector line
+Label & Detector orientation
         
 \\ \midrule
-Symbol & ${L_{\text{det}}}$
+Symbol & ${d_{\text{orient}}}$
          
 \\ \midrule
 Units & Unitless
         
 \\ \midrule
 Equation & \begin{displaymath}
-           \resizeExpression{{L_{\text{det}}}=\begin{bmatrix}
-                                              {d_{\text{orient}}} & {x_{\text{det}}} & {y_{\text{det}}} & {y_{\text{detMin}}} & {y_{\text{detMax}}} & {x_{\text{detMin}}} & {x_{\text{detMax}}}
-                                              \end{bmatrix}}
+           \resizeExpression{{d_{\text{orient}}}={d_{\text{orient}}}}
            \end{displaymath}
 \\ \midrule
 Description & \begin{symbDescription}
-              \item{${L_{\text{det}}}$ is the detector line (Unitless)}
               \item{${d_{\text{orient}}}$ is the detector orientation (Unitless)}
-              \item{${x_{\text{det}}}$ is the detector line x-position (${\text{m}}$)}
-              \item{${y_{\text{det}}}$ is the detector line y-position (${\text{m}}$)}
-              \item{${y_{\text{detMin}}}$ is the minimum y-coordinate of detector (${\text{m}}$)}
-              \item{${y_{\text{detMax}}}$ is the maximum y-coordinate of detector (${\text{m}}$)}
-              \item{${x_{\text{detMin}}}$ is the minimum x-coordinate of detector (${\text{m}}$)}
-              \item{${x_{\text{detMax}}}$ is the maximum x-coordinate of detector (${\text{m}}$)}
+              \item{${d_{\text{orient}}}$ is the detector orientation (Unitless)}
               \end{symbDescription}
 \\ \midrule
-Notes & ${L_{\text{det}}}$ is the detector line segment. When ${d_{\text{orient}}}$ = 0 (vertical), the detector is L\_det is the set of (x,y) such that x = x\_det and y in [y\_min(det), y\_max(det)]. When ${d_{\text{orient}}}$ = 1 (horizontal), the detector is L\_det is the set of (x,y) such that y = y\_det and x in [x\_min(det), x\_max(det)]. The detector orientation and bounds are user-specified, per \hyperref[lineDetector]{A:lineDetector}.
+Notes & ${d_{\text{orient}}}$ selects the detector orientation. When ${d_{\text{orient}}}$ = 0 (vertical), the detector is the vertical line x = ${d_{\text{pos}}}$ spanning y from ${d_{\text{start}}}$ to ${d_{\text{start}}}$ + ${d_{\text{len}}}$. When ${d_{\text{orient}}}$ = 1 (horizontal), the detector is the horizontal line y = ${d_{\text{pos}}}$ spanning x from ${d_{\text{start}}}$ to ${d_{\text{start}}}$ + ${d_{\text{len}}}$. The detector orientation and bounds are user-specified, per \hyperref[lineDetector]{A:lineDetector}.
         
 \\ \midrule
 Source & --
@@ -988,7 +972,7 @@ RefBy & \hyperref[IM:detHit]{IM:detHit}, \hyperref[reportOutputs]{FR:Report-Outp
 Label & First detector intersection (hit time and hit location)
         
 \\ \midrule
-Input & ${d_{\text{orient}}}$, ${x_{\text{det}}}$, ${y_{\text{det}}}$, ${y_{\text{detMin}}}$, ${y_{\text{detMax}}}$, ${x_{\text{detMin}}}$, ${x_{\text{detMax}}}$, ${t_{\text{final}}}$, $x$, $y$
+Input & ${d_{\text{orient}}}$, ${d_{\text{pos}}}$, ${d_{\text{start}}}$, ${d_{\text{len}}}$, ${t_{\text{final}}}$, $x$, $y$
         
 \\ \midrule
 Output & ${t_{\text{hit}}}$
@@ -999,23 +983,20 @@ Input Constraints &
 Output Constraints & 
 \\ \midrule
 Equation & \begin{displaymath}
-           \resizeExpression{x={x_{\text{det}}}\land{}{y_{\text{hit}}}\geq{}{y_{\text{detMin}}}\land{}{y_{\text{hit}}}\leq{}{y_{\text{detMax}}}\lor{}y={y_{\text{det}}}\land{}{x_{\text{hit}}}\geq{}{x_{\text{detMin}}}\land{}{x_{\text{hit}}}\leq{}{x_{\text{detMax}}}}
+           \resizeExpression{x={d_{\text{pos}}}\land{}{y_{\text{hit}}}\geq{}{d_{\text{start}}}\land{}{y_{\text{hit}}}\leq{}{d_{\text{start}}}+{d_{\text{len}}}\lor{}y={d_{\text{pos}}}\land{}{x_{\text{hit}}}\geq{}{d_{\text{start}}}\land{}{x_{\text{hit}}}\leq{}{d_{\text{start}}}+{d_{\text{len}}}}
            \end{displaymath}
 \\ \midrule
 Description & \begin{symbDescription}
               \item{$x$ is the x-position of the particle (${\text{m}}$)}
-              \item{${x_{\text{det}}}$ is the detector line x-position (${\text{m}}$)}
+              \item{${d_{\text{pos}}}$ is the detector line position (${\text{m}}$)}
               \item{${y_{\text{hit}}}$ is the y-coordinate of impact point (${\text{m}}$)}
-              \item{${y_{\text{detMin}}}$ is the minimum y-coordinate of detector (${\text{m}}$)}
-              \item{${y_{\text{detMax}}}$ is the maximum y-coordinate of detector (${\text{m}}$)}
+              \item{${d_{\text{start}}}$ is the detector start coordinate (${\text{m}}$)}
+              \item{${d_{\text{len}}}$ is the detector line length (${\text{m}}$)}
               \item{$y$ is the y-position of the particle (${\text{m}}$)}
-              \item{${y_{\text{det}}}$ is the detector line y-position (${\text{m}}$)}
               \item{${x_{\text{hit}}}$ is the x-coordinate of impact point (${\text{m}}$)}
-              \item{${x_{\text{detMin}}}$ is the minimum x-coordinate of detector (${\text{m}}$)}
-              \item{${x_{\text{detMax}}}$ is the maximum x-coordinate of detector (${\text{m}}$)}
               \end{symbDescription}
 \\ \midrule
-Notes & The detector is modelled as a line segment that may be vertical or horizontal, selected by the orientation flag ${d_{\text{orient}}}$ (\hyperref[DD:detectorLine]{DD:detectorLine}). Vertical case (D = 0): the detector is at x = ${x_{\text{det}}}$ with y-bounds [${y_{\text{detMin}}}$, ${y_{\text{detMax}}}$]. The hit condition is x(t) = x\_det and y(t) in [y\_min, y\_max]. Horizontal case (D = 1): the detector is at y = ${y_{\text{det}}}$ with x-bounds [${x_{\text{detMin}}}$, ${x_{\text{detMax}}}$]. The hit condition is y(t) = y\_det and x(t) in [x\_min, x\_max]. In both cases, ${t_{\text{hit}}}$ is the minimum t in [0, ${t_{\text{final}}}$] satisfying the condition. If no such t exists, ${t_{\text{hit}}}$ is set to -1 as a sentinel value indicating no hit, and the hit coordinates are undefined. The trajectory (x(t), y(t)) is provided by \hyperref[IM:stateEvol]{IM:stateEvol}. Applicable assumptions: \hyperref[fullDetection]{A:fullDetection} and \hyperref[lineDetector]{A:lineDetector}.
+Notes & The detector is modelled as a line segment that may be vertical or horizontal, selected by the orientation flag ${d_{\text{orient}}}$ (\hyperref[DD:detectorLine]{DD:detectorLine}). ${d_{\text{pos}}}$ is the coordinate along the detector's perpendicular axis. ${d_{\text{start}}}$ is the start of the segment along its parallel axis; the segment extends to ${d_{\text{start}}}$ + ${d_{\text{len}}}$. Vertical case (D = 0): the detector is at x = ${d_{\text{pos}}}$ spanning y from ${d_{\text{start}}}$ to ${d_{\text{start}}}$ + ${d_{\text{len}}}$. Horizontal case (D = 1): the detector is at y = ${d_{\text{pos}}}$ spanning x from ${d_{\text{start}}}$ to ${d_{\text{start}}}$ + ${d_{\text{len}}}$. In both cases, ${t_{\text{hit}}}$ is the minimum t in [0, ${t_{\text{final}}}$] satisfying the condition. If no such t exists, ${t_{\text{hit}}}$ is set to -1 as a sentinel value indicating no hit, and the hit coordinates are set to -1. The trajectory (x(t), y(t)) is provided by \hyperref[IM:stateEvol]{IM:stateEvol}. Applicable assumptions: \hyperref[fullDetection]{A:fullDetection} and \hyperref[lineDetector]{A:lineDetector}.
         
 \\ \midrule
 Source & --
@@ -1036,7 +1017,13 @@ The \hyperref[Table:InDataConstraints]{Input Data Constraints Table} shows the d
 {colspec={l l l l l}, rowhead=1, hline{1,Z}=\heavyrulewidth, hline{2}=\lightrulewidth}
 \textbf{Var} & \textbf{Physical Constraints} & \textbf{Software Constraints} & \textbf{Typical Value} & \textbf{Uncert.}
 \\
+${d_{\text{len}}}$ & ${d_{\text{len}}}\gt{}0$ & -- & $0.1$ ${\text{m}}$ & 0.0$\%$
+\\
 ${d_{\text{orient}}}$ & -- & $0\leq{}{d_{\text{orient}}}\leq{}1$ & $0$ & 0.0$\%$
+\\
+${d_{\text{pos}}}$ & -- & -- & $0.1$ ${\text{m}}$ & 0.0$\%$
+\\
+${d_{\text{start}}}$ & -- & -- & $0.0-5$ ${\text{m}}$ & 0.0$\%$
 \\
 $h$ & $h\gt{}0$ & -- & $0.1$ ${\text{m}}$ & 0.0$\%$
 \\
@@ -1058,21 +1045,9 @@ $w$ & $w\gt{}0$ & -- & $0.1$ ${\text{m}}$ & 0.0$\%$
 \\
 ${x_{0}}$ & -- & -- & $0$ ${\text{m}}$ & 0.0$\%$
 \\
-${x_{\text{det}}}$ & -- & -- & $0.1$ ${\text{m}}$ & 0.0$\%$
-\\
-${x_{\text{detMax}}}$ & -- & -- & $0.1$ ${\text{m}}$ & 0.0$\%$
-\\
-${x_{\text{detMin}}}$ & -- & -- & $0$ ${\text{m}}$ & 0.0$\%$
-\\
 ${x_{\text{grid}}}$ & -- & -- & $0$ ${\text{m}}$ & 0.0$\%$
 \\
 ${y_{0}}$ & -- & -- & $0$ ${\text{m}}$ & 0.0$\%$
-\\
-${y_{\text{det}}}$ & -- & -- & $0$ ${\text{m}}$ & 0.0$\%$
-\\
-${y_{\text{detMax}}}$ & -- & -- & $0.05$ ${\text{m}}$ & 0.0$\%$
-\\
-${y_{\text{detMin}}}$ & -- & -- & $0.0-5$ ${\text{m}}$ & 0.0$\%$
 \\
 ${y_{\text{grid}}}$ & -- & -- & $0$ ${\text{m}}$ & 0.0$\%$
 \label{Table:InDataConstraints}
@@ -1136,7 +1111,13 @@ ${B_{4}}$ & Magnetic flux density in region 4 & ${\text{T}}$
 \\
 ${B_{5}}$ & Magnetic flux density in region 5 & ${\text{T}}$
 \\
+${d_{\text{len}}}$ & Detector line length & ${\text{m}}$
+\\
 ${d_{\text{orient}}}$ & Detector orientation & --
+\\
+${d_{\text{pos}}}$ & Detector line position & ${\text{m}}$
+\\
+${d_{\text{start}}}$ & Detector start coordinate & ${\text{m}}$
 \\
 ${E_{\text{x}0}}$ & X-electric field in region 0 & $\frac{\text{N}}{\text{C}}$
 \\
@@ -1182,21 +1163,9 @@ $w$ & Region width & ${\text{m}}$
 \\
 ${x_{0}}$ & Initial x-position & ${\text{m}}$
 \\
-${x_{\text{det}}}$ & Detector line x-position & ${\text{m}}$
-\\
-${x_{\text{detMax}}}$ & Maximum x-coordinate of detector & ${\text{m}}$
-\\
-${x_{\text{detMin}}}$ & Minimum x-coordinate of detector & ${\text{m}}$
-\\
 ${x_{\text{grid}}}$ & Grid origin x-coordinate & ${\text{m}}$
 \\
 ${y_{0}}$ & Initial y-position & ${\text{m}}$
-\\
-${y_{\text{det}}}$ & Detector line y-position & ${\text{m}}$
-\\
-${y_{\text{detMax}}}$ & Maximum y-coordinate of detector & ${\text{m}}$
-\\
-${y_{\text{detMin}}}$ & Minimum y-coordinate of detector & ${\text{m}}$
 \\
 ${y_{\text{grid}}}$ & Grid origin y-coordinate & ${\text{m}}$
 \label{Table:ReqInputs}

@@ -6,89 +6,98 @@
 ## \brief Finds time of detector hit
 # \param traj trajectory
 # \param d_orient detector orientation
-# \param x_det detector line x-position
-# \param y_det detector line y-position
-# \param y_detMin detector y min
-# \param y_detMax detector y max
-# \param x_detMin detector x min
-# \param x_detMax detector x max
+# \param d_pos detector line position
+# \param d_start detector start coordinate
+# \param d_len detector line length
+# \param t_final final simulation time
 # \return Finds time of detector hit
-def func_t_hit(traj, d_orient, x_det, y_det, y_detMin, y_detMax, x_detMin, x_detMax):
+def det_t_hit(traj, d_orient, d_pos, d_start, d_len, t_final):
     num_pts = len(traj)
     t_best = -1
-    x_best = 0
-    y_best = 0
+    x_best = -1
+    y_best = -1
+    t_step = t_final / (num_pts - 1)
+    x_prev = traj[0][0]
+    y_prev = traj[0][1]
     for i in range(0, num_pts, 1):
         x_i = traj[i][0]
         y_i = traj[i][1]
         if d_orient == 0:
-            if t_best < 0 and (x_i >= x_det and (y_i >= y_detMin and y_i <= y_detMax)):
-                t_best = 0
+            if t_best < 0 and ((x_prev < d_pos and x_i >= d_pos or x_prev >= d_pos and x_i < d_pos) and (y_i >= d_start and y_i <= d_start + d_len)):
+                t_best = i * t_step
                 x_best = x_i
                 y_best = y_i
         else:
-            if t_best < 0 and (y_i >= y_det and (x_i >= x_detMin and x_i <= x_detMax)):
-                t_best = 0
+            if t_best < 0 and ((y_prev < d_pos and y_i >= d_pos or y_prev >= d_pos and y_i < d_pos) and (x_i >= d_start and x_i <= d_start + d_len)):
+                t_best = i * t_step
                 x_best = x_i
                 y_best = y_i
+        x_prev = x_i
+        y_prev = y_i
     return t_best
 
 ## \brief Finds x-coordinate of detector hit
 # \param traj trajectory
 # \param d_orient detector orientation
-# \param x_det detector line x-position
-# \param y_det detector line y-position
-# \param y_detMin detector y min
-# \param y_detMax detector y max
-# \param x_detMin detector x min
-# \param x_detMax detector x max
+# \param d_pos detector line position
+# \param d_start detector start coordinate
+# \param d_len detector line length
+# \param t_final final simulation time
 # \return Finds x-coordinate of detector hit
-def func_x_hit(traj, d_orient, x_det, y_det, y_detMin, y_detMax, x_detMin, x_detMax):
+def det_x_hit(traj, d_orient, d_pos, d_start, d_len, t_final):
     num_pts = len(traj)
     t_best = -1
-    x_best = 0
-    y_best = 0
+    x_best = -1
+    y_best = -1
+    t_step = t_final / (num_pts - 1)
+    x_prev = traj[0][0]
+    y_prev = traj[0][1]
     for i in range(0, num_pts, 1):
         x_i = traj[i][0]
         y_i = traj[i][1]
         if d_orient == 0:
-            if t_best < 0 and (x_i >= x_det and (y_i >= y_detMin and y_i <= y_detMax)):
-                t_best = 0
+            if t_best < 0 and ((x_prev < d_pos and x_i >= d_pos or x_prev >= d_pos and x_i < d_pos) and (y_i >= d_start and y_i <= d_start + d_len)):
+                t_best = i * t_step
                 x_best = x_i
                 y_best = y_i
         else:
-            if t_best < 0 and (y_i >= y_det and (x_i >= x_detMin and x_i <= x_detMax)):
-                t_best = 0
+            if t_best < 0 and ((y_prev < d_pos and y_i >= d_pos or y_prev >= d_pos and y_i < d_pos) and (x_i >= d_start and x_i <= d_start + d_len)):
+                t_best = i * t_step
                 x_best = x_i
                 y_best = y_i
+        x_prev = x_i
+        y_prev = y_i
     return x_best
 
 ## \brief Finds y-coordinate of detector hit
 # \param traj trajectory
 # \param d_orient detector orientation
-# \param x_det detector line x-position
-# \param y_det detector line y-position
-# \param y_detMin detector y min
-# \param y_detMax detector y max
-# \param x_detMin detector x min
-# \param x_detMax detector x max
+# \param d_pos detector line position
+# \param d_start detector start coordinate
+# \param d_len detector line length
+# \param t_final final simulation time
 # \return Finds y-coordinate of detector hit
-def func_y_hit(traj, d_orient, x_det, y_det, y_detMin, y_detMax, x_detMin, x_detMax):
+def det_y_hit(traj, d_orient, d_pos, d_start, d_len, t_final):
     num_pts = len(traj)
     t_best = -1
-    x_best = 0
-    y_best = 0
+    x_best = -1
+    y_best = -1
+    t_step = t_final / (num_pts - 1)
+    x_prev = traj[0][0]
+    y_prev = traj[0][1]
     for i in range(0, num_pts, 1):
         x_i = traj[i][0]
         y_i = traj[i][1]
         if d_orient == 0:
-            if t_best < 0 and (x_i >= x_det and (y_i >= y_detMin and y_i <= y_detMax)):
-                t_best = 0
+            if t_best < 0 and ((x_prev < d_pos and x_i >= d_pos or x_prev >= d_pos and x_i < d_pos) and (y_i >= d_start and y_i <= d_start + d_len)):
+                t_best = i * t_step
                 x_best = x_i
                 y_best = y_i
         else:
-            if t_best < 0 and (y_i >= y_det and (x_i >= x_detMin and x_i <= x_detMax)):
-                t_best = 0
+            if t_best < 0 and ((y_prev < d_pos and y_i >= d_pos or y_prev >= d_pos and y_i < d_pos) and (x_i >= d_start and x_i <= d_start + d_len)):
+                t_best = i * t_step
                 x_best = x_i
                 y_best = y_i
+        x_prev = x_i
+        y_prev = y_i
     return y_best

@@ -90,6 +90,11 @@ data CodeExpr where
   -- | Set operator for Element + Set -> Bool
   ESBBinaryOp :: ESBBinOp -> CodeExpr -> CodeExpr -> CodeExpr
 
+  -- | Integer (floor) division: a // b
+  IntDivC :: CodeExpr -> CodeExpr -> CodeExpr
+  -- | Integer modulo: a % b
+  IntModC :: CodeExpr -> CodeExpr -> CodeExpr
+
   -- | Operators are generalized arithmetic operators over a 'DomainDesc'
   --   of an 'Expr'.  Could be called BigOp.
   --   ex: Summation is represented via 'Add' over a discrete domain.

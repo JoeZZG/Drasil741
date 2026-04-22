@@ -232,9 +232,24 @@
                   <td><em>T</em></td>
                 </tr>
                 <tr>
+                  <td><em>d<sub>len</sub></em></td>
+                  <td>Detector line length</td>
+                  <td><em>m</em></td>
+                </tr>
+                <tr>
                   <td><em>d<sub>orient</sub></em></td>
                   <td>Detector orientation</td>
                   <td>--</td>
+                </tr>
+                <tr>
+                  <td><em>d<sub>pos</sub></em></td>
+                  <td>Detector line position</td>
+                  <td><em>m</em></td>
+                </tr>
+                <tr>
+                  <td><em>d<sub>start</sub></em></td>
+                  <td>Detector start coordinate</td>
+                  <td><em>m</em></td>
                 </tr>
                 <tr>
                   <td><em>E<sub>x0</sub></em></td>
@@ -315,11 +330,6 @@
                   <td><em>h</em></td>
                   <td>Region height</td>
                   <td><em>m</em></td>
-                </tr>
-                <tr>
-                  <td><em>L<sub>det</sub></em></td>
-                  <td>Detector line</td>
-                  <td>--</td>
                 </tr>
                 <tr>
                   <td><em>m</em></td>
@@ -447,21 +457,6 @@
                   <td><em>m</em></td>
                 </tr>
                 <tr>
-                  <td><em>x<sub>det</sub></em></td>
-                  <td>Detector line x-position</td>
-                  <td><em>m</em></td>
-                </tr>
-                <tr>
-                  <td><em>x<sub>detMax</sub></em></td>
-                  <td>Maximum x-coordinate of detector</td>
-                  <td><em>m</em></td>
-                </tr>
-                <tr>
-                  <td><em>x<sub>detMin</sub></em></td>
-                  <td>Minimum x-coordinate of detector</td>
-                  <td><em>m</em></td>
-                </tr>
-                <tr>
                   <td><em>x<sub>grid</sub></em></td>
                   <td>Grid origin x-coordinate</td>
                   <td><em>m</em></td>
@@ -479,21 +474,6 @@
                 <tr>
                   <td><em>y<sub>0</sub></em></td>
                   <td>Initial y-position</td>
-                  <td><em>m</em></td>
-                </tr>
-                <tr>
-                  <td><em>y<sub>det</sub></em></td>
-                  <td>Detector line y-position</td>
-                  <td><em>m</em></td>
-                </tr>
-                <tr>
-                  <td><em>y<sub>detMax</sub></em></td>
-                  <td>Maximum y-coordinate of detector</td>
-                  <td><em>m</em></td>
-                </tr>
-                <tr>
-                  <td><em>y<sub>detMin</sub></em></td>
-                  <td>Minimum y-coordinate of detector</td>
                   <td><em>m</em></td>
                 </tr>
                 <tr>
@@ -761,7 +741,7 @@
               <div class="subsubsection">
                 <h3>Goal Statements</h3>
                 <p class="paragraph">
-                  Given the particle properties (<em>q</em> and <em>m</em>), initial conditions (<em>x<sub>0</sub></em>, <em>y<sub>0</sub></em>, <em>v<sub>x0</sub></em>, <em>v<sub>y0</sub></em>), the number of field regions <em>N</em>, the per-region fields (<em>E<sub>x0</sub></em>, <em>E<sub>y0</sub></em>, <em>B<sub>0</sub></em> for each region), the region grid specification (<em>x<sub>grid</sub></em>, <em>y<sub>grid</sub></em>, <em>w</em>, <em>h</em>), the detector specification (<em>d<sub>orient</sub></em>, <em>x<sub>det</sub></em>, <em>y<sub>det</sub></em> and extent), and the simulation time <em>t<sub>final</sub></em>, the goal statements are:
+                  Given the particle properties (<em>q</em> and <em>m</em>), initial conditions (<em>x<sub>0</sub></em>, <em>y<sub>0</sub></em>, <em>v<sub>x0</sub></em>, <em>v<sub>y0</sub></em>), the number of field regions <em>N</em>, the per-region fields (<em>E<sub>x0</sub></em>, <em>E<sub>y0</sub></em>, <em>B<sub>0</sub></em> for each region), the region grid specification (<em>x<sub>grid</sub></em>, <em>y<sub>grid</sub></em>, <em>w</em>, <em>h</em>), the detector specification (<em>d<sub>orient</sub></em>, <em>d<sub>pos</sub></em>, <em>d<sub>start</sub></em>, <em>d<sub>len</sub></em>), and the simulation time <em>t<sub>final</sub></em>, the goal statements are:
                 </p>
                 <div class="list">
                   <p>
@@ -1677,11 +1657,11 @@
                     </tr>
                     <tr>
                       <th>Label</th>
-                      <td><p class="paragraph">Detector line</p></td>
+                      <td><p class="paragraph">Detector orientation</p></td>
                     </tr>
                     <tr>
                       <th>Symbol</th>
-                      <td><p class="paragraph"><em>L<sub>det</sub></em></p></td>
+                      <td><p class="paragraph"><em>d<sub>orient</sub></em></p></td>
                     </tr>
                     <tr>
                       <th>Units</th>
@@ -1689,37 +1669,17 @@
                     </tr>
                     <tr>
                       <th>Equation</th>
-                      <td>
-                        \[{L_{\text{det}}}=\begin{bmatrix}
-                                           {d_{\text{orient}}} & {x_{\text{det}}} & {y_{\text{det}}} & {y_{\text{detMin}}} & {y_{\text{detMax}}} & {x_{\text{detMin}}} & {x_{\text{detMax}}}
-                                           \end{bmatrix}\]
-                      </td>
+                      <td>\[{d_{\text{orient}}}={d_{\text{orient}}}\]</td>
                     </tr>
                     <tr>
                       <th>Description</th>
                       <td>
                         <ul class="hide-list-style-no-indent">
-                          <li><em>L<sub>det</sub></em> is the detector line (Unitless)</li>
                           <li>
                             <em>d<sub>orient</sub></em> is the detector orientation (Unitless)
                           </li>
                           <li>
-                            <em>x<sub>det</sub></em> is the detector line x-position (<em>m</em>)
-                          </li>
-                          <li>
-                            <em>y<sub>det</sub></em> is the detector line y-position (<em>m</em>)
-                          </li>
-                          <li>
-                            <em>y<sub>detMin</sub></em> is the minimum y-coordinate of detector (<em>m</em>)
-                          </li>
-                          <li>
-                            <em>y<sub>detMax</sub></em> is the maximum y-coordinate of detector (<em>m</em>)
-                          </li>
-                          <li>
-                            <em>x<sub>detMin</sub></em> is the minimum x-coordinate of detector (<em>m</em>)
-                          </li>
-                          <li>
-                            <em>x<sub>detMax</sub></em> is the maximum x-coordinate of detector (<em>m</em>)
+                            <em>d<sub>orient</sub></em> is the detector orientation (Unitless)
                           </li>
                         </ul>
                       </td>
@@ -1728,7 +1688,7 @@
                       <th>Notes</th>
                       <td>
                         <p class="paragraph">
-                          <em>L<sub>det</sub></em> is the detector line segment. When <em>d<sub>orient</sub></em> = 0 (vertical), the detector is L_det is the set of (x,y) such that x = x_det and y in [y_min(det), y_max(det)]. When <em>d<sub>orient</sub></em> = 1 (horizontal), the detector is L_det is the set of (x,y) such that y = y_det and x in [x_min(det), x_max(det)]. The detector orientation and bounds are user-specified, per <a href=#lineDetector>A:lineDetector</a>.
+                          <em>d<sub>orient</sub></em> selects the detector orientation. When <em>d<sub>orient</sub></em> = 0 (vertical), the detector is the vertical line x = <em>d<sub>pos</sub></em> spanning y from <em>d<sub>start</sub></em> to <em>d<sub>start</sub></em> + <em>d<sub>len</sub></em>. When <em>d<sub>orient</sub></em> = 1 (horizontal), the detector is the horizontal line y = <em>d<sub>pos</sub></em> spanning x from <em>d<sub>start</sub></em> to <em>d<sub>start</sub></em> + <em>d<sub>len</sub></em>. The detector orientation and bounds are user-specified, per <a href=#lineDetector>A:lineDetector</a>.
                         </p>
                       </td>
                     </tr>
@@ -1856,7 +1816,7 @@
                       <th>Input</th>
                       <td>
                         <p class="paragraph">
-                          <em>d<sub>orient</sub></em>, <em>x<sub>det</sub></em>, <em>y<sub>det</sub></em>, <em>y<sub>detMin</sub></em>, <em>y<sub>detMax</sub></em>, <em>x<sub>detMin</sub></em>, <em>x<sub>detMax</sub></em>, <em>t<sub>final</sub></em>, <em>x</em>, <em>y</em>
+                          <em>d<sub>orient</sub></em>, <em>d<sub>pos</sub></em>, <em>d<sub>start</sub></em>, <em>d<sub>len</sub></em>, <em>t<sub>final</sub></em>, <em>x</em>, <em>y</em>
                         </p>
                       </td>
                     </tr>
@@ -1875,7 +1835,7 @@
                     <tr>
                       <th>Equation</th>
                       <td>
-                        \[x={x_{\text{det}}}\land{}{y_{\text{hit}}}\geq{}{y_{\text{detMin}}}\land{}{y_{\text{hit}}}\leq{}{y_{\text{detMax}}}\lor{}y={y_{\text{det}}}\land{}{x_{\text{hit}}}\geq{}{x_{\text{detMin}}}\land{}{x_{\text{hit}}}\leq{}{x_{\text{detMax}}}\]
+                        \[x={d_{\text{pos}}}\land{}{y_{\text{hit}}}\geq{}{d_{\text{start}}}\land{}{y_{\text{hit}}}\leq{}{d_{\text{start}}}+{d_{\text{len}}}\lor{}y={d_{\text{pos}}}\land{}{x_{\text{hit}}}\geq{}{d_{\text{start}}}\land{}{x_{\text{hit}}}\leq{}{d_{\text{start}}}+{d_{\text{len}}}\]
                       </td>
                     </tr>
                     <tr>
@@ -1884,29 +1844,20 @@
                         <ul class="hide-list-style-no-indent">
                           <li><em>x</em> is the x-position of the particle (<em>m</em>)</li>
                           <li>
-                            <em>x<sub>det</sub></em> is the detector line x-position (<em>m</em>)
+                            <em>d<sub>pos</sub></em> is the detector line position (<em>m</em>)
                           </li>
                           <li>
                             <em>y<sub>hit</sub></em> is the y-coordinate of impact point (<em>m</em>)
                           </li>
                           <li>
-                            <em>y<sub>detMin</sub></em> is the minimum y-coordinate of detector (<em>m</em>)
+                            <em>d<sub>start</sub></em> is the detector start coordinate (<em>m</em>)
                           </li>
                           <li>
-                            <em>y<sub>detMax</sub></em> is the maximum y-coordinate of detector (<em>m</em>)
+                            <em>d<sub>len</sub></em> is the detector line length (<em>m</em>)
                           </li>
                           <li><em>y</em> is the y-position of the particle (<em>m</em>)</li>
                           <li>
-                            <em>y<sub>det</sub></em> is the detector line y-position (<em>m</em>)
-                          </li>
-                          <li>
                             <em>x<sub>hit</sub></em> is the x-coordinate of impact point (<em>m</em>)
-                          </li>
-                          <li>
-                            <em>x<sub>detMin</sub></em> is the minimum x-coordinate of detector (<em>m</em>)
-                          </li>
-                          <li>
-                            <em>x<sub>detMax</sub></em> is the maximum x-coordinate of detector (<em>m</em>)
                           </li>
                         </ul>
                       </td>
@@ -1915,7 +1866,7 @@
                       <th>Notes</th>
                       <td>
                         <p class="paragraph">
-                          The detector is modelled as a line segment that may be vertical or horizontal, selected by the orientation flag <em>d<sub>orient</sub></em> (<a href=#DD:detectorLine>DD:detectorLine</a>). Vertical case (D = 0): the detector is at x = <em>x<sub>det</sub></em> with y-bounds [<em>y<sub>detMin</sub></em>, <em>y<sub>detMax</sub></em>]. The hit condition is x(t) = x_det and y(t) in [y_min, y_max]. Horizontal case (D = 1): the detector is at y = <em>y<sub>det</sub></em> with x-bounds [<em>x<sub>detMin</sub></em>, <em>x<sub>detMax</sub></em>]. The hit condition is y(t) = y_det and x(t) in [x_min, x_max]. In both cases, <em>t<sub>hit</sub></em> is the minimum t in [0, <em>t<sub>final</sub></em>] satisfying the condition. If no such t exists, <em>t<sub>hit</sub></em> is set to -1 as a sentinel value indicating no hit, and the hit coordinates are undefined. The trajectory (x(t), y(t)) is provided by <a href=#IM:stateEvol>IM:stateEvol</a>. Applicable assumptions: <a href=#fullDetection>A:fullDetection</a> and <a href=#lineDetector>A:lineDetector</a>.
+                          The detector is modelled as a line segment that may be vertical or horizontal, selected by the orientation flag <em>d<sub>orient</sub></em> (<a href=#DD:detectorLine>DD:detectorLine</a>). <em>d<sub>pos</sub></em> is the coordinate along the detector's perpendicular axis. <em>d<sub>start</sub></em> is the start of the segment along its parallel axis; the segment extends to <em>d<sub>start</sub></em> + <em>d<sub>len</sub></em>. Vertical case (D = 0): the detector is at x = <em>d<sub>pos</sub></em> spanning y from <em>d<sub>start</sub></em> to <em>d<sub>start</sub></em> + <em>d<sub>len</sub></em>. Horizontal case (D = 1): the detector is at y = <em>d<sub>pos</sub></em> spanning x from <em>d<sub>start</sub></em> to <em>d<sub>start</sub></em> + <em>d<sub>len</sub></em>. In both cases, <em>t<sub>hit</sub></em> is the minimum t in [0, <em>t<sub>final</sub></em>] satisfying the condition. If no such t exists, <em>t<sub>hit</sub></em> is set to -1 as a sentinel value indicating no hit, and the hit coordinates are set to -1. The trajectory (x(t), y(t)) is provided by <a href=#IM:stateEvol>IM:stateEvol</a>. Applicable assumptions: <a href=#fullDetection>A:fullDetection</a> and <a href=#lineDetector>A:lineDetector</a>.
                         </p>
                       </td>
                     </tr>
@@ -1951,12 +1902,33 @@
                       <th><span title="typical uncertainty">Uncert.</span></th>
                     </tr>
                     <tr>
+                      <td><em>d<sub>len</sub></em></td>
+                      <td><em>d<sub>len</sub>&thinsp;&gt;&thinsp;0</em></td>
+                      <td>--</td>
+                      <td><em>0.1</em> <em>m</em></td>
+                      <td>0.0<em>%</em></td>
+                    </tr>
+                    <tr>
                       <td><em>d<sub>orient</sub></em></td>
                       <td>--</td>
                       <td>
                         <em>0&thinsp;&le;&thinsp;d<sub>orient</sub>&thinsp;&le;&thinsp;1</em>
                       </td>
                       <td><em>0</em></td>
+                      <td>0.0<em>%</em></td>
+                    </tr>
+                    <tr>
+                      <td><em>d<sub>pos</sub></em></td>
+                      <td>--</td>
+                      <td>--</td>
+                      <td><em>0.1</em> <em>m</em></td>
+                      <td>0.0<em>%</em></td>
+                    </tr>
+                    <tr>
+                      <td><em>d<sub>start</sub></em></td>
+                      <td>--</td>
+                      <td>--</td>
+                      <td><em>0.0-5</em> <em>m</em></td>
                       <td>0.0<em>%</em></td>
                     </tr>
                     <tr>
@@ -2042,27 +2014,6 @@
                       <td>0.0<em>%</em></td>
                     </tr>
                     <tr>
-                      <td><em>x<sub>det</sub></em></td>
-                      <td>--</td>
-                      <td>--</td>
-                      <td><em>0.1</em> <em>m</em></td>
-                      <td>0.0<em>%</em></td>
-                    </tr>
-                    <tr>
-                      <td><em>x<sub>detMax</sub></em></td>
-                      <td>--</td>
-                      <td>--</td>
-                      <td><em>0.1</em> <em>m</em></td>
-                      <td>0.0<em>%</em></td>
-                    </tr>
-                    <tr>
-                      <td><em>x<sub>detMin</sub></em></td>
-                      <td>--</td>
-                      <td>--</td>
-                      <td><em>0</em> <em>m</em></td>
-                      <td>0.0<em>%</em></td>
-                    </tr>
-                    <tr>
                       <td><em>x<sub>grid</sub></em></td>
                       <td>--</td>
                       <td>--</td>
@@ -2074,27 +2025,6 @@
                       <td>--</td>
                       <td>--</td>
                       <td><em>0</em> <em>m</em></td>
-                      <td>0.0<em>%</em></td>
-                    </tr>
-                    <tr>
-                      <td><em>y<sub>det</sub></em></td>
-                      <td>--</td>
-                      <td>--</td>
-                      <td><em>0</em> <em>m</em></td>
-                      <td>0.0<em>%</em></td>
-                    </tr>
-                    <tr>
-                      <td><em>y<sub>detMax</sub></em></td>
-                      <td>--</td>
-                      <td>--</td>
-                      <td><em>0.05</em> <em>m</em></td>
-                      <td>0.0<em>%</em></td>
-                    </tr>
-                    <tr>
-                      <td><em>y<sub>detMin</sub></em></td>
-                      <td>--</td>
-                      <td>--</td>
-                      <td><em>0.0-5</em> <em>m</em></td>
                       <td>0.0<em>%</em></td>
                     </tr>
                     <tr>
@@ -2223,9 +2153,24 @@
                   <td><em>T</em></td>
                 </tr>
                 <tr>
+                  <td><em>d<sub>len</sub></em></td>
+                  <td>Detector line length</td>
+                  <td><em>m</em></td>
+                </tr>
+                <tr>
                   <td><em>d<sub>orient</sub></em></td>
                   <td>Detector orientation</td>
                   <td>--</td>
+                </tr>
+                <tr>
+                  <td><em>d<sub>pos</sub></em></td>
+                  <td>Detector line position</td>
+                  <td><em>m</em></td>
+                </tr>
+                <tr>
+                  <td><em>d<sub>start</sub></em></td>
+                  <td>Detector start coordinate</td>
+                  <td><em>m</em></td>
                 </tr>
                 <tr>
                   <td><em>E<sub>x0</sub></em></td>
@@ -2338,21 +2283,6 @@
                   <td><em>m</em></td>
                 </tr>
                 <tr>
-                  <td><em>x<sub>det</sub></em></td>
-                  <td>Detector line x-position</td>
-                  <td><em>m</em></td>
-                </tr>
-                <tr>
-                  <td><em>x<sub>detMax</sub></em></td>
-                  <td>Maximum x-coordinate of detector</td>
-                  <td><em>m</em></td>
-                </tr>
-                <tr>
-                  <td><em>x<sub>detMin</sub></em></td>
-                  <td>Minimum x-coordinate of detector</td>
-                  <td><em>m</em></td>
-                </tr>
-                <tr>
                   <td><em>x<sub>grid</sub></em></td>
                   <td>Grid origin x-coordinate</td>
                   <td><em>m</em></td>
@@ -2360,21 +2290,6 @@
                 <tr>
                   <td><em>y<sub>0</sub></em></td>
                   <td>Initial y-position</td>
-                  <td><em>m</em></td>
-                </tr>
-                <tr>
-                  <td><em>y<sub>det</sub></em></td>
-                  <td>Detector line y-position</td>
-                  <td><em>m</em></td>
-                </tr>
-                <tr>
-                  <td><em>y<sub>detMax</sub></em></td>
-                  <td>Maximum y-coordinate of detector</td>
-                  <td><em>m</em></td>
-                </tr>
-                <tr>
-                  <td><em>y<sub>detMin</sub></em></td>
-                  <td>Minimum y-coordinate of detector</td>
                   <td><em>m</em></td>
                 </tr>
                 <tr>

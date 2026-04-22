@@ -7,15 +7,19 @@
 --   ds[2]/dt = kappa*(Ex_curr + s[3]*B_curr)   (dvx/dt = κ(Ex + vy·B))
 --   ds[3]/dt = kappa*(Ey_curr - s[2]*B_curr)   (dvy/dt = κ(Ey − vx·B))
 --
--- where Ex_curr, Ey_curr, B_curr are selected from the per-region arrays
+-- where Ex_curr, Ey_curr, B_curr are selected from per-region flat arrays
 -- via completeCase based on the particle's current (x,y) position.
--- The grid has a fixed maximum of 6 regions (3 columns × 2 rows).
--- Unused regions can have zero-valued fields.
+-- The flat region index k = row*N_col + col, where:
+--   col = floor((x - x_grid) / w)
+--   row = floor((y - y_grid) / h)
+-- Supports up to maxRegions = 6 regions total (N_col up to 3 cols × 2 rows).
+-- The step size is derived from t_final / 1000 for scale-independent integration.
 module Drasil.Trajecto.ODEs (trajectODEOpts, trajectODEInfo) where
 
 import Language.Drasil (ExprC(..), LiteralC(int, exactDbl, dbl))
 import Language.Drasil.Code (odeInfo, odeOptions, quantvar, ODEInfo,
   ODEMethod(RK45), ODEOptions)
+import Drasil.Code.CodeExpr (CodeExprC(($//) , ($%)), CodeExpr)
 
 import Data.Drasil.Quantities.Physics (time)
 
@@ -26,14 +30,16 @@ import Drasil.Trajecto.Unitals
   , b0, b1, b2, b3, b4, b5
   , xPos0, yPos0, xVel0, yVel0, tFinal
   , particleState
-  , xGrid, yGrid, regionWidth, regionHeight )
+  , xGrid, yGrid, regionWidth, regionHeight, nCols )
 
--- | ODE solver options: RK45, tolerances 1e-6, step size 1e-9 s.
+-- | ODE solver options: RK45, tolerances 1e-6.
+-- Step size = t_final / 1000, computed at runtime, giving ~1000 samples
+-- regardless of the physical time scale (electron-scale or macro-scale).
 trajectODEOpts :: ODEOptions
-trajectODEOpts = odeOptions RK45 (dbl 1.0e-6) (dbl 1.0e-6) (dbl 1.0e-9)
+trajectODEOpts = odeOptions RK45 (dbl 1.0e-6) (dbl 1.0e-6) (sy tFinal $/ exactDbl 1000)
 
 -- | ODE info for the charged-particle trajectory (IM1).
--- Parameters include the per-region field arrays and grid geometry.
+-- Parameters include the per-region field arrays, grid geometry, and N_col.
 trajectODEInfo :: ODEInfo
 trajectODEInfo = odeInfo
   (quantvar time)           -- independent variable t
@@ -48,7 +54,8 @@ trajectODEInfo = odeInfo
   , quantvar xGrid          -- grid origin x
   , quantvar yGrid          -- grid origin y
   , quantvar regionWidth    -- w (region width)
-  , quantvar regionHeight ] -- h (region height)
+  , quantvar regionHeight   -- h (region height)
+  , quantvar nCols ]        -- N_col (number of columns)
   (exactDbl 0)              -- t_init = 0
   (sy tFinal)               -- t_final from user input
   -- Initial conditions: [x0, y0, vx0, vy0] from user input
@@ -66,53 +73,57 @@ px, py :: (ExprC e, LiteralC e) => e
 px = idx (sy particleState) (int 0)
 py = idx (sy particleState) (int 1)
 
--- | Check if particle is in region at grid position (col, row).
--- x ∈ [xGrid + col*w, xGrid + (col+1)*w) and y ∈ [yGrid + row*h, yGrid + (row+1)*h)
-inRegion :: (ExprC e, LiteralC e) => Int -> Int -> e
-inRegion col row =
+-- | Dynamic region lookup: given flat index k, check if particle is in that region.
+-- col = k % N_col,  row = k // N_col
+-- x ∈ [xGrid + col*w, xGrid + (col+1)*w) ∧ y ∈ [yGrid + row*h, yGrid + (row+1)*h)
+inRegionDyn :: Int -> CodeExpr
+inRegionDyn k =
   (px $>= xLo) $&& (px $< xHi) $&& (py $>= yLo) $&& (py $< yHi)
   where
-    xLo = sy xGrid $+ (exactDbl (fromIntegral col)     $* sy regionWidth)
-    xHi = sy xGrid $+ (exactDbl (fromIntegral (col+1)) $* sy regionWidth)
-    yLo = sy yGrid $+ (exactDbl (fromIntegral row)     $* sy regionHeight)
-    yHi = sy yGrid $+ (exactDbl (fromIntegral (row+1)) $* sy regionHeight)
+    kE   = int (fromIntegral k)
+    col  = kE $% sy nCols
+    row  = kE $// sy nCols
+    xLo  = sy xGrid $+ (col $* sy regionWidth)
+    xHi  = sy xGrid $+ ((col $+ int 1) $* sy regionWidth)
+    yLo  = sy yGrid $+ (row $* sy regionHeight)
+    yHi  = sy yGrid $+ ((row $+ int 1) $* sy regionHeight)
 
--- | Piecewise field lookup for Ex: 6 regions (3 cols × 2 rows), default 0.
-currentEx :: (ExprC e, LiteralC e) => e
+-- | Piecewise field lookup for Ex: up to 6 regions (flat index 0..5), default 0.
+currentEx :: CodeExpr
 currentEx = completeCase
-  [ (sy ex0, inRegion 0 0)
-  , (sy ex1, inRegion 1 0)
-  , (sy ex2, inRegion 2 0)
-  , (sy ex3, inRegion 0 1)
-  , (sy ex4, inRegion 1 1)
-  , (sy ex5, inRegion 2 1)
-  , (exactDbl 0,  otherwise')
+  [ (sy ex0, inRegionDyn 0)
+  , (sy ex1, inRegionDyn 1)
+  , (sy ex2, inRegionDyn 2)
+  , (sy ex3, inRegionDyn 3)
+  , (sy ex4, inRegionDyn 4)
+  , (sy ex5, inRegionDyn 5)
+  , (exactDbl 0, otherwise')
   ]
 
 -- | Piecewise field lookup for Ey.
-currentEy :: (ExprC e, LiteralC e) => e
+currentEy :: CodeExpr
 currentEy = completeCase
-  [ (sy ey0, inRegion 0 0)
-  , (sy ey1, inRegion 1 0)
-  , (sy ey2, inRegion 2 0)
-  , (sy ey3, inRegion 0 1)
-  , (sy ey4, inRegion 1 1)
-  , (sy ey5, inRegion 2 1)
-  , (exactDbl 0,  otherwise')
+  [ (sy ey0, inRegionDyn 0)
+  , (sy ey1, inRegionDyn 1)
+  , (sy ey2, inRegionDyn 2)
+  , (sy ey3, inRegionDyn 3)
+  , (sy ey4, inRegionDyn 4)
+  , (sy ey5, inRegionDyn 5)
+  , (exactDbl 0, otherwise')
   ]
 
 -- | Piecewise field lookup for B.
-currentB :: (ExprC e, LiteralC e) => e
+currentB :: CodeExpr
 currentB = completeCase
-  [ (sy b0, inRegion 0 0)
-  , (sy b1, inRegion 1 0)
-  , (sy b2, inRegion 2 0)
-  , (sy b3, inRegion 0 1)
-  , (sy b4, inRegion 1 1)
-  , (sy b5, inRegion 2 1)
-  , (exactDbl 0,  otherwise')
+  [ (sy b0, inRegionDyn 0)
+  , (sy b1, inRegionDyn 1)
+  , (sy b2, inRegionDyn 2)
+  , (sy b3, inRegionDyn 3)
+  , (sy b4, inRegionDyn 4)
+  , (sy b5, inRegionDyn 5)
+  , (exactDbl 0, otherwise')
   ]
 
 -- | "Otherwise" condition: always true (catch-all for outside all regions).
-otherwise' :: (ExprC e, LiteralC e) => e
+otherwise' :: CodeExpr
 otherwise' = exactDbl 1 $> exactDbl 0

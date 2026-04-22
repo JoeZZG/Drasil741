@@ -11,7 +11,7 @@ digraph "refvsref" {
     "theory:stateEvolRC" -> "dataDefn:Ei";
     "theory:stateEvolRC" -> "theory:kin2DRC";
     "theory:stateEvolRC" -> "theory:dyn2DRC";
-    "theory:detHitRC" -> "dataDefn:Ldet";
+    "theory:detHitRC" -> "dataDefn:d_orient";
     "theory:detHitRC" -> "theory:stateEvolRC";
     "dataDefn:kappa" [shape=box, color=black, style=filled, fillcolor="paleturquoise1", label="DD:qOverm"];
     "dataDefn:s0" [shape=box, color=black, style=filled, fillcolor="paleturquoise1", label="DD:initState"];
@@ -19,10 +19,10 @@ digraph "refvsref" {
     "dataDefn:Bvec" [shape=box, color=black, style=filled, fillcolor="paleturquoise1", label="DD:bField"];
     "dataDefn:Ri" [shape=box, color=black, style=filled, fillcolor="paleturquoise1", label="DD:regionRect"];
     "dataDefn:Ei" [shape=box, color=black, style=filled, fillcolor="paleturquoise1", label="DD:fieldsByRegion"];
-    "dataDefn:Ldet" [shape=box, color=black, style=filled, fillcolor="paleturquoise1", label="DD:detectorLine"];
+    "dataDefn:d_orient" [shape=box, color=black, style=filled, fillcolor="paleturquoise1", label="DD:detectorLine"];
     subgraph "DD" {
         rank="same";
-        "dataDefn:kappa" "dataDefn:s0" "dataDefn:Evec" "dataDefn:Bvec" "dataDefn:Ri" "dataDefn:Ei" "dataDefn:Ldet";
+        "dataDefn:kappa" "dataDefn:s0" "dataDefn:Evec" "dataDefn:Bvec" "dataDefn:Ri" "dataDefn:Ei" "dataDefn:d_orient";
     }
     "theory:velocityTM" [shape=box, color=black, style=filled, fillcolor="pink", label="TM:velocity"];
     "theory:accelerationTM" [shape=box, color=black, style=filled, fillcolor="pink", label="TM:acceleration"];

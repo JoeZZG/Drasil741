@@ -8,7 +8,7 @@ import Data.Drasil.Concepts.Documentation (goalStmtDom)
 
 import Drasil.Trajecto.Unitals (parMass, parCharge,
   xPos0, yPos0, xVel0, yVel0, elecFieldX, elecFieldY, magField, tFinal,
-  nRegions, regionWidth, regionHeight, xGrid, yGrid, detOrient, xDet, yDet)
+  nRegions, regionWidth, regionHeight, xGrid, yGrid, detOrient, detPos, detStart, detLength)
 import Drasil.Trajecto.IMods (stateEvolIM, detHitIM)
 
 goals :: [ConceptInstance]
@@ -25,7 +25,7 @@ goalsInputs =
     S "the region grid specification" +:+
     sParen (ch xGrid `sC` ch yGrid `sC` ch regionWidth `sC` ch regionHeight) `sC`
     S "the detector specification" +:+
-    sParen (ch detOrient `sC` ch xDet `sC` ch yDet +:+ S "and extent") `sC`
+    sParen (ch detOrient `sC` ch detPos `sC` ch detStart `sC` ch detLength) `sC`
     S "and the simulation time" +:+ ch tFinal ]
 
 predictTrajectory :: ConceptInstance

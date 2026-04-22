@@ -16,7 +16,7 @@ import Drasil.Trajecto.Unitals
   , elecFieldVec, elecFieldX, elecFieldY
   , magFieldVec, magField
   , fieldRegion, fieldRegionE, fieldRegionB
-  , detLine, xDet, yDet, yDetMin, yDetMax, xDetMin, xDetMax, detOrient
+  , detOrient, detPos, detStart, detLength
   , nRegions, regionWidth, regionHeight, xGrid, yGrid )
 import Drasil.Trajecto.Assumptions
   ( prescribedFields, eAxisAligned, bPerpPlane
@@ -153,23 +153,26 @@ fieldsByRegionNote = foldlSent
 
 ---------------------------------------------------------
 -- DD7: Detector line (vertical or horizontal)
--- Vertical:   L_det = { (x,y) | x = x_det, y ∈ [y_min^det, y_max^det] }
--- Horizontal: L_det = { (x,y) | y = y_det, x ∈ [x_min^det, x_max^det] }
+-- Parameterised by: orientation flag, perpendicular-axis position,
+-- start of segment on parallel axis, and segment length.
+-- Vertical  (d_orient=0): at x=det_pos, y ∈ [det_start, det_start+det_length]
+-- Horizontal(d_orient=1): at y=det_pos, x ∈ [det_start, det_start+det_length]
 ---------------------------------------------------------
 
 detectorLineDD :: DataDefinition
 detectorLineDD = ddENoRefs detectorLineQD Nothing "detectorLine" [detectorLineNote]
 
 detectorLineQD :: SimpleQDef
-detectorLineQD = mkQuantDef detLine
-  (rowVec [sy detOrient, sy xDet, sy yDet, sy yDetMin, sy yDetMax, sy xDetMin, sy xDetMax])
+detectorLineQD = mkQuantDef detOrient (sy detOrient)
 
 detectorLineNote :: Sentence
 detectorLineNote = foldlSent
-  [ ch detLine +:+. S "is the detector line segment"
-  , S "When" +:+ ch detOrient +:+ S "= 0 (vertical), the detector is"
-  , S "L_det is the set of (x,y) such that x = x_det and y in [y_min(det), y_max(det)]."
-  , S "When" +:+ ch detOrient +:+ S "= 1 (horizontal), the detector is"
-  , S "L_det is the set of (x,y) such that y = y_det and x in [x_min(det), x_max(det)]."
+  [ ch detOrient +:+. S "selects the detector orientation"
+  , S "When" +:+ ch detOrient +:+ S "= 0 (vertical), the detector is the vertical line"
+  , S "x =" +:+ ch detPos +:+ S "spanning y from" +:+ ch detStart
+  , S "to" +:+ ch detStart +:+ S "+" +:+ ch detLength :+: S "."
+  , S "When" +:+ ch detOrient +:+ S "= 1 (horizontal), the detector is the horizontal line"
+  , S "y =" +:+ ch detPos +:+ S "spanning x from" +:+ ch detStart
+  , S "to" +:+ ch detStart +:+ S "+" +:+ ch detLength :+: S "."
   , S "The detector orientation and bounds are user-specified, per" +:+ refS lineDetector
   ]

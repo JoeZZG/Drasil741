@@ -14,40 +14,34 @@ using std::vector;
 /** \brief Finds time of detector hit
     \param traj trajectory
     \param d_orient detector orientation
-    \param x_det detector line x-position
-    \param y_det detector line y-position
-    \param y_detMin detector y min
-    \param y_detMax detector y max
-    \param x_detMin detector x min
-    \param x_detMax detector x max
+    \param d_pos detector line position
+    \param d_start detector start coordinate
+    \param d_len detector line length
+    \param t_final final simulation time
     \return Finds time of detector hit
 */
-double func_t_hit(vector<vector<double>> &traj, int d_orient, double x_det, double y_det, double y_detMin, double y_detMax, double x_detMin, double x_detMax);
+double func_t_hit(vector<vector<double>> &traj, int d_orient, double d_pos, double d_start, double d_len, double t_final);
 
 /** \brief Finds x-coordinate of detector hit
     \param traj trajectory
     \param d_orient detector orientation
-    \param x_det detector line x-position
-    \param y_det detector line y-position
-    \param y_detMin detector y min
-    \param y_detMax detector y max
-    \param x_detMin detector x min
-    \param x_detMax detector x max
+    \param d_pos detector line position
+    \param d_start detector start coordinate
+    \param d_len detector line length
+    \param t_final final simulation time
     \return Finds x-coordinate of detector hit
 */
-double func_x_hit(vector<vector<double>> &traj, int d_orient, double x_det, double y_det, double y_detMin, double y_detMax, double x_detMin, double x_detMax);
+double func_x_hit(vector<vector<double>> &traj, int d_orient, double d_pos, double d_start, double d_len, double t_final);
 
 /** \brief Finds y-coordinate of detector hit
     \param traj trajectory
     \param d_orient detector orientation
-    \param x_det detector line x-position
-    \param y_det detector line y-position
-    \param y_detMin detector y min
-    \param y_detMax detector y max
-    \param x_detMin detector x min
-    \param x_detMax detector x max
+    \param d_pos detector line position
+    \param d_start detector start coordinate
+    \param d_len detector line length
+    \param t_final final simulation time
     \return Finds y-coordinate of detector hit
 */
-double func_y_hit(vector<vector<double>> &traj, int d_orient, double x_det, double y_det, double y_detMin, double y_detMax, double x_detMin, double x_detMax);
+double func_y_hit(vector<vector<double>> &traj, int d_orient, double d_pos, double d_start, double d_len, double t_final);
 
 #endif

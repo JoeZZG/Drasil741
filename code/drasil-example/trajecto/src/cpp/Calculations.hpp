@@ -23,6 +23,7 @@ using std::vector;
     \param E_x4 x-electric field in region 4 (N/C)
     \param E_x5 x-electric field in region 5 (N/C)
     \param x_grid grid origin x-coordinate (m)
+    \param N_col number of grid columns
     \param w region width (m)
     \param y_grid grid origin y-coordinate (m)
     \param h region height (m)
@@ -45,45 +46,39 @@ using std::vector;
     \param t_final final simulation time (s)
     \return dependent variables (m)
 */
-vector<vector<double>> func_s(double κ, double E_x0, double E_x1, double E_x2, double E_x3, double E_x4, double E_x5, double x_grid, double w, double y_grid, double h, double B_0, double B_1, double B_2, double B_3, double B_4, double B_5, double E_y0, double E_y1, double E_y2, double E_y3, double E_y4, double E_y5, double x_0, double y_0, double v_x0, double v_y0, double t_final);
+vector<double> func_s(double κ, double E_x0, double E_x1, double E_x2, double E_x3, double E_x4, double E_x5, double x_grid, int N_col, double w, double y_grid, double h, double B_0, double B_1, double B_2, double B_3, double B_4, double B_5, double E_y0, double E_y1, double E_y2, double E_y3, double E_y4, double E_y5, double x_0, double y_0, double v_x0, double v_y0, double t_final);
 
 /** \brief Calculates time of detector hit (s)
     \param d_orient detector orientation
-    \param x_det detector line x-position (m)
-    \param y_det detector line y-position (m)
-    \param y_detMin minimum y-coordinate of detector (m)
-    \param y_detMax maximum y-coordinate of detector (m)
-    \param x_detMin minimum x-coordinate of detector (m)
-    \param x_detMax maximum x-coordinate of detector (m)
+    \param d_pos detector line position (m)
+    \param d_start detector start coordinate (m)
+    \param d_len detector line length (m)
+    \param t_final final simulation time (s)
     \param s dependent variables (m)
     \return time of detector hit (s)
 */
-double func_t_hit(double d_orient, double x_det, double y_det, double y_detMin, double y_detMax, double x_detMin, double x_detMax, vector<double> &s);
+double func_t_hit(int d_orient, double d_pos, double d_start, double d_len, double t_final, vector<double> &s);
 
 /** \brief Calculates x-coordinate of impact point (m)
     \param d_orient detector orientation
-    \param x_det detector line x-position (m)
-    \param y_det detector line y-position (m)
-    \param y_detMin minimum y-coordinate of detector (m)
-    \param y_detMax maximum y-coordinate of detector (m)
-    \param x_detMin minimum x-coordinate of detector (m)
-    \param x_detMax maximum x-coordinate of detector (m)
+    \param d_pos detector line position (m)
+    \param d_start detector start coordinate (m)
+    \param d_len detector line length (m)
+    \param t_final final simulation time (s)
     \param s dependent variables (m)
     \return x-coordinate of impact point (m)
 */
-double func_x_hit(double d_orient, double x_det, double y_det, double y_detMin, double y_detMax, double x_detMin, double x_detMax, vector<double> &s);
+double func_x_hit(int d_orient, double d_pos, double d_start, double d_len, double t_final, vector<double> &s);
 
 /** \brief Calculates y-coordinate of impact point (m)
     \param d_orient detector orientation
-    \param x_det detector line x-position (m)
-    \param y_det detector line y-position (m)
-    \param y_detMin minimum y-coordinate of detector (m)
-    \param y_detMax maximum y-coordinate of detector (m)
-    \param x_detMin minimum x-coordinate of detector (m)
-    \param x_detMax maximum x-coordinate of detector (m)
+    \param d_pos detector line position (m)
+    \param d_start detector start coordinate (m)
+    \param d_len detector line length (m)
+    \param t_final final simulation time (s)
     \param s dependent variables (m)
     \return y-coordinate of impact point (m)
 */
-double func_y_hit(double d_orient, double x_det, double y_det, double y_detMin, double y_detMax, double x_detMin, double x_detMax, vector<double> &s);
+double func_y_hit(int d_orient, double d_pos, double d_start, double d_len, double t_final, vector<double> &s);
 
 #endif

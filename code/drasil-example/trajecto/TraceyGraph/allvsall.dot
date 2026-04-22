@@ -12,7 +12,7 @@ digraph "allvsall" {
     "dataDefn:Ei" -> "instance:piecewiseUniform";
     "dataDefn:Ei" -> "instance:prescribedFields";
     "dataDefn:Ei" -> "dataDefn:Ri";
-    "dataDefn:Ldet" -> "instance:lineDetector";
+    "dataDefn:d_orient" -> "instance:lineDetector";
     "theory:lorentzForceCS" -> "instance:singleParticle";
     "theory:lorentzForceCS" -> "instance:prescribedFields";
     "theory:eqnMotionCS" -> "instance:singleParticle";
@@ -42,7 +42,7 @@ digraph "allvsall" {
     "theory:stateEvolRC" -> "theory:dyn2DRC";
     "theory:detHitRC" -> "instance:lineDetector";
     "theory:detHitRC" -> "instance:fullDetection";
-    "theory:detHitRC" -> "dataDefn:Ldet";
+    "theory:detHitRC" -> "dataDefn:d_orient";
     "theory:detHitRC" -> "theory:stateEvolRC";
     "instance:buildRegionGrid" -> "dataDefn:Ri";
     "instance:lookupActiveRegion" -> "dataDefn:Ei";
@@ -75,10 +75,10 @@ digraph "allvsall" {
     "dataDefn:Bvec" [shape=box, color=black, style=filled, fillcolor="paleturquoise1", label="DD:bField"];
     "dataDefn:Ri" [shape=box, color=black, style=filled, fillcolor="paleturquoise1", label="DD:regionRect"];
     "dataDefn:Ei" [shape=box, color=black, style=filled, fillcolor="paleturquoise1", label="DD:fieldsByRegion"];
-    "dataDefn:Ldet" [shape=box, color=black, style=filled, fillcolor="paleturquoise1", label="DD:detectorLine"];
+    "dataDefn:d_orient" [shape=box, color=black, style=filled, fillcolor="paleturquoise1", label="DD:detectorLine"];
     subgraph "DD" {
         rank="same";
-        "dataDefn:kappa" "dataDefn:s0" "dataDefn:Evec" "dataDefn:Bvec" "dataDefn:Ri" "dataDefn:Ei" "dataDefn:Ldet";
+        "dataDefn:kappa" "dataDefn:s0" "dataDefn:Evec" "dataDefn:Bvec" "dataDefn:Ri" "dataDefn:Ei" "dataDefn:d_orient";
     }
     "theory:velocityTM" [shape=box, color=black, style=filled, fillcolor="pink", label="TM:velocity"];
     "theory:accelerationTM" [shape=box, color=black, style=filled, fillcolor="pink", label="TM:acceleration"];

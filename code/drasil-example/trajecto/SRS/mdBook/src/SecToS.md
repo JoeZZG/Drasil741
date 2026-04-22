@@ -17,7 +17,10 @@ The symbols used in this document are summarized in the [Table of Symbols](./Sec
 |\\({B\_{5}}\\)                            |Magnetic flux density in region 5           |\\({\text{T}}\\)                   |
 |\\(\boldsymbol{B}\\)                      |Magnetic flux density vector                |\\({\text{T}}\\)                   |
 |\\({\boldsymbol{B}\_{i}}\\)               |Magnetic flux density in region i           |\\({\text{T}}\\)                   |
+|\\({d\_{\text{len}}}\\)                   |Detector line length                        |\\({\text{m}}\\)                   |
 |\\({d\_{\text{orient}}}\\)                |Detector orientation                        |--                                 |
+|\\({d\_{\text{pos}}}\\)                   |Detector line position                      |\\({\text{m}}\\)                   |
+|\\({d\_{\text{start}}}\\)                 |Detector start coordinate                   |\\({\text{m}}\\)                   |
 |\\({E\_{\text{x}0}}\\)                    |X-electric field in region 0                |\\(\frac{\text{N}}{\text{C}}\\)    |
 |\\({E\_{\text{x}1}}\\)                    |X-electric field in region 1                |\\(\frac{\text{N}}{\text{C}}\\)    |
 |\\({E\_{\text{x}2}}\\)                    |X-electric field in region 2                |\\(\frac{\text{N}}{\text{C}}\\)    |
@@ -34,7 +37,6 @@ The symbols used in this document are summarized in the [Table of Symbols](./Sec
 |\\({\boldsymbol{E}\_{i}}\\)               |Electric field in region i                  |\\(\frac{\text{N}}{\text{C}}\\)    |
 |\\(\boldsymbol{F}\\)                      |Force                                       |\\({\text{N}}\\)                   |
 |\\(h\\)                                   |Region height                               |\\({\text{m}}\\)                   |
-|\\({L\_{\text{det}}}\\)                   |Detector line                               |--                                 |
 |\\(m\\)                                   |Particle mass                               |\\({\text{kg}}\\)                  |
 |\\({m\_{\text{max}}}\\)                   |Maximum particle mass                       |\\({\text{kg}}\\)                  |
 |\\({m\_{\text{min}}}\\)                   |Minimum particle mass                       |\\({\text{kg}}\\)                  |
@@ -60,16 +62,10 @@ The symbols used in this document are summarized in the [Table of Symbols](./Sec
 |\\(w\\)                                   |Region width                                |\\({\text{m}}\\)                   |
 |\\(x\\)                                   |X-position of the particle                  |\\({\text{m}}\\)                   |
 |\\({x\_{0}}\\)                            |Initial x-position                          |\\({\text{m}}\\)                   |
-|\\({x\_{\text{det}}}\\)                   |Detector line x-position                    |\\({\text{m}}\\)                   |
-|\\({x\_{\text{detMax}}}\\)                |Maximum x-coordinate of detector            |\\({\text{m}}\\)                   |
-|\\({x\_{\text{detMin}}}\\)                |Minimum x-coordinate of detector            |\\({\text{m}}\\)                   |
 |\\({x\_{\text{grid}}}\\)                  |Grid origin x-coordinate                    |\\({\text{m}}\\)                   |
 |\\({x\_{\text{hit}}}\\)                   |X-coordinate of impact point                |\\({\text{m}}\\)                   |
 |\\(y\\)                                   |Y-position of the particle                  |\\({\text{m}}\\)                   |
 |\\({y\_{0}}\\)                            |Initial y-position                          |\\({\text{m}}\\)                   |
-|\\({y\_{\text{det}}}\\)                   |Detector line y-position                    |\\({\text{m}}\\)                   |
-|\\({y\_{\text{detMax}}}\\)                |Maximum y-coordinate of detector            |\\({\text{m}}\\)                   |
-|\\({y\_{\text{detMin}}}\\)                |Minimum y-coordinate of detector            |\\({\text{m}}\\)                   |
 |\\({y\_{\text{grid}}}\\)                  |Grid origin y-coordinate                    |\\({\text{m}}\\)                   |
 |\\({y\_{\text{hit}}}\\)                   |Y-coordinate of impact point                |\\({\text{m}}\\)                   |
 |\\(κ\\)                                   |Charge-to-mass ratio                        |\\(\frac{\text{C}}{\text{kg}}\\)   |

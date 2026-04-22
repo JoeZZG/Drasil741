@@ -22,9 +22,9 @@ detHitMod = packmod "DetectorHit"
 
 -- | Implementation variables used internally by the detector hit function.
 implVars :: [DefinedQuantityDict]
-implVars = [traj, dOr, xD, yD, yMin, yMax, xMin, xMax,
+implVars = [traj, dOr, detPosV, detStartV, detLenV,
   ii, numPts, bestT, bestX, bestY,
-  xi, yi]
+  xi, yi, prevX, prevY, dtVar, tFinalP]
 
 -- Local variable helpers
 var :: String -> String -> String -> Symbol -> Space -> DefinedQuantityDict
@@ -37,23 +37,14 @@ traj = var "traj" "trajectory" "the ODE trajectory array" (label "traj") (Vect (
 dOr :: DefinedQuantityDict
 dOr = var "d_orient" "detector orientation" "detector orientation flag" (sub lD (label "orient")) Natural
 
-xD :: DefinedQuantityDict
-xD = var "x_det" "detector x" "detector x-position" (sub lX (label "det")) Real
+detPosV :: DefinedQuantityDict
+detPosV = var "det_pos" "detector position" "coordinate along the detector's perpendicular axis" (sub lD (label "pos")) Real
 
-yD :: DefinedQuantityDict
-yD = var "y_det" "detector y" "detector y-position" (sub lY (label "det")) Real
+detStartV :: DefinedQuantityDict
+detStartV = var "det_start" "detector start" "start of the detector segment along its parallel axis" (sub lD (label "start")) Real
 
-yMin :: DefinedQuantityDict
-yMin = var "y_detMin" "detector y min" "detector y minimum" (sub lY (label "detMin")) Real
-
-yMax :: DefinedQuantityDict
-yMax = var "y_detMax" "detector y max" "detector y maximum" (sub lY (label "detMax")) Real
-
-xMin :: DefinedQuantityDict
-xMin = var "x_detMin" "detector x min" "detector x minimum" (sub lX (label "detMin")) Real
-
-xMax :: DefinedQuantityDict
-xMax = var "x_detMax" "detector x max" "detector x maximum" (sub lX (label "detMax")) Real
+detLenV :: DefinedQuantityDict
+detLenV = var "det_length" "detector length" "length of the detector segment" (sub lD (label "len")) Real
 
 -- Internal variables
 ii :: DefinedQuantityDict
@@ -81,70 +72,93 @@ xi = var "x_i" "x at step" "x-position at time step i" (sub lX lI) Real
 yi :: DefinedQuantityDict
 yi = var "y_i" "y at step" "y-position at time step i" (sub lY lI) Real
 
+prevX :: DefinedQuantityDict
+prevX = var "prev_x" "previous x" "x-position at the previous time step" (sub lX (label "prev")) Real
+
+prevY :: DefinedQuantityDict
+prevY = var "prev_y" "previous y" "y-position at the previous time step" (sub lY (label "prev")) Real
+
+dtVar :: DefinedQuantityDict
+dtVar = var "dt" "time step size" "time between consecutive trajectory points"
+  (sub lT (label "step")) Real
+
+tFinalP :: DefinedQuantityDict
+tFinalP = var "t_final" "final simulation time" "the final time passed to the detector hit function"
+  (sub lT (label "final")) Real
+
 ---------------------------------------------------------------------------
 -- Three detector hit functions, each returning a scalar.
 -- They share the same logic but return different components.
--- detHitTime returns -1 if no hit, else 0 (placeholder for time).
+-- detHitTime returns -1 if no hit, else the interpolated hit time.
 -- detHitX returns 0 if no hit, else x-coordinate of hit.
 -- detHitY returns 0 if no hit, else y-coordinate of hit.
 ---------------------------------------------------------------------------
 
 -- | Helper: the common body for detector hit functions.
 -- The function loops over trajectory points, checks if the particle
--- position matches the detector line, and returns a specified component.
+-- crosses the detector line between consecutive steps, and returns
+-- a specified component.
 mkDetHitFunc :: String -> String -> DefinedQuantityDict -> Func
 mkDetHitFunc name desc retVar =
   funcDef name desc
-    [traj, dOr, xD, yD, yMin, yMax, xMin, xMax]
+    [traj, dOr, detPosV, detStartV, detLenV, tFinalP]
     Real
     (Just desc)
     [
       fDecDef numPts (dim (sy traj)),
       fDecDef bestT (neg (int 1)),
-      fDecDef bestX (int 0),
-      fDecDef bestY (int 0),
+      fDecDef bestX (neg (int 1)),
+      fDecDef bestY (neg (int 1)),
+      fDecDef dtVar  (sy tFinalP $/ (sy numPts $- int 1)),
+      fDecDef prevX  (idx (idx (sy traj) (int 0)) (int 0)),
+      fDecDef prevY  (idx (idx (sy traj) (int 0)) (int 1)),
 
       ffor ii (sy numPts)
         [
           fDecDef xi  (idx (idx (sy traj) (sy ii)) (int 0)),
           fDecDef yi  (idx (idx (sy traj) (sy ii)) (int 1)),
 
-          -- Vertical detector (d_orient == 0)
+          -- Vertical detector (d_orient == 0): cross x = detPos (either direction), within [detStart, detStart+detLen]
           FCond (sy dOr $= int 0)
             [
               FCond ((sy bestT $< int 0) $&&
-                     (sy xi $>= sy xD) $&&
-                     (sy yi $>= sy yMin) $&&
-                     (sy yi $<= sy yMax))
-                [ bestT $:= int 0,
+                     (((sy prevX $< sy detPosV) $&& (sy xi $>= sy detPosV)) $||
+                      ((sy prevX $>= sy detPosV) $&& (sy xi $< sy detPosV))) $&&
+                     (sy yi $>= sy detStartV) $&&
+                     (sy yi $<= (sy detStartV $+ sy detLenV)))
+                [ bestT $:= (sy ii $* sy dtVar),
                   bestX $:= sy xi,
                   bestY $:= sy yi
                 ] []
             ]
-            -- Horizontal detector (d_orient == 1)
+            -- Horizontal detector (d_orient == 1): cross y = detPos (either direction), within [detStart, detStart+detLen]
             [
               FCond ((sy bestT $< int 0) $&&
-                     (sy yi $>= sy yD) $&&
-                     (sy xi $>= sy xMin) $&&
-                     (sy xi $<= sy xMax))
-                [ bestT $:= int 0,
+                     (((sy prevY $< sy detPosV) $&& (sy yi $>= sy detPosV)) $||
+                      ((sy prevY $>= sy detPosV) $&& (sy yi $< sy detPosV))) $&&
+                     (sy xi $>= sy detStartV) $&&
+                     (sy xi $<= (sy detStartV $+ sy detLenV)))
+                [ bestT $:= (sy ii $* sy dtVar),
                   bestX $:= sy xi,
                   bestY $:= sy yi
                 ] []
-            ]
+            ],
+
+          prevX $:= sy xi,
+          prevY $:= sy yi
         ],
 
       FRet $ sy retVar
     ]
 
 detHitTimeCT :: Func
-detHitTimeCT = mkDetHitFunc "func_t_hit" "Finds time of detector hit" bestT
+detHitTimeCT = mkDetHitFunc "det_t_hit" "Finds time of detector hit" bestT
 
 detHitXCT :: Func
-detHitXCT = mkDetHitFunc "func_x_hit" "Finds x-coordinate of detector hit" bestX
+detHitXCT = mkDetHitFunc "det_x_hit" "Finds x-coordinate of detector hit" bestX
 
 detHitYCT :: Func
-detHitYCT = mkDetHitFunc "func_y_hit" "Finds y-coordinate of detector hit" bestY
+detHitYCT = mkDetHitFunc "det_y_hit" "Finds y-coordinate of detector hit" bestY
 
 ---------------------------------------------------------------------------
 -- QDefinitions that use the detector hit functions.
@@ -157,31 +171,28 @@ detHitDefs =
   , mkQuantDef U.yHit yHitExpr
   ]
 
--- Function quantities for apply calls (must match funcDef names)
--- NOTE: We use Real (return type) rather than mkFunction to avoid
--- Drasil's spaceToCodeType generating Float alternatives that crash Python.
+-- Function quantities for apply calls (must differ from qtoc(tHit/xHit/yHit) names
+-- to avoid eMap collision that causes self-referencing wrappers in Calculations.py)
 detHitTimeFQ :: DefinedQuantityDict
-detHitTimeFQ = dqdNoUnit (dcc "func_t_hit" (nounPhraseSP "func_t_hit")
-  "time of detector hit function") (variable "func_t_hit") Real
+detHitTimeFQ = dqdNoUnit (dcc "det_t_hit" (nounPhraseSP "det_t_hit")
+  "time of detector hit function") (variable "det_t_hit") Real
 
 detHitXFQ :: DefinedQuantityDict
-detHitXFQ = dqdNoUnit (dcc "func_x_hit" (nounPhraseSP "func_x_hit")
-  "x of detector hit function") (variable "func_x_hit") Real
+detHitXFQ = dqdNoUnit (dcc "det_x_hit" (nounPhraseSP "det_x_hit")
+  "x of detector hit function") (variable "det_x_hit") Real
 
 detHitYFQ :: DefinedQuantityDict
-detHitYFQ = dqdNoUnit (dcc "func_y_hit" (nounPhraseSP "func_y_hit")
-  "y of detector hit function") (variable "func_y_hit") Real
+detHitYFQ = dqdNoUnit (dcc "det_y_hit" (nounPhraseSP "det_y_hit")
+  "y of detector hit function") (variable "det_y_hit") Real
 
 detHitArgs :: [Expr]
 detHitArgs =
   [ sy U.particleState
   , sy U.detOrient
-  , sy U.xDet
-  , sy U.yDet
-  , sy U.yDetMin
-  , sy U.yDetMax
-  , sy U.xDetMin
-  , sy U.xDetMax
+  , sy U.detPos
+  , sy U.detStart
+  , sy U.detLength
+  , sy U.tFinal
   ]
 
 tHitExpr :: Expr

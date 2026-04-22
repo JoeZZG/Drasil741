@@ -353,6 +353,8 @@ convExpr (VVNBinaryOp o a b)   = liftM2 (vecVecNumBfunc o) (convExpr a) (convExp
 convExpr (NVVBinaryOp o a b)   = liftM2 (numVecVecBfunc o) (convExpr a) (convExpr b)
 convExpr (ESSBinaryOp o a b)   = liftM2 (elementSetSetBfunc o) (convExpr a) (convExpr b)
 convExpr (ESBBinaryOp o a b)   = liftM2 (elementSetBoolBfunc o) (convExpr a) (convExpr b)
+convExpr (IntDivC a b)         = liftM2 (#/) (convExpr a) (convExpr b)
+convExpr (IntModC a b)         = liftM2 (#%) (convExpr a) (convExpr b)
 convExpr (Case c l)            = doit l -- FIXME this is sub-optimal
   where
     doit [] = error "should never happen" -- TODO: change error message?
@@ -1047,6 +1049,8 @@ convExprProc (VVNBinaryOp o a b)   = liftM2 (vecVecNumBfunc o) (convExprProc a) 
 convExprProc (NVVBinaryOp o a b)   = liftM2 (numVecVecBfunc o) (convExprProc a) (convExprProc b)
 convExprProc (ESSBinaryOp o a b)   = liftM2 (elementSetSetBfunc o) (convExprProc a) (convExprProc b)
 convExprProc (ESBBinaryOp o a b)   = liftM2 (elementSetBoolBfunc o) (convExprProc a) (convExprProc b)
+convExprProc (IntDivC a b)         = liftM2 (#/) (convExprProc a) (convExprProc b)
+convExprProc (IntModC a b)         = liftM2 (#%) (convExprProc a) (convExprProc b)
 convExprProc (Case c l)            = doit l -- FIXME this is sub-optimal
   where
     doit [] = error "should never happen" -- TODO: change error message?

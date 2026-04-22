@@ -38,4 +38,6 @@ eprec (VVNBinaryOp bo _ _)   = prec2VVN bo
 eprec (NVVBinaryOp bo _ _)   = prec2NVV bo
 eprec (ESSBinaryOp bo _ _)   = prec2ESS bo
 eprec (ESBBinaryOp bo _ _)   = prec2ESB bo
+eprec (IntDivC _ _)          = 70  -- same level as multiplication
+eprec (IntModC _ _)          = 70
 eprec RealI{}                = 170

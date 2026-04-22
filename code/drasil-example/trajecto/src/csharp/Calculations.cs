@@ -19,6 +19,7 @@ public class Calculations {
         \param E_x4 x-electric field in region 4 (N/C)
         \param E_x5 x-electric field in region 5 (N/C)
         \param x_grid grid origin x-coordinate (m)
+        \param N_col number of grid columns
         \param w region width (m)
         \param y_grid grid origin y-coordinate (m)
         \param h region height (m)
@@ -41,10 +42,10 @@ public class Calculations {
         \param t_final final simulation time (s)
         \return dependent variables (m)
     */
-    public static List<List<double>> func_s(double κ, double E_x0, double E_x1, double E_x2, double E_x3, double E_x4, double E_x5, double x_grid, double w, double y_grid, double h, double B_0, double B_1, double B_2, double B_3, double B_4, double B_5, double E_y0, double E_y1, double E_y2, double E_y3, double E_y4, double E_y5, double x_0, double y_0, double v_x0, double v_y0, double t_final) {
-        List<List<double>> s;
+    public static List<double> func_s(double κ, double E_x0, double E_x1, double E_x2, double E_x3, double E_x4, double E_x5, double x_grid, int N_col, double w, double y_grid, double h, double B_0, double B_1, double B_2, double B_3, double B_4, double B_5, double E_y0, double E_y1, double E_y2, double E_y3, double E_y4, double E_y5, double x_0, double y_0, double v_x0, double v_y0, double t_final) {
+        List<double> s;
         Func<double, Vector, Vector> f = (t, s_vec) => {
-            return new Vector(s_vec[2], s_vec[3], κ * ((s[0] >= x_grid + 0.0 * w && (s[0] < x_grid + w && (s[1] >= y_grid + 0.0 * h && s[1] < y_grid + h)) ? E_x0 : s[0] >= x_grid + w && (s[0] < x_grid + 2.0 * w && (s[1] >= y_grid + 0.0 * h && s[1] < y_grid + h)) ? E_x1 : s[0] >= x_grid + 2.0 * w && (s[0] < x_grid + 3.0 * w && (s[1] >= y_grid + 0.0 * h && s[1] < y_grid + h)) ? E_x2 : s[0] >= x_grid + 0.0 * w && (s[0] < x_grid + w && (s[1] >= y_grid + h && s[1] < y_grid + 2.0 * h)) ? E_x3 : s[0] >= x_grid + w && (s[0] < x_grid + 2.0 * w && (s[1] >= y_grid + h && s[1] < y_grid + 2.0 * h)) ? E_x4 : s[0] >= x_grid + 2.0 * w && (s[0] < x_grid + 3.0 * w && (s[1] >= y_grid + h && s[1] < y_grid + 2.0 * h)) ? E_x5 : 0.0) + s_vec[3] * (s[0] >= x_grid + 0.0 * w && (s[0] < x_grid + w && (s[1] >= y_grid + 0.0 * h && s[1] < y_grid + h)) ? B_0 : s[0] >= x_grid + w && (s[0] < x_grid + 2.0 * w && (s[1] >= y_grid + 0.0 * h && s[1] < y_grid + h)) ? B_1 : s[0] >= x_grid + 2.0 * w && (s[0] < x_grid + 3.0 * w && (s[1] >= y_grid + 0.0 * h && s[1] < y_grid + h)) ? B_2 : s[0] >= x_grid + 0.0 * w && (s[0] < x_grid + w && (s[1] >= y_grid + h && s[1] < y_grid + 2.0 * h)) ? B_3 : s[0] >= x_grid + w && (s[0] < x_grid + 2.0 * w && (s[1] >= y_grid + h && s[1] < y_grid + 2.0 * h)) ? B_4 : s[0] >= x_grid + 2.0 * w && (s[0] < x_grid + 3.0 * w && (s[1] >= y_grid + h && s[1] < y_grid + 2.0 * h)) ? B_5 : 0.0)), κ * ((s[0] >= x_grid + 0.0 * w && (s[0] < x_grid + w && (s[1] >= y_grid + 0.0 * h && s[1] < y_grid + h)) ? E_y0 : s[0] >= x_grid + w && (s[0] < x_grid + 2.0 * w && (s[1] >= y_grid + 0.0 * h && s[1] < y_grid + h)) ? E_y1 : s[0] >= x_grid + 2.0 * w && (s[0] < x_grid + 3.0 * w && (s[1] >= y_grid + 0.0 * h && s[1] < y_grid + h)) ? E_y2 : s[0] >= x_grid + 0.0 * w && (s[0] < x_grid + w && (s[1] >= y_grid + h && s[1] < y_grid + 2.0 * h)) ? E_y3 : s[0] >= x_grid + w && (s[0] < x_grid + 2.0 * w && (s[1] >= y_grid + h && s[1] < y_grid + 2.0 * h)) ? E_y4 : s[0] >= x_grid + 2.0 * w && (s[0] < x_grid + 3.0 * w && (s[1] >= y_grid + h && s[1] < y_grid + 2.0 * h)) ? E_y5 : 0.0) - s_vec[2] * (s[0] >= x_grid + 0.0 * w && (s[0] < x_grid + w && (s[1] >= y_grid + 0.0 * h && s[1] < y_grid + h)) ? B_0 : s[0] >= x_grid + w && (s[0] < x_grid + 2.0 * w && (s[1] >= y_grid + 0.0 * h && s[1] < y_grid + h)) ? B_1 : s[0] >= x_grid + 2.0 * w && (s[0] < x_grid + 3.0 * w && (s[1] >= y_grid + 0.0 * h && s[1] < y_grid + h)) ? B_2 : s[0] >= x_grid + 0.0 * w && (s[0] < x_grid + w && (s[1] >= y_grid + h && s[1] < y_grid + 2.0 * h)) ? B_3 : s[0] >= x_grid + w && (s[0] < x_grid + 2.0 * w && (s[1] >= y_grid + h && s[1] < y_grid + 2.0 * h)) ? B_4 : s[0] >= x_grid + 2.0 * w && (s[0] < x_grid + 3.0 * w && (s[1] >= y_grid + h && s[1] < y_grid + 2.0 * h)) ? B_5 : 0.0)));
+            return new Vector(s_vec[2], s_vec[3], κ * ((s[0] >= x_grid + 0 % N_col * w && (s[0] < x_grid + (0 % N_col + 1) * w && (s[1] >= y_grid + 0 / N_col * h && s[1] < y_grid + (0 / N_col + 1) * h)) ? E_x0 : s[0] >= x_grid + 1 % N_col * w && (s[0] < x_grid + (1 % N_col + 1) * w && (s[1] >= y_grid + 1 / N_col * h && s[1] < y_grid + (1 / N_col + 1) * h)) ? E_x1 : s[0] >= x_grid + 2 % N_col * w && (s[0] < x_grid + (2 % N_col + 1) * w && (s[1] >= y_grid + 2 / N_col * h && s[1] < y_grid + (2 / N_col + 1) * h)) ? E_x2 : s[0] >= x_grid + 3 % N_col * w && (s[0] < x_grid + (3 % N_col + 1) * w && (s[1] >= y_grid + 3 / N_col * h && s[1] < y_grid + (3 / N_col + 1) * h)) ? E_x3 : s[0] >= x_grid + 4 % N_col * w && (s[0] < x_grid + (4 % N_col + 1) * w && (s[1] >= y_grid + 4 / N_col * h && s[1] < y_grid + (4 / N_col + 1) * h)) ? E_x4 : s[0] >= x_grid + 5 % N_col * w && (s[0] < x_grid + (5 % N_col + 1) * w && (s[1] >= y_grid + 5 / N_col * h && s[1] < y_grid + (5 / N_col + 1) * h)) ? E_x5 : 0.0) + s_vec[3] * (s[0] >= x_grid + 0 % N_col * w && (s[0] < x_grid + (0 % N_col + 1) * w && (s[1] >= y_grid + 0 / N_col * h && s[1] < y_grid + (0 / N_col + 1) * h)) ? B_0 : s[0] >= x_grid + 1 % N_col * w && (s[0] < x_grid + (1 % N_col + 1) * w && (s[1] >= y_grid + 1 / N_col * h && s[1] < y_grid + (1 / N_col + 1) * h)) ? B_1 : s[0] >= x_grid + 2 % N_col * w && (s[0] < x_grid + (2 % N_col + 1) * w && (s[1] >= y_grid + 2 / N_col * h && s[1] < y_grid + (2 / N_col + 1) * h)) ? B_2 : s[0] >= x_grid + 3 % N_col * w && (s[0] < x_grid + (3 % N_col + 1) * w && (s[1] >= y_grid + 3 / N_col * h && s[1] < y_grid + (3 / N_col + 1) * h)) ? B_3 : s[0] >= x_grid + 4 % N_col * w && (s[0] < x_grid + (4 % N_col + 1) * w && (s[1] >= y_grid + 4 / N_col * h && s[1] < y_grid + (4 / N_col + 1) * h)) ? B_4 : s[0] >= x_grid + 5 % N_col * w && (s[0] < x_grid + (5 % N_col + 1) * w && (s[1] >= y_grid + 5 / N_col * h && s[1] < y_grid + (5 / N_col + 1) * h)) ? B_5 : 0.0)), κ * ((s[0] >= x_grid + 0 % N_col * w && (s[0] < x_grid + (0 % N_col + 1) * w && (s[1] >= y_grid + 0 / N_col * h && s[1] < y_grid + (0 / N_col + 1) * h)) ? E_y0 : s[0] >= x_grid + 1 % N_col * w && (s[0] < x_grid + (1 % N_col + 1) * w && (s[1] >= y_grid + 1 / N_col * h && s[1] < y_grid + (1 / N_col + 1) * h)) ? E_y1 : s[0] >= x_grid + 2 % N_col * w && (s[0] < x_grid + (2 % N_col + 1) * w && (s[1] >= y_grid + 2 / N_col * h && s[1] < y_grid + (2 / N_col + 1) * h)) ? E_y2 : s[0] >= x_grid + 3 % N_col * w && (s[0] < x_grid + (3 % N_col + 1) * w && (s[1] >= y_grid + 3 / N_col * h && s[1] < y_grid + (3 / N_col + 1) * h)) ? E_y3 : s[0] >= x_grid + 4 % N_col * w && (s[0] < x_grid + (4 % N_col + 1) * w && (s[1] >= y_grid + 4 / N_col * h && s[1] < y_grid + (4 / N_col + 1) * h)) ? E_y4 : s[0] >= x_grid + 5 % N_col * w && (s[0] < x_grid + (5 % N_col + 1) * w && (s[1] >= y_grid + 5 / N_col * h && s[1] < y_grid + (5 / N_col + 1) * h)) ? E_y5 : 0.0) - s_vec[2] * (s[0] >= x_grid + 0 % N_col * w && (s[0] < x_grid + (0 % N_col + 1) * w && (s[1] >= y_grid + 0 / N_col * h && s[1] < y_grid + (0 / N_col + 1) * h)) ? B_0 : s[0] >= x_grid + 1 % N_col * w && (s[0] < x_grid + (1 % N_col + 1) * w && (s[1] >= y_grid + 1 / N_col * h && s[1] < y_grid + (1 / N_col + 1) * h)) ? B_1 : s[0] >= x_grid + 2 % N_col * w && (s[0] < x_grid + (2 % N_col + 1) * w && (s[1] >= y_grid + 2 / N_col * h && s[1] < y_grid + (2 / N_col + 1) * h)) ? B_2 : s[0] >= x_grid + 3 % N_col * w && (s[0] < x_grid + (3 % N_col + 1) * w && (s[1] >= y_grid + 3 / N_col * h && s[1] < y_grid + (3 / N_col + 1) * h)) ? B_3 : s[0] >= x_grid + 4 % N_col * w && (s[0] < x_grid + (4 % N_col + 1) * w && (s[1] >= y_grid + 4 / N_col * h && s[1] < y_grid + (4 / N_col + 1) * h)) ? B_4 : s[0] >= x_grid + 5 % N_col * w && (s[0] < x_grid + (5 % N_col + 1) * w && (s[1] >= y_grid + 5 / N_col * h && s[1] < y_grid + (5 / N_col + 1) * h)) ? B_5 : 0.0)));
         };
         Options opts = new Options();
         opts.AbsoluteTolerance = 1.0e-6;
@@ -52,14 +53,10 @@ public class Calculations {
         
         Vector initv = new Vector(new double[] {x_0, y_0, v_x0, v_y0});
         IEnumerable<SolPoint> sol = Ode.RK547M(0.0, initv, f, opts);
-        IEnumerable<SolPoint> points = sol.SolveFromToStep(0.0, t_final, 1.0e-9);
-        s = new List<List<double>> {};
+        IEnumerable<SolPoint> points = sol.SolveFromToStep(0.0, t_final, t_final / 1000.0);
+        s = new List<double> {};
         foreach (SolPoint sp in points) {
-            List<double> xTemp = new List<double>(0);
-            for (int i = 0; i < 4; i += 1) {
-                xTemp.Add(sp.X[i]);
-            }
-            s.Add(xTemp);
+            s.Add(sp.X[0]);
         }
         
         return s;
@@ -67,46 +64,40 @@ public class Calculations {
     
     /** \brief Calculates time of detector hit (s)
         \param d_orient detector orientation
-        \param x_det detector line x-position (m)
-        \param y_det detector line y-position (m)
-        \param y_detMin minimum y-coordinate of detector (m)
-        \param y_detMax maximum y-coordinate of detector (m)
-        \param x_detMin minimum x-coordinate of detector (m)
-        \param x_detMax maximum x-coordinate of detector (m)
+        \param d_pos detector line position (m)
+        \param d_start detector start coordinate (m)
+        \param d_len detector line length (m)
+        \param t_final final simulation time (s)
         \param s dependent variables (m)
         \return time of detector hit (s)
     */
-    public static double func_t_hit(double d_orient, double x_det, double y_det, double y_detMin, double y_detMax, double x_detMin, double x_detMax, List<double> s) {
-        return func_t_hit(s, d_orient, x_det, y_det, y_detMin, y_detMax, x_detMin, x_detMax);
+    public static double func_t_hit(int d_orient, double d_pos, double d_start, double d_len, double t_final, List<double> s) {
+        return func_t_hit(s, d_orient, d_pos, d_start, d_len, t_final);
     }
     
     /** \brief Calculates x-coordinate of impact point (m)
         \param d_orient detector orientation
-        \param x_det detector line x-position (m)
-        \param y_det detector line y-position (m)
-        \param y_detMin minimum y-coordinate of detector (m)
-        \param y_detMax maximum y-coordinate of detector (m)
-        \param x_detMin minimum x-coordinate of detector (m)
-        \param x_detMax maximum x-coordinate of detector (m)
+        \param d_pos detector line position (m)
+        \param d_start detector start coordinate (m)
+        \param d_len detector line length (m)
+        \param t_final final simulation time (s)
         \param s dependent variables (m)
         \return x-coordinate of impact point (m)
     */
-    public static double func_x_hit(double d_orient, double x_det, double y_det, double y_detMin, double y_detMax, double x_detMin, double x_detMax, List<double> s) {
-        return func_x_hit(s, d_orient, x_det, y_det, y_detMin, y_detMax, x_detMin, x_detMax);
+    public static double func_x_hit(int d_orient, double d_pos, double d_start, double d_len, double t_final, List<double> s) {
+        return func_x_hit(s, d_orient, d_pos, d_start, d_len, t_final);
     }
     
     /** \brief Calculates y-coordinate of impact point (m)
         \param d_orient detector orientation
-        \param x_det detector line x-position (m)
-        \param y_det detector line y-position (m)
-        \param y_detMin minimum y-coordinate of detector (m)
-        \param y_detMax maximum y-coordinate of detector (m)
-        \param x_detMin minimum x-coordinate of detector (m)
-        \param x_detMax maximum x-coordinate of detector (m)
+        \param d_pos detector line position (m)
+        \param d_start detector start coordinate (m)
+        \param d_len detector line length (m)
+        \param t_final final simulation time (s)
         \param s dependent variables (m)
         \return y-coordinate of impact point (m)
     */
-    public static double func_y_hit(double d_orient, double x_det, double y_det, double y_detMin, double y_detMax, double x_detMin, double x_detMax, List<double> s) {
-        return func_y_hit(s, d_orient, x_det, y_det, y_detMin, y_detMax, x_detMin, x_detMax);
+    public static double func_y_hit(int d_orient, double d_pos, double d_start, double d_len, double t_final, List<double> s) {
+        return func_y_hit(s, d_orient, d_pos, d_start, d_len, t_final);
     }
 }

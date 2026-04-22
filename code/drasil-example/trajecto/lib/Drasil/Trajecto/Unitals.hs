@@ -42,14 +42,13 @@ symbols = map dqdWr
   [ elecFieldVec, magFieldVec
   , fieldRegionE, fieldRegionB
   , chargeToMass
-  , tFinal, tHit, xDet, xHit, yHit
-  , yDetMin, yDetMax ]
+  , tFinal, tHit, xHit, yHit ]
   ++ [dqdWr nRegions, dqdWr nCols]
   ++ map dqdWr [ regionWidth, regionHeight, xGrid, yGrid ]
   ++ [dqdWr detOrient]
-  ++ map dqdWr [ yDet, xDetMin, xDetMax
+  ++ map dqdWr [ detPos, detStart, detLength
   , mMin, mMax, qMax, vMax0, eMax, bMax, tMax ]
-  ++ [ initStateVec, fieldRegion, detLine, vCrossBVec ]
+  ++ [ initStateVec, fieldRegion, vCrossBVec ]
   ++ map dqdWr [QP.velocity, QP.acceleration, QP.force, QP.time, QP.position]
   ++ map dqdWr constants
   ++ [dqdWr particleState]
@@ -67,12 +66,12 @@ inputs = map dqdWr
   ++ map dqdWr [ regionWidth, regionHeight, xGrid, yGrid ]
   ++ map dqdWr exFields ++ map dqdWr eyFields ++ map dqdWr bFields
   ++ [dqdWr detOrient]
-  ++ map dqdWr [ xDet, yDet, yDetMin, yDetMax, xDetMin, xDetMax
-  , tFinal ]
+  ++ map dqdWr [ detPos, detStart, detLength, tFinal ]
 
--- | Output variables (ODE state vector + detector hit results)
+-- | Output variables (ODE state vector + detector hit results).
 outputs :: [DefinedQuantityDict]
 outputs = [dqdWr particleState, dqdWr tHit, dqdWr xHit, dqdWr yHit]
+  ++ inputs
 
 -- | Named constants
 constants :: [ConstQDef]
@@ -234,10 +233,26 @@ tHit = uc' "t_hit" (nounPhraseSP "time of detector hit")
   (S "the time at which the particle first reaches the detector line")
   (sub lT (label "hit")) Real second
 
-xDet :: UnitalChunk
-xDet = uc' "x_det" (nounPhraseSP "detector line x-position")
-  (S "the x-coordinate of the detector line")
-  (sub lX (label "det")) Real metre
+-- | Position of the detector line along its perpendicular axis.
+-- For a vertical detector (d_orient=0) this is the x-coordinate of the line;
+-- for a horizontal detector (d_orient=1) this is the y-coordinate.
+detPos :: UnitalChunk
+detPos = uc' "det_pos" (nounPhraseSP "detector line position")
+  (S "coordinate of the detector line along its perpendicular axis")
+  (sub lD (label "pos")) Real metre
+
+-- | Start coordinate of the detector along its parallel axis.
+-- For vertical: the lower y-bound; for horizontal: the lower x-bound.
+detStart :: UnitalChunk
+detStart = uc' "det_start" (nounPhraseSP "detector start coordinate")
+  (S "start of the detector line segment along its parallel axis")
+  (sub lD (label "start")) Real metre
+
+-- | Length of the detector line segment.
+detLength :: UnitalChunk
+detLength = uc' "det_length" (nounPhraseSP "detector line length")
+  (S "length of the detector line segment")
+  (sub lD (label "len")) Real metre
 
 xHit :: UnitalChunk
 xHit = uc' "x_hit" (nounPhraseSP "x-coordinate of impact point")
@@ -287,22 +302,6 @@ fieldRegionB = uc' "Bi" (nounPhraseSP "magnetic flux density in region i")
 -- Detector line (DD7)
 ---------------------------------------------------------
 
-detLine :: DefinedQuantityDict
-detLine = dqdNoUnit
-  (dccA "Ldet" (nounPhraseSP "detector line")
-    "the vertical line segment defining the particle detector" Nothing)
-  (sub cL (label "det")) Real
-
-yDetMin :: UnitalChunk
-yDetMin = uc' "y_det_min" (nounPhraseSP "minimum y-coordinate of detector")
-  (S "the lower y-bound of the detector line segment")
-  (sub lY (label "detMin")) Real metre
-
-yDetMax :: UnitalChunk
-yDetMax = uc' "y_det_max" (nounPhraseSP "maximum y-coordinate of detector")
-  (S "the upper y-bound of the detector line segment")
-  (sub lY (label "detMax")) Real metre
-
 ---------------------------------------------------------
 -- Region grid quantities
 ---------------------------------------------------------
@@ -310,12 +309,12 @@ yDetMax = uc' "y_det_max" (nounPhraseSP "maximum y-coordinate of detector")
 nRegions :: ConstrConcept
 nRegions = cucNoUnit' "nRegions" (nounPhraseSP "number of field regions")
   "the total number of rectangular field regions in the grid"
-  cN Real [gtZeroConstr] (exactDbl 1)
+  cN Integer [gtZeroConstr] (exactDbl 1)
 
 nCols :: ConstrConcept
 nCols = cucNoUnit' "nCols" (nounPhraseSP "number of grid columns")
   "the number of columns in the rectangular grid of field regions"
-  (sub cN (label "col")) Real [gtZeroConstr] (exactDbl 1)
+  (sub cN (label "col")) Integer [gtZeroConstr] (exactDbl 1)
 
 regionWidth :: UnitalChunk
 regionWidth = uc' "w" (nounPhraseSP "region width")
@@ -344,24 +343,9 @@ yGrid = uc' "y_grid" (nounPhraseSP "grid origin y-coordinate")
 detOrient :: ConstrConcept
 detOrient = cucNoUnit' "d_orient" (nounPhraseSP "detector orientation")
   "flag indicating detector orientation: 0 for vertical, 1 for horizontal"
-  (sub lD (label "orient")) Real
-  [sfwrRange $ Bounded (Inc, exactDbl 0) (Inc, exactDbl 1)]
+  (sub lD (label "orient")) Integer
+  [sfwrRange $ Bounded (Inc, int 0) (Inc, int 1)]
   (exactDbl 0)
-
-yDet :: UnitalChunk
-yDet = uc' "y_det" (nounPhraseSP "detector line y-position")
-  (S "the y-coordinate of a horizontal detector line")
-  (sub lY (label "det")) Real metre
-
-xDetMin :: UnitalChunk
-xDetMin = uc' "x_det_min" (nounPhraseSP "minimum x-coordinate of detector")
-  (S "the lower x-bound of a horizontal detector line segment")
-  (sub lX (label "detMin")) Real metre
-
-xDetMax :: UnitalChunk
-xDetMax = uc' "x_det_max" (nounPhraseSP "maximum x-coordinate of detector")
-  (S "the upper x-bound of a horizontal detector line segment")
-  (sub lX (label "detMax")) Real metre
 
 ---------------------------------------------------------
 -- State vector and cross-product result (DD2, GD2)
@@ -512,22 +496,13 @@ yGridCon :: ConstrConcept
 yGridCon = constrained' yGrid [] (exactDbl 0)
 
 xDetCon :: ConstrConcept
-xDetCon = constrained' xDet [] (dbl 0.1)
+xDetCon = constrained' detPos [] (dbl 0.1)
 
-yDetCon :: ConstrConcept
-yDetCon = constrained' yDet [] (exactDbl 0)
+detStartCon :: ConstrConcept
+detStartCon = constrained' detStart [] (dbl (-0.05))
 
-yDetMinCon :: ConstrConcept
-yDetMinCon = constrained' yDetMin [] (dbl (-0.05))
-
-yDetMaxCon :: ConstrConcept
-yDetMaxCon = constrained' yDetMax [] (dbl 0.05)
-
-xDetMinCon :: ConstrConcept
-xDetMinCon = constrained' xDetMin [] (exactDbl 0)
-
-xDetMaxCon :: ConstrConcept
-xDetMaxCon = constrained' xDetMax [] (dbl 0.1)
+detLengthCon :: ConstrConcept
+detLengthCon = constrained' detLength [gtZeroConstr] (dbl 0.1)
 
 -- | Input constraints with uncertainty
 inConstraints :: [UncertQ]
@@ -546,11 +521,8 @@ inConstraints =
   , uq yGridCon    exact
   , uq detOrient exact
   , uq xDetCon     exact
-  , uq yDetCon     exact
-  , uq yDetMinCon  exact
-  , uq yDetMaxCon  exact
-  , uq xDetMinCon  exact
-  , uq xDetMaxCon  exact
+  , uq detStartCon exact
+  , uq detLengthCon exact
   , uq tFinalCon   exact
   ]
 

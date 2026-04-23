@@ -23,15 +23,21 @@ def det_t_hit(traj, d_orient, d_pos, d_start, d_len, t_final):
         x_i = traj[i][0]
         y_i = traj[i][1]
         if d_orient == 0:
-            if t_best < 0 and ((x_prev < d_pos and x_i >= d_pos or x_prev >= d_pos and x_i < d_pos) and (y_i >= d_start and y_i <= d_start + d_len)):
-                t_best = i * t_step
-                x_best = x_i
-                y_best = y_i
+            if t_best < 0 and (x_prev < d_pos and x_i >= d_pos or x_prev >= d_pos and x_i < d_pos):
+                frac = (d_pos - x_prev) / (x_i - x_prev)
+                cross_coord = y_prev + frac * (y_i - y_prev)
+                if cross_coord >= d_start and cross_coord <= d_start + d_len:
+                    t_best = (i - 1 + frac) * t_step
+                    x_best = d_pos
+                    y_best = cross_coord
         else:
-            if t_best < 0 and ((y_prev < d_pos and y_i >= d_pos or y_prev >= d_pos and y_i < d_pos) and (x_i >= d_start and x_i <= d_start + d_len)):
-                t_best = i * t_step
-                x_best = x_i
-                y_best = y_i
+            if t_best < 0 and (y_prev < d_pos and y_i >= d_pos or y_prev >= d_pos and y_i < d_pos):
+                frac = (d_pos - y_prev) / (y_i - y_prev)
+                cross_coord = x_prev + frac * (x_i - x_prev)
+                if cross_coord >= d_start and cross_coord <= d_start + d_len:
+                    t_best = (i - 1 + frac) * t_step
+                    x_best = cross_coord
+                    y_best = d_pos
         x_prev = x_i
         y_prev = y_i
     return t_best
@@ -56,15 +62,21 @@ def det_x_hit(traj, d_orient, d_pos, d_start, d_len, t_final):
         x_i = traj[i][0]
         y_i = traj[i][1]
         if d_orient == 0:
-            if t_best < 0 and ((x_prev < d_pos and x_i >= d_pos or x_prev >= d_pos and x_i < d_pos) and (y_i >= d_start and y_i <= d_start + d_len)):
-                t_best = i * t_step
-                x_best = x_i
-                y_best = y_i
+            if t_best < 0 and (x_prev < d_pos and x_i >= d_pos or x_prev >= d_pos and x_i < d_pos):
+                frac = (d_pos - x_prev) / (x_i - x_prev)
+                cross_coord = y_prev + frac * (y_i - y_prev)
+                if cross_coord >= d_start and cross_coord <= d_start + d_len:
+                    t_best = (i - 1 + frac) * t_step
+                    x_best = d_pos
+                    y_best = cross_coord
         else:
-            if t_best < 0 and ((y_prev < d_pos and y_i >= d_pos or y_prev >= d_pos and y_i < d_pos) and (x_i >= d_start and x_i <= d_start + d_len)):
-                t_best = i * t_step
-                x_best = x_i
-                y_best = y_i
+            if t_best < 0 and (y_prev < d_pos and y_i >= d_pos or y_prev >= d_pos and y_i < d_pos):
+                frac = (d_pos - y_prev) / (y_i - y_prev)
+                cross_coord = x_prev + frac * (x_i - x_prev)
+                if cross_coord >= d_start and cross_coord <= d_start + d_len:
+                    t_best = (i - 1 + frac) * t_step
+                    x_best = cross_coord
+                    y_best = d_pos
         x_prev = x_i
         y_prev = y_i
     return x_best
@@ -89,15 +101,21 @@ def det_y_hit(traj, d_orient, d_pos, d_start, d_len, t_final):
         x_i = traj[i][0]
         y_i = traj[i][1]
         if d_orient == 0:
-            if t_best < 0 and ((x_prev < d_pos and x_i >= d_pos or x_prev >= d_pos and x_i < d_pos) and (y_i >= d_start and y_i <= d_start + d_len)):
-                t_best = i * t_step
-                x_best = x_i
-                y_best = y_i
+            if t_best < 0 and (x_prev < d_pos and x_i >= d_pos or x_prev >= d_pos and x_i < d_pos):
+                frac = (d_pos - x_prev) / (x_i - x_prev)
+                cross_coord = y_prev + frac * (y_i - y_prev)
+                if cross_coord >= d_start and cross_coord <= d_start + d_len:
+                    t_best = (i - 1 + frac) * t_step
+                    x_best = d_pos
+                    y_best = cross_coord
         else:
-            if t_best < 0 and ((y_prev < d_pos and y_i >= d_pos or y_prev >= d_pos and y_i < d_pos) and (x_i >= d_start and x_i <= d_start + d_len)):
-                t_best = i * t_step
-                x_best = x_i
-                y_best = y_i
+            if t_best < 0 and (y_prev < d_pos and y_i >= d_pos or y_prev >= d_pos and y_i < d_pos):
+                frac = (d_pos - y_prev) / (y_i - y_prev)
+                cross_coord = x_prev + frac * (x_i - x_prev)
+                if cross_coord >= d_start and cross_coord <= d_start + d_len:
+                    t_best = (i - 1 + frac) * t_step
+                    x_best = cross_coord
+                    y_best = d_pos
         x_prev = x_i
         y_prev = y_i
     return y_best

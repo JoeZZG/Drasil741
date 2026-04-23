@@ -24,7 +24,7 @@ detHitMod = packmod "DetectorHit"
 implVars :: [DefinedQuantityDict]
 implVars = [traj, dOr, detPosV, detStartV, detLenV,
   ii, numPts, bestT, bestX, bestY,
-  xi, yi, prevX, prevY, dtVar, tFinalP]
+  xi, yi, prevX, prevY, dtVar, tFinalP, fracVar, crossCoordVar]
 
 -- Local variable helpers
 var :: String -> String -> String -> Symbol -> Space -> DefinedQuantityDict
@@ -78,6 +78,12 @@ prevX = var "prev_x" "previous x" "x-position at the previous time step" (sub lX
 prevY :: DefinedQuantityDict
 prevY = var "prev_y" "previous y" "y-position at the previous time step" (sub lY (label "prev")) Real
 
+fracVar :: DefinedQuantityDict
+fracVar = var "frac" "interpolation fraction" "fractional position along segment where crossing occurs" (label "frac") Real
+
+crossCoordVar :: DefinedQuantityDict
+crossCoordVar = var "cross_coord" "crossing coordinate" "interpolated coordinate at the detector crossing" (label "cross_coord") Real
+
 dtVar :: DefinedQuantityDict
 dtVar = var "dt" "time step size" "time between consecutive trajectory points"
   (sub lT (label "step")) Real
@@ -118,29 +124,37 @@ mkDetHitFunc name desc retVar =
           fDecDef xi  (idx (idx (sy traj) (sy ii)) (int 0)),
           fDecDef yi  (idx (idx (sy traj) (sy ii)) (int 1)),
 
-          -- Vertical detector (d_orient == 0): cross x = detPos (either direction), within [detStart, detStart+detLen]
+          -- Vertical detector (d_orient == 0): cross x = detPos (either direction)
+          -- Interpolate to find exact crossing point
           FCond (sy dOr $= int 0)
             [
               FCond ((sy bestT $< int 0) $&&
                      (((sy prevX $< sy detPosV) $&& (sy xi $>= sy detPosV)) $||
-                      ((sy prevX $>= sy detPosV) $&& (sy xi $< sy detPosV))) $&&
-                     (sy yi $>= sy detStartV) $&&
-                     (sy yi $<= (sy detStartV $+ sy detLenV)))
-                [ bestT $:= (sy ii $* sy dtVar),
-                  bestX $:= sy xi,
-                  bestY $:= sy yi
+                      ((sy prevX $>= sy detPosV) $&& (sy xi $< sy detPosV))))
+                [ fDecDef fracVar ((sy detPosV $- sy prevX) $/ (sy xi $- sy prevX)),
+                  fDecDef crossCoordVar (sy prevY $+ (sy fracVar $* (sy yi $- sy prevY))),
+                  FCond ((sy crossCoordVar $>= sy detStartV) $&&
+                         (sy crossCoordVar $<= (sy detStartV $+ sy detLenV)))
+                    [ bestT $:= ((sy ii $- int 1 $+ sy fracVar) $* sy dtVar),
+                      bestX $:= sy detPosV,
+                      bestY $:= sy crossCoordVar
+                    ] []
                 ] []
             ]
-            -- Horizontal detector (d_orient == 1): cross y = detPos (either direction), within [detStart, detStart+detLen]
+            -- Horizontal detector (d_orient == 1): cross y = detPos (either direction)
+            -- Interpolate to find exact crossing point
             [
               FCond ((sy bestT $< int 0) $&&
                      (((sy prevY $< sy detPosV) $&& (sy yi $>= sy detPosV)) $||
-                      ((sy prevY $>= sy detPosV) $&& (sy yi $< sy detPosV))) $&&
-                     (sy xi $>= sy detStartV) $&&
-                     (sy xi $<= (sy detStartV $+ sy detLenV)))
-                [ bestT $:= (sy ii $* sy dtVar),
-                  bestX $:= sy xi,
-                  bestY $:= sy yi
+                      ((sy prevY $>= sy detPosV) $&& (sy yi $< sy detPosV))))
+                [ fDecDef fracVar ((sy detPosV $- sy prevY) $/ (sy yi $- sy prevY)),
+                  fDecDef crossCoordVar (sy prevX $+ (sy fracVar $* (sy xi $- sy prevX))),
+                  FCond ((sy crossCoordVar $>= sy detStartV) $&&
+                         (sy crossCoordVar $<= (sy detStartV $+ sy detLenV)))
+                    [ bestT $:= ((sy ii $- int 1 $+ sy fracVar) $* sy dtVar),
+                      bestX $:= sy crossCoordVar,
+                      bestY $:= sy detPosV
+                    ] []
                 ] []
             ],
 

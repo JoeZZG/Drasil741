@@ -36,9 +36,9 @@ import Drasil.GOOL (VSType, SValue, MSStatement, SharedProg, OOProg,
 genAllInputCalls :: (OOProg r) => GenState [MSStatement r]
 genAllInputCalls = do
   gi <- genInputCall
+  ic <- genConstraintCall  -- constraints checked before derived values to catch invalid inputs early
   dv <- genDerivedCall
-  ic <- genConstraintCall
-  return $ catMaybes [gi, dv, ic]
+  return $ catMaybes [gi, ic, dv]
 
 -- | Generates a call to the function for reading inputs from a file.
 genInputCall :: (OOProg r) => GenState (Maybe (MSStatement r))
@@ -135,9 +135,9 @@ genCall n = do
 genAllInputCallsProc :: (SharedProg r) => GenState [MSStatement r]
 genAllInputCallsProc = do
   gi <- genInputCallProc
+  ic <- genConstraintCallProc  -- constraints checked before derived values to catch invalid inputs early
   dv <- genDerivedCallProc
-  ic <- genConstraintCallProc
-  return $ catMaybes [gi, dv, ic]
+  return $ catMaybes [gi, ic, dv]
 
 -- | Generates a call to the function for reading inputs from a file.
 genInputCallProc:: (SharedProg r) => GenState (Maybe (MSStatement r))
